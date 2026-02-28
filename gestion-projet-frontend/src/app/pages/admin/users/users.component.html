@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-12 col-md-10 col-lg-8 mx-auto">   <!-- tu peux changer les tailles -->
+    <div class="card">
+      <div class="card-body">
+
+        <h4 class="card-title text-center mb-4">
+          Users Management
+        </h4>
+
+        <div class="table-responsive">
+          <table class="table table-striped text-center">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{user.id}}</td>
+                <td>{{user.name}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.role}}</td>
+                <td>
+                  <button class="btn btn-sm btn-danger"
+                          (click)="deleteUser(user.id!)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
