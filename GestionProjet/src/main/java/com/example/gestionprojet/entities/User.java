@@ -1,5 +1,6 @@
 package com.example.gestionprojet.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +28,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
-
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    private Boolean isActive = true;
+    private Boolean isActive ;
 
     public Long getId() {
         return id;
@@ -46,9 +45,6 @@ public class User {
         return firstName   ;
     }
 
-    public void setName(String name) {
-        this.firstName = name;
-    }
 
     public String getLastName() {
         return lastName;
@@ -81,7 +77,7 @@ public class User {
     public void setRole(RoleType role) {
         this.role = role;
     }
-
+    @JsonProperty("createdAt")
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -94,9 +90,6 @@ public class User {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
 
     public Long getCin() {
         return cin;
@@ -105,6 +98,20 @@ public class User {
     public void setCin(Long cin) {
         this.cin = cin;
     }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
     public User(){}
 
 

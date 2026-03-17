@@ -1,4 +1,6 @@
 package com.example.gestionprojet.services.impl;
+import com.example.gestionprojet.dto.UserDTO;
+import com.example.gestionprojet.entities.RoleType;
 import com.example.gestionprojet.entities.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +31,7 @@ public class UserService implements UserDetailsService {
     public User saveUser(User user) {
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
         user.setCreatedAt(LocalDateTime.now());
+
         return userRepository.save(user);
     }
 
@@ -51,20 +54,30 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User updateUser(Long id, User updatedUser) {
-        return userRepository.findById(id).map(existingUser -> {
-            existingUser.setCin(updatedUser.getCin());
-            existingUser.setName(updatedUser.getFirstName() + " " + updatedUser.getLastName());
-            existingUser.setEmail(updatedUser.getEmail());
+    public User updateUserFromDTO(Long id, UserDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Only encode password if it's not already encoded
-            if (updatedUser.getPasswordHash() != null && !updatedUser.getPasswordHash().isEmpty() && !updatedUser.getPasswordHash().startsWith("$2a$")) {
-                existingUser.setPasswordHash(passwordEncoder.encode(updatedUser.getPasswordHash()));
-            }
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        if (dto.getCin() != null) user.setCin(dto.getCin());
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
+        }
 
+        return userRepository.save(user);
+    }
+    public User setUserActiveStatus(Long id, boolean active) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-            existingUser.setRole(updatedUser.getRole());
-            return userRepository.save(existingUser);
-        }).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID : " + id));
+        user.setIsActive(active);
+
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.gestionprojet.controllers;
 
+import com.example.gestionprojet.dto.UserDTO;
 import com.example.gestionprojet.entities.User;
 import com.example.gestionprojet.services.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,35 +18,103 @@ public class UserController {
 @Autowired
     private UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser( @RequestBody User user) {
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO dto) {
 
-        if (userService.getUserByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("Email already in use.");
+        if (userService.getUserByEmail(dto.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().build();
         }
 
+        User user = new User();
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setCin(dto.getCin());
+        user.setEmail(dto.getEmail());
+        user.setIsActive(false);
+        user.setPasswordHash(dto.getPassword());
+        user.setRole(dto.getRole());
 
         User savedUser = userService.saveUser(user);
 
-        return ResponseEntity.ok(savedUser);
+        //  Construire DTO de réponse
+        UserDTO response = new UserDTO();
+        response.setId(savedUser.getId());
+        response.setFirstName(savedUser.getFirstName());
+        response.setLastName(savedUser.getLastName());
+        response.setEmail(savedUser.getEmail());
+        response.setCin(savedUser.getCin());
+        response.setIsActive(savedUser.getIsActive());
+        response.setRole(savedUser.getRole());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
-        return userService.getUserByEmail(email).get();
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+
+        User user = userService.getUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setCin(user.getCin());
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserDTO>> getAll() {
+
+
         List<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+
+        List<UserDTO> dtos = users.stream().map(user -> {
+            UserDTO dto = new UserDTO();
+            dto.setId(user.getId());
+            dto.setFirstName(user.getFirstName());
+            dto.setLastName(user.getLastName());
+            dto.setEmail(user.getEmail());
+            dto.setCin(user.getCin());
+            dto.setIsActive(user.getIsActive());
+            return dto;
+        }).toList();
+
+        return ResponseEntity.ok(dtos);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDTO> update(@PathVariable Long id,
+                                          @RequestBody UserDTO dto) {
+        User updatedUser = userService.updateUserFromDTO(id, dto);
+        UserDTO response = convertToDTO(updatedUser);
+        return ResponseEntity.ok(response);
+    }
+    private UserDTO convertToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setCin(user.getCin());
+        return dto;
+    }
+    @PatchMapping("/{id}/deactivate")
+    public ResponseEntity<UserDTO> deactivate(@PathVariable Long id) {
+        User user = userService.setUserActiveStatus(id, false);
+        return ResponseEntity.ok(convertToDTO(user));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id,
-                                       @RequestBody User user) {
-        User updated = userService.updateUser(id, user);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+    // --- ACTIVATE ---
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<UserDTO> activate(@PathVariable Long id) {
+        User user = userService.setUserActiveStatus(id, true);
+        return ResponseEntity.ok(convertToDTO(user));
     }
 
 //    @DeleteMapping("/{id}")
@@ -53,16 +122,5 @@ public class UserController {
 //        userService.deleteUser(id);
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
-//
-//    @PatchMapping("/{id}/deactivate")
-//    public ResponseEntity<User> deactivate(@PathVariable Long id) {
-//        User user = userService.deactivateUser(id);
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
-//
-//    @PatchMapping("/{id}/activate")
-//    public ResponseEntity<User> activate(@PathVariable Long id) {
-//        User user = userService.activateUser(id);
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
+
 }

@@ -1,0 +1,358 @@
+<!-- Overlay -->
+<div class="ud-overlay" (click)="onOverlayClick($event)">
+  <div class="ud-panel">
+
+    <!-- Header -->
+    <div class="ud-header">
+      <div class="ud-avatar-block">
+        <div class="ud-avatar">{{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}</div>
+        <div class="ud-avatar-status" [ngClass]="user?.isActive ? 'status-active' : 'status-inactive'"></div>
+      </div>
+      <div class="ud-header-info">
+        <h4 class="ud-name">{{ user?.firstName }} {{ user?.lastName }}</h4>
+        <span class="ud-role-badge" [ngClass]="'role-' + user?.role?.toLowerCase()">
+          {{ user?.role }}
+        </span>
+      </div>
+      <button class="ud-close" (click)="close.emit()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Status banner -->
+    <div class="ud-status-banner" [ngClass]="user?.isActive ? 'banner-active' : 'banner-inactive'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <ng-container *ngIf="user?.isActive">
+          <polyline points="20 6 9 17 4 12"/>
+        </ng-container>
+        <ng-container *ngIf="!user?.isActive">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </ng-container>
+      </svg>
+      Account is currently <strong>{{ user?.isActive ? 'Active' : 'Inactive' }}</strong>
+    </div>
+
+    <!-- Details grid -->
+    <div class="ud-body">
+
+      <div class="ud-section-label">
+        <span>Personal Information</span>
+        <div class="ud-divider"></div>
+      </div>
+
+      <div class="ud-grid">
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">First Name</span>
+            <span class="ud-detail-value">{{ user?.firstName || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">Last Name</span>
+            <span class="ud-detail-value">{{ user?.lastName || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="ud-detail-card ud-full-width">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">Email Address</span>
+            <span class="ud-detail-value">{{ user?.email || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">CIN</span>
+            <span class="ud-detail-value ud-mono">{{ user?.cin || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">Member Since</span>
+            <span class="ud-detail-value">{{ formatDate(user?.createdAt) }}</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="ud-section-label" style="margin-top: 1rem;">
+        <span>Account Information</span>
+        <div class="ud-divider"></div>
+      </div>
+
+      <div class="ud-grid">
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">Role</span>
+            <span class="ud-detail-value">{{ user?.role || '—' }}</span>
+          </div>
+        </div>
+
+        <div class="ud-detail-card">
+          <div class="ud-detail-icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+              <line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+          </div>
+          <div class="ud-detail-content">
+            <span class="ud-detail-label">User ID</span>
+            <span class="ud-detail-value ud-mono">#{{ user?.id }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Footer actions -->
+    <div class="ud-footer">
+      <button class="ud-btn-close" (click)="close.emit()">Close</button>
+      <button class="ud-btn-edit" (click)="onEdit()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Edit User
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== STYLES ===================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+.ud-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: ud-fade 0.2s ease;
+}
+@keyframes ud-fade  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ud-slide { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ── Panel ── */
+.ud-panel {
+  width: 100%;
+  max-width: 520px;
+  background: #161a24;
+  border: 1px solid #1e2533;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: ud-slide 0.25s ease;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1);
+}
+
+/* ── Header ── */
+.ud-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-bottom: 1px solid #1e2533;
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), transparent);
+}
+.ud-avatar-block { position: relative; flex-shrink: 0; }
+.ud-avatar {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 1.1rem;
+  color: #fff; text-transform: uppercase;
+  box-shadow: 0 0 24px rgba(99,102,241,0.35);
+}
+.ud-avatar-status {
+  position: absolute;
+  bottom: -2px; right: -2px;
+  width: 13px; height: 13px;
+  border-radius: 50%;
+  border: 2px solid #161a24;
+}
+.status-active   { background: #10b981; }
+.status-inactive { background: #64748b; }
+
+.ud-header-info { flex: 1; min-width: 0; }
+.ud-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 1.1rem;
+  color: #f1f5f9; margin: 0 0 5px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Role badges */
+.ud-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.role-admin   { background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.25); }
+.role-owner   { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.25); }
+.role-user    { background: rgba(16,185,129,0.12); color: #34d399;  border: 1px solid rgba(16,185,129,0.25); }
+.role-project_manager { background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.25); }
+.role-member  { background: rgba(16,185,129,0.12); color: #34d399;  border: 1px solid rgba(16,185,129,0.25); }
+
+.ud-close {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid #1e2533;
+  color: #64748b; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+}
+.ud-close:hover { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+
+/* ── Status banner ── */
+.ud-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.8rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.banner-active   { background: rgba(16,185,129,0.08); color: #34d399; border-bottom: 1px solid rgba(16,185,129,0.15); }
+.banner-inactive { background: rgba(100,116,139,0.08); color: #94a3b8; border-bottom: 1px solid rgba(100,116,139,0.15); }
+.ud-status-banner strong { font-weight: 600; }
+
+/* ── Body ── */
+.ud-body { padding: 1.25rem 1.5rem 0.5rem; }
+
+.ud-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.9rem;
+}
+.ud-section-label span {
+  font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: #475569; font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.ud-divider { flex: 1; height: 1px; background: #1e2533; }
+
+/* ── Detail grid ── */
+.ud-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+  margin-bottom: 0.5rem;
+}
+.ud-full-width { grid-column: 1 / -1; }
+
+.ud-detail-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #0d0f14;
+  border: 1px solid #1e2533;
+  border-radius: 12px;
+  transition: border-color 0.15s;
+}
+.ud-detail-card:hover { border-color: #6366f1; }
+
+.ud-detail-icon {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: rgba(99,102,241,0.1);
+  display: flex; align-items: center; justify-content: center;
+  color: #6366f1; flex-shrink: 0;
+}
+
+.ud-detail-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ud-detail-label {
+  font-size: 0.68rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: #475569; font-family: 'DM Sans', sans-serif;
+}
+.ud-detail-value {
+  font-size: 0.875rem; font-weight: 500;
+  color: #e2e8f0; font-family: 'DM Sans', sans-serif;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.ud-mono { font-family: 'Courier New', monospace; font-size: 0.82rem; }
+
+/* ── Footer ── */
+.ud-footer {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid #1e2533;
+  margin-top: 1rem;
+}
+.ud-btn-close {
+  flex: 1; padding: 0.7rem;
+  background: transparent; border: 1px solid #1e2533;
+  border-radius: 10px; color: #94a3b8;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.ud-btn-close:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+
+.ud-btn-edit {
+  flex: 2; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.7rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(99,102,241,0.35);
+}
+.ud-btn-edit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+.ud-btn-edit:active { transform: translateY(0); }
+</style>

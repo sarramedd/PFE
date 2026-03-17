@@ -1,0 +1,364 @@
+<!-- Overlay -->
+<div class="au-overlay" (click)="onOverlayClick($event)">
+  <div class="au-panel">
+
+    <!-- Header -->
+    <div class="au-header">
+      <div class="au-header-left">
+        <div class="au-icon-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="22" y1="11" x2="16" y2="11"/>
+          </svg>
+        </div>
+        <div>
+          <h4 class="au-title">Add New User</h4>
+          <p class="au-subtitle">Fill in the details to create an account</p>
+        </div>
+      </div>
+      <button class="au-close" (click)="close.emit()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form -->
+    <form class="au-form" (ngSubmit)="addUser()" #addForm="ngForm">
+
+      <!-- Row: First + Last Name -->
+      <div class="au-grid-2">
+        <div class="au-field">
+          <label class="au-label" for="firstName">First Name</label>
+          <div class="au-input-wrap">
+            <svg class="au-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="firstName" class="au-input"
+              [(ngModel)]="user.firstName" name="firstName"
+              placeholder="John" required
+              #firstName="ngModel"
+              [class.au-input-error]="firstName.invalid && firstName.touched">
+          </div>
+          <span class="au-error" *ngIf="firstName.invalid && firstName.touched">Required</span>
+        </div>
+
+        <div class="au-field">
+          <label class="au-label" for="lastName">Last Name</label>
+          <div class="au-input-wrap">
+            <svg class="au-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input type="text" id="lastName" class="au-input"
+              [(ngModel)]="user.lastName" name="lastName"
+              placeholder="Doe" required
+              #lastName="ngModel"
+              [class.au-input-error]="lastName.invalid && lastName.touched">
+          </div>
+          <span class="au-error" *ngIf="lastName.invalid && lastName.touched">Required</span>
+        </div>
+      </div>
+
+      <!-- CIN -->
+      <div class="au-field">
+        <label class="au-label" for="cin">CIN</label>
+        <div class="au-input-wrap">
+          <svg class="au-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          <input type="number" id="cin" class="au-input"
+            [(ngModel)]="user.cin" name="cin"
+            placeholder="National ID number" required
+            #cin="ngModel"
+            [class.au-input-error]="cin.invalid && cin.touched">
+        </div>
+        <span class="au-error" *ngIf="cin.invalid && cin.touched">Required</span>
+      </div>
+
+      <!-- Email -->
+      <div class="au-field">
+        <label class="au-label" for="email">Email Address</label>
+        <div class="au-input-wrap">
+          <svg class="au-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <input type="email" id="email" class="au-input"
+            [(ngModel)]="user.email" name="email"
+            placeholder="john@example.com" required
+            #email="ngModel"
+            [class.au-input-error]="email.invalid && email.touched">
+        </div>
+        <span class="au-error" *ngIf="email.invalid && email.touched">Enter a valid email</span>
+      </div>
+
+      <!-- Password -->
+      <div class="au-field">
+        <label class="au-label" for="password">Password</label>
+        <div class="au-input-wrap">
+          <svg class="au-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input [type]="showPassword ? 'text' : 'password'" id="password"
+            class="au-input au-input-password"
+            [(ngModel)]="user.password" name="password"
+            placeholder="Create a strong password" required
+            #password="ngModel"
+            [class.au-input-error]="password.invalid && password.touched">
+          <button type="button" class="au-eye-btn" (click)="showPassword = !showPassword">
+            <svg *ngIf="!showPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg *ngIf="showPassword" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+        <span class="au-error" *ngIf="password.invalid && password.touched">Required</span>
+      </div>
+
+      <!-- Role -->
+      <div class="au-field">
+        <label class="au-label">Role</label>
+        <div class="au-role-group">
+          <button type="button"
+            *ngFor="let r of roles"
+            class="au-role-btn"
+            [class.au-role-active]="user.role === r.value"
+            (click)="user.role = r.value">
+            <span class="au-role-dot" [ngClass]="'dot-' + r.value.toLowerCase()"></span>
+            {{ r.label }}
+          </button>
+        </div>
+        <span class="au-error" *ngIf="!user.role && formSubmitted">Please select a role</span>
+      </div>
+
+      <!-- Success / Error feedback -->
+      <div class="au-feedback au-feedback-success" *ngIf="successMsg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ successMsg }}
+      </div>
+      <div class="au-feedback au-feedback-error" *ngIf="errorMsg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ errorMsg }}
+      </div>
+
+      <!-- Actions -->
+      <div class="au-actions">
+        <button type="button" class="au-btn-cancel" (click)="close.emit()">Cancel</button>
+        <button type="submit" class="au-btn-submit" [disabled]="addForm.invalid || !user.role || loading">
+          <span *ngIf="!loading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Create User
+          </span>
+          <span *ngIf="loading" class="au-spinner"></span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- ===================== STYLES ===================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+.au-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: au-fade 0.2s ease;
+}
+@keyframes au-fade  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes au-slide { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.au-panel {
+  width: 100%;
+  max-width: 500px;
+  background: #161a24;
+  border: 1px solid #1e2533;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: au-slide 0.25s ease;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1);
+}
+
+/* ── Header ── */
+.au-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #1e2533;
+  background: linear-gradient(135deg, rgba(99,102,241,0.07), transparent);
+}
+.au-header-left { display: flex; align-items: center; gap: 0.9rem; }
+.au-icon-badge {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; flex-shrink: 0;
+  box-shadow: 0 0 20px rgba(99,102,241,0.35);
+}
+.au-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700; font-size: 1.05rem;
+  color: #f1f5f9; margin: 0 0 2px;
+}
+.au-subtitle { font-size: 0.75rem; color: #64748b; margin: 0; }
+.au-close {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,0.05); border: 1px solid #1e2533;
+  color: #64748b; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+}
+.au-close:hover { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+
+/* ── Form ── */
+.au-form {
+  padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.au-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.au-field { display: flex; flex-direction: column; gap: 0.4rem; }
+.au-label {
+  font-size: 0.72rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.06em; color: #64748b;
+}
+
+/* ── Input ── */
+.au-input-wrap { position: relative; }
+.au-input-icon {
+  position: absolute; left: 0.85rem; top: 50%;
+  transform: translateY(-50%); color: #475569; pointer-events: none;
+}
+.au-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.35rem;
+  background: #0d0f14; border: 1px solid #1e2533;
+  border-radius: 10px; color: #e2e8f0;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem;
+  transition: all 0.2s; outline: none; box-sizing: border-box;
+}
+.au-input::placeholder { color: #334155; }
+.au-input:focus { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+.au-input-error { border-color: #ef4444 !important; box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important; }
+.au-input-password { padding-right: 2.5rem; }
+
+.au-eye-btn {
+  position: absolute; right: 0.85rem; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: #475569;
+  cursor: pointer; display: flex; align-items: center; padding: 0; transition: color 0.15s;
+}
+.au-eye-btn:hover { color: #94a3b8; }
+.au-error { font-size: 0.7rem; color: #f87171; font-weight: 500; }
+
+/* ── Role selector ── */
+.au-role-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.au-role-btn {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: #0d0f14;
+  border: 1px solid #1e2533;
+  border-radius: 10px;
+  color: #64748b;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.au-role-btn:hover {
+  border-color: #6366f1;
+  color: #e2e8f0;
+  background: rgba(99,102,241,0.07);
+}
+.au-role-active {
+  border-color: #6366f1 !important;
+  background: rgba(99,102,241,0.12) !important;
+  color: #818cf8 !important;
+  font-weight: 600 !important;
+}
+
+/* Role dot colors */
+.au-role-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-admin           { background: #f59e0b; }
+.dot-project_manager { background: #6366f1; }
+.dot-member          { background: #10b981; }
+
+/* ── Feedback ── */
+.au-feedback {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.65rem 0.9rem; border-radius: 9px;
+  font-size: 0.8rem; font-weight: 500;
+}
+.au-feedback-success { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: #34d399; }
+.au-feedback-error   { background: rgba(239,68,68,0.08);  border: 1px solid rgba(239,68,68,0.2);  color: #f87171; }
+
+/* ── Actions ── */
+.au-actions { display: flex; gap: 0.75rem; padding-top: 0.25rem; }
+.au-btn-cancel {
+  flex: 1; padding: 0.7rem;
+  background: transparent; border: 1px solid #1e2533;
+  border-radius: 10px; color: #94a3b8;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.au-btn-cancel:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+.au-btn-submit {
+  flex: 2; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.7rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none; border-radius: 10px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(99,102,241,0.35);
+}
+.au-btn-submit:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+.au-btn-submit:active:not(:disabled) { transform: translateY(0); }
+.au-btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.au-spinner {
+  width: 16px; height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: au-spin 0.6s linear infinite; display: inline-block;
+}
+@keyframes au-spin { to { transform: rotate(360deg); } }
+</style>

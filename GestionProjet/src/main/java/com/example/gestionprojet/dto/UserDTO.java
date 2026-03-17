@@ -1,11 +1,25 @@
 package com.example.gestionprojet.dto;
 
+import com.example.gestionprojet.entities.RoleType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
+import java.time.LocalDateTime;
+
 public class UserDTO {
     private Long id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private Boolean isActive ;
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+    private LocalDateTime createdAt;
+
+
+
     private Long cin ;
     public String getPassword() {
         return password;
@@ -23,11 +37,11 @@ public class UserDTO {
         this.id = id;
     }
 
-    public long getCin() {
+    public Long getCin() {
         return cin;
     }
 
-    public void setCin(long cin) {
+    public void setCin(Long cin) {
         this.cin = cin;
     }
 
@@ -53,5 +67,27 @@ public class UserDTO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+    public Boolean getIsActive(){
+        return isActive;
+    }
+
+    public RoleType getRole() {
+        return role;
+    }
+
+    public void setRole(RoleType role) {
+        this.role = role;
+    }
+    @JsonProperty("createdAt")
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

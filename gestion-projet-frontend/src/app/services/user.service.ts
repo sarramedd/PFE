@@ -31,4 +31,12 @@ export class UserService {
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  deactivateUser(id: number): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}/deactivate`, {});
+  }
+
+  // Activer un utilisateur
+  activateUser(id: number): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}/activate`, {});
+  }
 }

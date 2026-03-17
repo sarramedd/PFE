@@ -16,6 +16,15 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { LoginComponent } from './auth/login/login.component';
 import { FormsModule } from '@angular/forms';
+import { AddUserComponent } from './pages/users/add-user/add-user.component';
+import { EditUserComponent } from './pages/users/edit-user/edit-user.component';
+import { DetailsUserComponent } from './pages/users/details-user/details-user.component';
+import { EditProjectComponent } from './pages/admin/projects/edit-project/edit-project.component';
+import { AddProjectComponent } from './pages/admin/projects/add-project/add-project.component';
+import { ManageMembersComponent } from './pages/admin/projects/manage-members/manage-members.component';
+import { KanbanComponent } from './pages/admin/kanban/kanban.component';
+import { AddTaskComponent } from './pages/admin/tasks/add-task/add-task.component';
+import { EditTaskComponent } from './pages/admin/tasks/edit-task/edit-task.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +38,16 @@ import { FormsModule } from '@angular/forms';
     TasksComponent,
     AttachmentsComponent,
     NotificationsComponent,
-    LoginComponent
+    LoginComponent,
+    AddUserComponent,
+    EditUserComponent,
+    DetailsUserComponent,
+    AddProjectComponent,
+    EditProjectComponent,
+    ManageMembersComponent,
+    KanbanComponent,
+    AddTaskComponent,
+    EditTaskComponent
   ],
   imports: [
     BrowserModule,

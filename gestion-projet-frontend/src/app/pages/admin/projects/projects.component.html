@@ -1,1 +1,319 @@
-<p>projects works!</p>
+<div class="pm-wrapper">
+
+  <!-- Header -->
+  <div class="pm-header">
+    <div class="pm-title-block">
+      <div class="pm-icon-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="pm-title">Projects Management</h2>
+        <p class="pm-subtitle">Track and manage all your projects</p>
+      </div>
+    </div>
+    <button class="pm-btn-add" (click)="openAddModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New Project
+    </button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="pm-stats">
+    <div class="pm-stat-card">
+      <span class="pm-stat-value">{{ projects.length }}</span>
+      <span class="pm-stat-label">Total</span>
+    </div>
+    <div class="pm-stat-card pm-stat-active">
+      <span class="pm-stat-value">{{ activeCount }}</span>
+      <span class="pm-stat-label">Active</span>
+    </div>
+    <div class="pm-stat-card pm-stat-archived">
+      <span class="pm-stat-value">{{ archivedCount }}</span>
+      <span class="pm-stat-label">Archived</span>
+    </div>
+    <div class="pm-stat-card pm-stat-completed">
+      <span class="pm-stat-value">{{ completedCount }}</span>
+      <span class="pm-stat-label">Completed</span>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="pm-table-card">
+    <div class="pm-table-wrapper">
+      <table class="pm-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Project</th>
+            <th>Description</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let project of projects; let i = index" class="pm-row">
+
+            <td class="pm-id">{{ i + 1 }}</td>
+
+            <td>
+              <div class="pm-project-cell">
+                <div class="pm-project-icon">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/>
+                    <line x1="8" y1="21" x2="16" y2="21"/>
+                    <line x1="12" y1="17" x2="12" y2="21"/>
+                  </svg>
+                </div>
+                <div class="pm-project-info">
+<span class="pm-project-name" style="cursor:pointer"
+  [routerLink]="['/admin/projects', project.id, 'kanban']">
+  {{ project.name }}
+</span>                  <span class="pm-project-id">ID: {{ project.id }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td class="pm-description">
+              <span class="pm-desc-text" [title]="project.description || ''">
+                {{ project.description ? (project.description.length > 50 ? (project.description | slice:0:50) + '...' : project.description) : '—' }}
+              </span>
+            </td>
+
+            <td class="pm-date">{{ formatDate(project.startDate) }}</td>
+            <td class="pm-date">{{ formatDate(project.endDate) }}</td>
+
+            <td>
+              <span class="pm-status-badge" [ngClass]="getStatusClass(project.status)">
+                <span class="badge-dot"></span>
+                {{ project.status || '—' }}
+              </span>
+            </td>
+
+            <td>
+              <div class="pm-actions">
+
+                <!-- Edit -->
+                <button class="pm-action-btn edit" (click)="openEditModal(project)" title="Edit project">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Edit
+                </button>
+
+                <!-- Members -->
+                <button class="pm-action-btn members" (click)="openMembersModal(project)" title="Manage members">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                  Members
+                </button>
+
+                <!-- Delete -->
+                <button class="pm-action-btn delete" (click)="deleteProject(project.id)" title="Delete project">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                  Delete
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty state -->
+      <div *ngIf="projects.length === 0" class="pm-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="3" width="20" height="14" rx="2"/>
+          <line x1="8" y1="21" x2="16" y2="21"/>
+          <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <p>No projects found</p>
+        <span>Click "New Project" to create the first one</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <app-add-project
+    *ngIf="showAddModal"
+    (projectAdded)="onProjectAdded()"
+    (close)="closeAddModal()">
+  </app-add-project>
+
+  <app-edit-project
+    *ngIf="showEditModal && selectedProject"
+    [project]="selectedProject"
+    (projectUpdated)="onProjectUpdated()"
+    (close)="closeEditModal()">
+  </app-edit-project>
+
+  <app-manage-members
+    *ngIf="showMembersModal && selectedProject"
+    [project]="selectedProject"
+    (close)="closeMembersModal()">
+  </app-manage-members>
+
+</div>
+
+<!-- ===================== STYLES ===================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+.pm-wrapper {
+  font-family: 'DM Sans', sans-serif;
+  padding: 2rem;
+  background: #0d0f14;
+  min-height: 100vh;
+  color: #e2e8f0;
+}
+
+/* ── Header ── */
+.pm-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;
+}
+.pm-title-block { display: flex; align-items: center; gap: 1rem; }
+.pm-icon-badge {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; box-shadow: 0 0 24px rgba(14,165,233,0.4); flex-shrink: 0;
+}
+.pm-title {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 1.5rem; color: #f1f5f9; margin: 0; line-height: 1.2;
+}
+.pm-subtitle { font-size: 0.8rem; color: #64748b; margin: 0; }
+.pm-btn-add {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: #fff; border: none; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(14,165,233,0.35);
+}
+.pm-btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,233,0.5); }
+.pm-btn-add:active { transform: translateY(0); }
+
+/* ── Stats ── */
+.pm-stats { display: flex; gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap; }
+.pm-stat-card {
+  flex: 1; min-width: 90px;
+  background: #161a24; border: 1px solid #1e2533;
+  border-radius: 12px; padding: 1rem 1.25rem;
+  display: flex; flex-direction: column; gap: 0.25rem;
+  transition: border-color 0.2s;
+}
+.pm-stat-card:hover   { border-color: #0ea5e9; }
+.pm-stat-active    { border-left: 3px solid #0ea5e9 !important; }
+.pm-stat-archived  { border-left: 3px solid #64748b !important; }
+.pm-stat-completed { border-left: 3px solid #10b981 !important; }
+.pm-stat-value {
+  font-family: 'Syne', sans-serif; font-size: 1.75rem;
+  font-weight: 800; color: #f1f5f9; line-height: 1;
+}
+.pm-stat-label {
+  font-size: 0.75rem; color: #64748b;
+  font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+/* ── Table ── */
+.pm-table-card {
+  background: #161a24; border: 1px solid #1e2533;
+  border-radius: 16px; overflow: hidden;
+}
+.pm-table-wrapper { overflow-x: auto; }
+.pm-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.pm-table thead tr { background: #0d0f14; border-bottom: 1px solid #1e2533; }
+.pm-table thead th {
+  padding: 1rem 1.25rem; text-align: left;
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: #475569;
+}
+.pm-row { border-bottom: 1px solid #1a1f2e; transition: background 0.15s ease; }
+.pm-row:last-child { border-bottom: none; }
+.pm-row:hover { background: #1a1f2e; }
+.pm-row td { padding: 0.9rem 1.25rem; vertical-align: middle; }
+.pm-id { color: #475569; font-size: 0.8rem; font-weight: 600; }
+
+.pm-project-cell { display: flex; align-items: center; gap: 0.75rem; }
+.pm-project-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: rgba(14,165,233,0.12);
+  display: flex; align-items: center; justify-content: center;
+  color: #38bdf8; flex-shrink: 0;
+}
+.pm-project-info { display: flex; flex-direction: column; gap: 2px; }
+.pm-project-name { font-weight: 600; color: #e2e8f0; }
+.pm-project-id   { font-size: 0.7rem; color: #475569; }
+
+.pm-description { max-width: 220px; }
+.pm-desc-text { color: #94a3b8; font-size: 0.82rem; display: block; }
+.pm-date { color: #94a3b8; font-size: 0.82rem; white-space: nowrap; }
+
+/* ── Status badges ── */
+.pm-status-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.75rem; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600; white-space: nowrap;
+}
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.badge-progress  { background: rgba(14,165,233,0.12);  color: #38bdf8; border: 1px solid rgba(14,165,233,0.25); animation: pulse-badge 2s infinite; }
+.badge-planned   { background: rgba(100,116,139,0.12); color: #94a3b8; border: 1px solid rgba(100,116,139,0.25); }
+.badge-completed { background: rgba(16,185,129,0.12);  color: #10b981; border: 1px solid rgba(16,185,129,0.25); }
+.badge-cancelled { background: rgba(239,68,68,0.1);    color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+
+@keyframes pulse-badge {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(14,165,233,0.3); }
+  50%       { box-shadow: 0 0 0 4px rgba(14,165,233,0); }
+}
+
+/* ── Actions ── */
+.pm-actions { display: flex; align-items: center; gap: 0.4rem; flex-wrap: nowrap; }
+.pm-action-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  padding: 0.35rem 0.7rem; border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s ease; white-space: nowrap;
+}
+.pm-action-btn:hover  { transform: translateY(-1px); }
+.pm-action-btn:active { transform: translateY(0); }
+
+.pm-action-btn.edit         { background: rgba(14,165,233,0.12); color: #38bdf8; }
+.pm-action-btn.edit:hover   { background: rgba(14,165,233,0.22); }
+
+.pm-action-btn.members       { background: rgba(99,102,241,0.12); color: #818cf8; }
+.pm-action-btn.members:hover { background: rgba(99,102,241,0.22); }
+
+.pm-action-btn.delete         { background: rgba(239,68,68,0.1);  color: #f87171; }
+.pm-action-btn.delete:hover   { background: rgba(239,68,68,0.2); }
+
+/* ── Empty state ── */
+.pm-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 4rem 2rem; gap: 0.5rem; text-align: center;
+}
+.pm-empty svg { color: #334155; margin-bottom: 0.5rem; }
+.pm-empty p { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1rem; color: #64748b; margin: 0; }
+.pm-empty span { font-size: 0.8rem; color: #334155; }
+</style>
