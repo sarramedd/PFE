@@ -1,0 +1,137 @@
+:host {
+  display: block;
+}
+
+.tfs-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.tfs-hero {
+  background: linear-gradient(135deg, #fff9fb 0%, #fbfdff 55%, #f5fffb 100%);
+}
+
+.tfs-kicker {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: #98a1b5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.tfs-hero h2 {
+  margin: 0;
+  color: #49536d;
+}
+
+.tfs-hero p {
+  margin: 0.65rem 0 0;
+  color: #8a94a9;
+}
+
+.tfs-searchbar {
+  margin-top: 1.2rem;
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.tfs-searchbar input {
+  flex: 1 1 22rem;
+  min-height: 3.2rem;
+  border: 1px solid #e7ebf5;
+  border-radius: 1rem;
+  padding: 0 1rem;
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.tfs-searchbar button {
+  border: 0;
+  border-radius: 1rem;
+  padding: 0.85rem 1.2rem;
+  background: linear-gradient(135deg, #efe9ff 0%, #eaf7ff 100%);
+  color: #5b6593;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.tfs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.tfs-card {
+  border-radius: 1.3rem;
+}
+
+.tfs-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.tfs-section-head h4 {
+  margin: 0;
+  color: #4f5972;
+}
+
+.tfs-section-head span {
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #f1f4fb;
+  color: #6e7892;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.tfs-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid #eef1f6;
+  text-decoration: none;
+}
+
+.tfs-item:first-of-type {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.tfs-item strong {
+  display: block;
+  color: #4a5470;
+}
+
+.tfs-item p {
+  margin: 0.2rem 0 0;
+  color: #8e98ad;
+  font-size: 0.88rem;
+}
+
+.tfs-item small {
+  color: #95a0b4;
+  white-space: nowrap;
+}
+
+.tfs-empty,
+.tfs-empty-state .card-body {
+  color: #98a2b7;
+}
+
+@media (max-width: 991.98px) {
+  .tfs-grid {
+    grid-template-columns: 1fr;
+  }
+}

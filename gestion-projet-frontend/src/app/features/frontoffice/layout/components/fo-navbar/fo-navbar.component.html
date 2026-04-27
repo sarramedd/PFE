@@ -1,0 +1,84 @@
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme fo-navbar-shell" id="layout-navbar">
+  <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+    <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+      <i class="bx bx-menu bx-sm"></i>
+    </a>
+  </div>
+
+  <div class="navbar-nav-right d-flex align-items-center justify-content-between w-100 gap-3" id="navbar-collapse" *ngIf="user$ | async as user">
+    <div class="fo-navbar-left">
+      <div class="fo-user-card">
+        <div class="fo-user-avatar" *ngIf="avatarUrl; else fallbackAvatar">
+          <img [src]="avatarUrl" alt="Photo de profil" />
+        </div>
+        <ng-template #fallbackAvatar>
+          <div class="fo-user-avatar fo-user-avatar-fallback">
+            {{ user.firstName[0] }}{{ user.lastName[0] }}
+          </div>
+        </ng-template>
+
+        <div class="fo-user-copy">
+          <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+          <span>{{ user.role }}</span>
+        </div>
+      </div>
+
+      <div class="fo-organization-card">
+        <div class="fo-organization-logo" *ngIf="organizationLogoUrl; else orgFallback">
+          <img [src]="organizationLogoUrl" alt="Logo organisation" />
+        </div>
+        <ng-template #orgFallback>
+          <div class="fo-organization-logo fo-organization-fallback">
+            <i class="bx bx-buildings"></i>
+          </div>
+        </ng-template>
+
+        <div class="fo-organization-copy">
+          <span>Organisation</span>
+          <strong>{{ currentOrganization?.name || user.organizationName || 'TeamFlow' }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="fo-navbar-actions position-relative">
+      <a *ngIf="isAdmin" routerLink="/admin/dashboard" class="fo-icon-btn" aria-label="Backoffice" title="Backoffice">
+        <i class="bx bx-briefcase-alt-2"></i>
+      </a>
+
+      <button type="button" class="fo-icon-btn position-relative" (click)="toggleNotifications()" aria-label="Notifications" title="Notifications">
+        <i class="bx bx-bell"></i>
+        <span *ngIf="unreadCount > 0" class="fo-notification-badge">
+          {{ unreadCount }}
+        </span>
+      </button>
+
+      <button type="button" class="fo-icon-btn fo-logout-btn" (click)="logout()" aria-label="Deconnexion" title="Deconnexion">
+        <i class="bx bx-log-out-circle"></i>
+      </button>
+
+      <div *ngIf="showNotifications" class="card shadow position-absolute end-0 mt-2 fo-notification-panel">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <span class="fw-semibold">Notifications</span>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="loadNotifications()">Rafraichir</button>
+        </div>
+        <div class="card-body p-0">
+          <div class="p-3 text-center text-muted" *ngIf="loadingNotifications">Chargement...</div>
+          <div class="list-group list-group-flush" *ngIf="!loadingNotifications && notifications.length > 0">
+            <button
+              type="button"
+              class="list-group-item list-group-item-action"
+              *ngFor="let notification of notifications | slice:0:6"
+              (click)="markAsRead(notification)"
+              [class.fo-notification-unread]="!notification.isRead">
+              <div class="fw-semibold small mb-1">{{ notification.message }}</div>
+              <small class="text-muted">{{ formatDate(notification.createdAt) }}</small>
+            </button>
+          </div>
+          <div class="p-3 text-center text-muted" *ngIf="!loadingNotifications && notifications.length === 0">
+            Aucune notification.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

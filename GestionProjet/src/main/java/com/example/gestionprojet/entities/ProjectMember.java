@@ -28,7 +28,8 @@ public class ProjectMember {
 
     private LocalDateTime joinedAt;
 
-    private RoleType roleInProject;
+    @Enumerated(EnumType.STRING)
+    private ProjectMemberRole roleInProject;
 
     public Long getId() {
         return id;
@@ -62,11 +63,11 @@ public class ProjectMember {
         this.joinedAt = joinedAt;
     }
 
-    public RoleType getRoleInProject() {
+    public ProjectMemberRole getRoleInProject() {
         return roleInProject;
     }
 
-    public void setRoleInProject(RoleType roleInProject) {
+    public void setRoleInProject(ProjectMemberRole roleInProject) {
         this.roleInProject = roleInProject;
     }
 }

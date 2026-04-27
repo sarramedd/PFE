@@ -1,5 +1,6 @@
 package com.example.gestionprojet;
 
+import com.example.gestionprojet.entities.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,17 @@ public class JwtUtil {
                 .compact();
     }
 
+    public String generateToken(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("userId", user.getId())
+                .claim("organizationId", user.getOrganization().getId())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -48,5 +60,36 @@ public class JwtUtil {
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return username.equals(userDetails.getUsername());
+    }
+
+    public Long extractUserId(String token) {
+        Object claim = extractClaim(token, "userId");
+        if (claim instanceof Integer value) {
+            return value.longValue();
+        }
+        if (claim instanceof Long value) {
+            return value;
+        }
+        return null;
+    }
+
+    public Long extractOrganizationId(String token) {
+        Object claim = extractClaim(token, "organizationId");
+        if (claim instanceof Integer value) {
+            return value.longValue();
+        }
+        if (claim instanceof Long value) {
+            return value;
+        }
+        return null;
+    }
+
+    private Object extractClaim(String token, String claimName) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get(claimName);
     }
 }

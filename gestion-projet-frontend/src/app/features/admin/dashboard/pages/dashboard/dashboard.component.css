@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.sad-admin-wrap .card {
+  border-radius: 0.6rem;
+}
+
+.sad-admin-wrap .corona-gradient-card .card-body {
+  border-radius: 0.6rem;
+}
+
+.sad-progress {
+  height: 0.55rem;
+}
+
+.sad-org-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem 0.4rem 0.45rem;
+}
+
+.sad-org-chip-logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #10131b;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.sad-org-chip small {
+  display: block;
+  font-size: 0.68rem;
+  opacity: 0.75;
+  margin-bottom: 0.05rem;
+}
+
+.sad-org-chip strong {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.sad-table th,
+.sad-table td {
+  vertical-align: middle;
+}
+
+.sad-admin-wrap .preview-item:last-child {
+  border-bottom: 0 !important;
+}
+
+.sad-org-panel-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0f131d;
+}
+
+.sad-mini-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid transparent;
+}
+
+.sad-mini-metric span {
+  font-size: 1rem;
+}
+
+.sad-mini-metric strong {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+.sad-mini-metric small {
+  display: block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.72rem;
+  margin-top: 0.1rem;
+}
+
+.sad-mini-metric-users {
+  background: rgba(88, 101, 242, 0.18);
+  border-color: rgba(88, 101, 242, 0.34);
+}
+
+.sad-mini-metric-projects {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.34);
+}
+
+.sad-mini-metric-tasks {
+  background: rgba(251, 191, 36, 0.14);
+  border-color: rgba(251, 191, 36, 0.3);
+}

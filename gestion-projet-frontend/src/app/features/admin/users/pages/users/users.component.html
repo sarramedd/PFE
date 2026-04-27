@@ -1,0 +1,500 @@
+<div class="um-wrapper">
+  <div class="um-org-banner" *ngIf="!isSuperAdmin">
+    <img [src]="organizationLogo" [alt]="currentOrganizationName" class="um-org-logo" />
+    <div>
+      <span class="um-org-label">Organization Workspace</span>
+      <h5>{{ currentOrganizationName }}</h5>
+      <p>Manage members and project users inside your organization.</p>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <div class="um-header">
+    <div class="um-title-block">
+      <div class="um-icon-badge">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <div>
+        <h2 class="um-title">{{ isSuperAdmin ? 'Users Management' : 'Organization Members' }}</h2>
+        <p class="um-subtitle">{{ isSuperAdmin ? 'Manage and monitor all user accounts' : 'Manage users assigned to your organization' }}</p>
+      </div>
+    </div>
+    <button class="um-btn-add" (click)="openAddModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add User
+    </button>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="um-stats">
+    <div class="um-stat-card">
+      <span class="um-stat-value">{{ users.length }}</span>
+      <span class="um-stat-label">Total Users</span>
+    </div>
+    <div class="um-stat-card um-stat-active">
+      <span class="um-stat-value">{{ activeCount }}</span>
+      <span class="um-stat-label">Active</span>
+    </div>
+    <div class="um-stat-card um-stat-inactive">
+      <span class="um-stat-value">{{ inactiveCount }}</span>
+      <span class="um-stat-label">Inactive</span>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="um-table-card">
+    <div class="um-table-wrapper">
+      <table class="um-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>CIN</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users; let i = index" class="um-row">
+
+            <td class="um-id">{{ i + 1 }}</td>
+
+            <!-- ✅ td plain, flex sur le div interne -->
+            <td>
+              <div class="um-user-cell">
+                <ng-container *ngIf="getAvatarUrl(user); else initialsAvatar">
+                  <img [src]="getAvatarUrl(user)!" [alt]="user.firstName + ' ' + user.lastName" class="um-avatar-image">
+                </ng-container>
+                <ng-template #initialsAvatar>
+                  <div class="um-avatar">{{ user.firstName[0] }}{{ user.lastName[0] }}</div>
+                </ng-template>
+                <div class="um-user-info">
+                  <span class="um-fullname um-clickable" (click)="openDetailsModal(user)">
+  {{ user.firstName }} {{ user.lastName }}
+</span>
+                 
+                </div>
+              </div>
+            </td>
+
+            <td class="um-email">{{ user.email }}</td>
+            <td class="um-cin">{{ user.cin }}</td>
+
+            <td>
+              <span class="um-status-badge"
+                [ngClass]="user.isActive ? 'badge-active' : 'badge-inactive'">
+                <span class="badge-dot"></span>
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+
+            <td>
+              <div class="um-actions">
+                <button class="um-action-btn edit" (click)="openEditModal(user)" title="Edit user">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Edit
+                </button>
+
+                <button class="um-action-btn delete" (click)="deleteUser(user.id)" title="Delete user">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                  </svg>
+                  Delete
+                </button>
+
+                <button
+                  class="um-action-btn"
+                  [ngClass]="user.isActive ? 'toggle-off' : 'toggle-on'"
+                  (click)="toggleUserStatus(user)"
+                  [title]="user.isActive ? 'Deactivate' : 'Activate'">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <ng-container *ngIf="user.isActive">
+                      <line x1="18" y1="6" x2="6" y2="18"/>
+                      <line x1="6" y1="6" x2="18" y2="18"/>
+                    </ng-container>
+                    <ng-container *ngIf="!user.isActive">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </ng-container>
+                  </svg>
+                  {{ user.isActive ? 'Deactivate' : 'Activate' }}
+                </button>
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Empty state -->
+      <div *ngIf="users.length === 0" class="um-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <p>No users found</p>
+        <span>Click "Add User" to create the first account</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <app-add-user
+    *ngIf="showAddModal"
+    (userAdded)="onUserAdded()"
+    (close)="closeAddModal()">
+  </app-add-user>
+
+  <app-edit-user
+    *ngIf="showEditModal && selectedUser"
+    [user]="selectedUser"
+    (userUpdated)="onUserUpdated()"
+    (close)="closeEditModal()">
+  </app-edit-user>
+  <app-details-user
+  *ngIf="showDetailsModal && detailsUser"
+  [user]="detailsUser"
+  (close)="closeDetailsModal()"
+  (editUser)="openEditModal($event)">
+</app-details-user>
+
+</div>
+
+<!-- ===================== STYLES ===================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+.um-wrapper {
+  font-family: 'DM Sans', sans-serif;
+  padding: 2rem;
+  background: #0d0f14;
+  min-height: 100vh;
+  color: #e2e8f0;
+}
+
+.um-org-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  border: 1px solid #1e2533;
+  background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(16,185,129,0.08));
+}
+
+.um-org-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid #1e2533;
+  background: #0d0f14;
+}
+
+.um-org-label {
+  display: inline-block;
+  color: #8ea0b9;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 0.1rem;
+}
+
+.um-org-banner h5 {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+}
+
+.um-org-banner p {
+  margin: 0.2rem 0 0;
+  color: #8391a6;
+  font-size: 0.78rem;
+}
+
+/* ── Header ── */
+.um-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.um-title-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.um-icon-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  box-shadow: 0 0 24px rgba(99,102,241,0.4);
+  flex-shrink: 0;
+}
+.um-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #f1f5f9;
+  margin: 0;
+  line-height: 1.2;
+}
+.um-subtitle {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+  font-weight: 400;
+}
+.um-btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 15px rgba(99,102,241,0.35);
+}
+.um-btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(99,102,241,0.5); }
+.um-btn-add:active { transform: translateY(0); }
+
+/* ── Stats ── */
+.um-stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+.um-stat-card {
+  flex: 1;
+  min-width: 100px;
+  background: #161a24;
+  border: 1px solid #1e2533;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transition: border-color 0.2s;
+}
+.um-stat-card:hover { border-color: #6366f1; }
+.um-stat-active  { border-left: 3px solid #10b981 !important; }
+.um-stat-inactive { border-left: 3px solid #ef4444 !important; }
+.um-stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  line-height: 1;
+}
+.um-stat-label {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Table Card ── */
+.um-table-card {
+  background: #161a24;
+  border: 1px solid #1e2533;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.um-table-wrapper { overflow-x: auto; }
+.um-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.um-table thead tr {
+  background: #0d0f14;
+  border-bottom: 1px solid #1e2533;
+}
+.um-table thead th {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #475569;
+}
+.um-row {
+  border-bottom: 1px solid #1a1f2e;
+  transition: background 0.15s ease;
+}
+.um-row:last-child { border-bottom: none; }
+.um-row:hover { background: #1a1f2e; }
+.um-row td {
+  padding: 0.9rem 1.25rem;
+  vertical-align: middle;
+}
+.um-id {
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ✅ FIX: flex sur le div interne, pas sur td */
+.um-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.um-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #fff;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.um-avatar-image {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: #0d0f14;
+  border: 1px solid #1e2533;
+  flex-shrink: 0;
+}
+.um-user-info { display: flex; flex-direction: column; gap: 2px; }
+.um-fullname { font-weight: 600; color: #e2e8f0; }
+.um-uid { font-size: 0.7rem; color: #475569; }
+.um-email { color: #94a3b8; }
+.um-cin { color: #94a3b8; font-size: 0.82rem; }
+
+/* ── Status Badge ── */
+.um-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-active {
+  background: rgba(16,185,129,0.12);
+  color: #10b981;
+  border: 1px solid rgba(16,185,129,0.25);
+}
+.badge-inactive {
+  background: rgba(239,68,68,0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239,68,68,0.2);
+}
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pulse-dot 2s infinite;
+  flex-shrink: 0;
+}
+.badge-inactive .badge-dot { animation: none; }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Action Buttons ── */
+.um-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: nowrap;
+}
+.um-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.um-action-btn:hover { transform: translateY(-1px); }
+.um-action-btn:active { transform: translateY(0); }
+.um-action-btn.edit         { background: rgba(99,102,241,0.15); color: #818cf8; }
+.um-action-btn.edit:hover   { background: rgba(99,102,241,0.25); }
+.um-action-btn.delete       { background: rgba(239,68,68,0.1);   color: #f87171; }
+.um-action-btn.delete:hover { background: rgba(239,68,68,0.2); }
+.um-action-btn.toggle-off       { background: rgba(239,68,68,0.1);  color: #f87171; }
+.um-action-btn.toggle-off:hover { background: rgba(239,68,68,0.2); }
+.um-action-btn.toggle-on        { background: rgba(16,185,129,0.1); color: #34d399; }
+.um-action-btn.toggle-on:hover  { background: rgba(16,185,129,0.2); }
+
+/* ── Empty State ── */
+.um-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: #475569;
+  gap: 0.5rem;
+  text-align: center;
+}
+.um-empty svg { color: #334155; margin-bottom: 0.5rem; }
+.um-empty p {
+  font-family: 'Syne', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #64748b;
+  margin: 0;
+}
+.um-empty span { font-size: 0.8rem; color: #334155; }
+.um-clickable {
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.um-clickable:hover { color: #818cf8; text-decoration: underline; }
+</style>

@@ -1,0 +1,430 @@
+<!-- Overlay -->
+<div class="eu-overlay" (click)="onOverlayClick($event)">
+  <div class="eu-panel">
+
+    <!-- Header -->
+    <div class="eu-header">
+      <div class="eu-header-left">
+        <div class="eu-avatar">{{ user?.firstName?.[0] }}{{ user?.lastName?.[0] }}</div>
+        <div>
+          <h4 class="eu-title">Edit User</h4>
+          <p class="eu-subtitle">{{ user?.firstName }} {{ user?.lastName }}</p>
+        </div>
+      </div>
+      <button class="eu-close" (click)="cancel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Section label -->
+    <div class="eu-section-label">
+      <span>Account Details</span>
+      <div class="eu-divider"></div>
+    </div>
+
+    <!-- Form -->
+    <form class="eu-form" #editForm="ngForm">
+
+      <!-- Row: First + Last Name -->
+      <div class="eu-grid-2">
+        <div class="eu-field">
+          <label class="eu-label" for="firstName">First Name</label>
+          <div class="eu-input-wrap">
+            <svg class="eu-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input
+              type="text"
+              id="firstName"
+              class="eu-input"
+              [(ngModel)]="user.firstName"
+              name="firstName"
+              placeholder="First name"
+              required minlength="2" maxlength="50"
+              #firstName="ngModel"
+              [class.eu-input-error]="firstName.invalid && firstName.touched">
+          </div>
+          <span class="eu-error" *ngIf="firstName.invalid && firstName.touched">Required</span>
+        </div>
+
+        <div class="eu-field">
+          <label class="eu-label" for="lastName">Last Name</label>
+          <div class="eu-input-wrap">
+            <svg class="eu-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input
+              type="text"
+              id="lastName"
+              class="eu-input"
+              [(ngModel)]="user.lastName"
+              name="lastName"
+              placeholder="Last name"
+              required minlength="2" maxlength="50"
+              #lastName="ngModel"
+              [class.eu-input-error]="lastName.invalid && lastName.touched">
+          </div>
+          <span class="eu-error" *ngIf="lastName.invalid && lastName.touched">Required</span>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="eu-field">
+        <label class="eu-label" for="email">Email Address</label>
+        <div class="eu-input-wrap">
+          <svg class="eu-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <input
+            type="email"
+            id="email"
+            class="eu-input"
+            [(ngModel)]="user.email"
+            name="email"
+            placeholder="Email address"
+            required email maxlength="120"
+            #email="ngModel"
+            [class.eu-input-error]="email.invalid && email.touched">
+        </div>
+        <span class="eu-error" *ngIf="email.invalid && email.touched">Enter a valid email</span>
+      </div>
+
+      <!-- CIN -->
+      <div class="eu-field">
+        <label class="eu-label" for="cin">CIN</label>
+        <div class="eu-input-wrap">
+          <svg class="eu-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          <input
+            type="number"
+            id="cin"
+            class="eu-input"
+            [(ngModel)]="user.cin"
+            name="cin"
+            placeholder="8 chiffres"
+            required min="0" max="19999999"
+            #cin="ngModel"
+            [class.eu-input-error]="(cin.invalid && cin.touched) || (cin.touched && !isCinValid())">
+        </div>
+        <span class="eu-error" *ngIf="cin.invalid && cin.touched">Required</span>
+        <span class="eu-error" *ngIf="cin.touched && !cin.invalid && !isCinValid()">Le CIN doit contenir 8 chiffres et commencer par 0 ou 1</span>
+      </div>
+
+      <!-- Notice -->
+      <div class="eu-notice">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        Changes will take effect immediately upon saving.
+      </div>
+
+      <!-- Success / Error feedback -->
+      <div class="eu-feedback eu-feedback-success" *ngIf="successMsg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ successMsg }}
+      </div>
+      <div class="eu-feedback eu-feedback-error" *ngIf="errorMsg">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ errorMsg }}
+      </div>
+
+      <!-- Actions -->
+      <div class="eu-actions">
+        <button type="button" class="eu-btn-cancel" (click)="cancel()">
+          Cancel
+        </button>
+        <button type="button" class="eu-btn-save" (click)="update()" [disabled]="editForm.invalid || !isCinValid() || loading">
+          <span *ngIf="!loading">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            Save Changes
+          </span>
+          <span *ngIf="loading" class="eu-spinner"></span>
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!-- ===================== STYLES ===================== -->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ── Overlay ── */
+.eu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: eu-fade 0.2s ease;
+}
+@keyframes eu-fade  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes eu-slide { from { opacity: 0; transform: translateY(20px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ── Panel ── */
+.eu-panel {
+  width: 100%;
+  max-width: 500px;
+  background: #161a24;
+  border: 1px solid #1e2533;
+  border-radius: 20px;
+  overflow: hidden;
+  animation: eu-slide 0.25s ease;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(139,92,246,0.1);
+}
+
+/* ── Header ── */
+.eu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid #1e2533;
+  background: linear-gradient(135deg, rgba(139,92,246,0.07), transparent);
+}
+.eu-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.eu-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+  text-transform: uppercase;
+  box-shadow: 0 0 20px rgba(139,92,246,0.3);
+  flex-shrink: 0;
+}
+.eu-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #f1f5f9;
+  margin: 0 0 2px;
+}
+.eu-subtitle {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  font-family: 'DM Sans', sans-serif;
+}
+.eu-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid #1e2533;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.eu-close:hover { background: rgba(239,68,68,0.15); color: #f87171; border-color: rgba(239,68,68,0.3); }
+
+/* ── Section label ── */
+.eu-section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 0;
+}
+.eu-section-label span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #475569;
+  font-family: 'DM Sans', sans-serif;
+  white-space: nowrap;
+}
+.eu-divider {
+  flex: 1;
+  height: 1px;
+  background: #1e2533;
+}
+
+/* ── Form ── */
+.eu-form {
+  padding: 1.25rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.eu-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.eu-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.eu-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+}
+
+/* ── Input ── */
+.eu-input-wrap { position: relative; }
+.eu-input-icon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #475569;
+  pointer-events: none;
+}
+.eu-input {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.35rem;
+  background: #0d0f14;
+  border: 1px solid #1e2533;
+  border-radius: 10px;
+  color: #e2e8f0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+.eu-input::placeholder { color: #334155; }
+.eu-input:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+}
+.eu-input-error {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.12) !important;
+}
+.eu-error {
+  font-size: 0.7rem;
+  color: #f87171;
+  font-weight: 500;
+}
+
+/* ── Notice ── */
+.eu-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.9rem;
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 9px;
+  color: #f59e0b;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* ── Feedback ── */
+.eu-feedback {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: 9px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.eu-feedback-success {
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.2);
+  color: #34d399;
+}
+.eu-feedback-error {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  color: #f87171;
+}
+
+/* ── Actions ── */
+.eu-actions {
+  display: flex;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+}
+.eu-btn-cancel {
+  flex: 1;
+  padding: 0.7rem;
+  background: transparent;
+  border: 1px solid #1e2533;
+  border-radius: 10px;
+  color: #94a3b8;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.eu-btn-cancel:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+
+.eu-btn-save {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem;
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(139,92,246,0.35);
+}
+.eu-btn-save:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(139,92,246,0.5); }
+.eu-btn-save:active:not(:disabled) { transform: translateY(0); }
+.eu-btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Spinner ── */
+.eu-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: eu-spin 0.6s linear infinite;
+  display: inline-block;
+}
+@keyframes eu-spin { to { transform: rotate(360deg); } }
+</style>

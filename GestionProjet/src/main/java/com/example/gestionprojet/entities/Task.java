@@ -31,6 +31,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
+    private Integer estimatedHours;
+
     private LocalDate dueDate;
 
     private LocalDateTime createdAt;
@@ -46,6 +48,10 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "parent_task_id")
     private Task parentTask;
+
+    @ManyToOne
+    @JoinColumn(name = "depends_on_task_id")
+    private Task dependsOn;
 
     public Long getId() {
         return id;
@@ -95,6 +101,14 @@ public class Task {
         this.dueDate = dueDate;
     }
 
+    public Integer getEstimatedHours() {
+        return estimatedHours;
+    }
+
+    public void setEstimatedHours(Integer estimatedHours) {
+        this.estimatedHours = estimatedHours;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -125,5 +139,13 @@ public class Task {
 
     public void setParentTask(Task parentTask) {
         this.parentTask = parentTask;
+    }
+
+    public Task getDependsOn() {
+        return dependsOn;
+    }
+
+    public void setDependsOn(Task dependsOn) {
+        this.dependsOn = dependsOn;
     }
 }

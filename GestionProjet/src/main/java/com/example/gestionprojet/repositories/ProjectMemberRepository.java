@@ -9,6 +9,15 @@ import java.util.Optional;
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long> {
     List<ProjectMember> findByProjectId(Long projectId);
 
+    List<ProjectMember> findByProjectIdAndProject_Organization_Id(Long projectId, Long organizationId);
+
     List<ProjectMember> findByUserId(Long userId);
 
-    Optional<ProjectMember> findByProjectIdAndUserId(Long projectId, Long userId);}
+    List<ProjectMember> findByUserIdAndProject_Organization_Id(Long userId, Long organizationId);
+
+    Optional<ProjectMember> findByProjectIdAndUserId(Long projectId, Long userId);
+
+    Optional<ProjectMember> findByProjectIdAndUserIdAndProject_Organization_Id(Long projectId, Long userId, Long organizationId);
+
+    boolean existsByProjectIdAndUserIdAndProject_Organization_Id(Long projectId, Long userId, Long organizationId);
+}

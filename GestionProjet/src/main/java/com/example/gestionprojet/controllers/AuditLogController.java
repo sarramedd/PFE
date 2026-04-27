@@ -35,6 +35,16 @@ public class AuditLogController {
         return new ResponseEntity<>(logs, HttpStatus.OK);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<List<AuditLog>> getMyActivity() {
+        return new ResponseEntity<>(auditLogService.getMyActivity(), HttpStatus.OK);
+    }
+
+    @GetMapping("/team")
+    public ResponseEntity<List<AuditLog>> getTeamActivity() {
+        return new ResponseEntity<>(auditLogService.getTeamActivity(), HttpStatus.OK);
+    }
+
     @GetMapping("/entity")
     public ResponseEntity<List<AuditLog>> getAuditLogsByEntity(
             @RequestParam String entityType,

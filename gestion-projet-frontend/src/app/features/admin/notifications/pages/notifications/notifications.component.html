@@ -1,0 +1,67 @@
+<div class="noti-shell">
+  <div class="noti-header">
+    <div>
+      <h3>Notifications Center</h3>
+      <p>Filtrage par type + preferences avancees (digest, rappels, surcharge, automations).</p>
+    </div>
+    <button class="btn btn-outline-light btn-sm" (click)="loadNotifications()">Rafraichir</button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Preferences</h5>
+          <div class="form-check noti-switch" *ngIf="preference">
+            <label><input type="checkbox" [(ngModel)]="preference.inAppEnabled"> In-app notifications</label>
+            <label><input type="checkbox" [(ngModel)]="preference.emailEnabled"> Email notifications</label>
+            <label><input type="checkbox" [(ngModel)]="preference.dailyDigestEnabled"> Digest quotidien</label>
+            <label><input type="checkbox" [(ngModel)]="preference.dueReminderEnabled"> Rappel echeances</label>
+            <label><input type="checkbox" [(ngModel)]="preference.overloadAlertEnabled"> Alertes surcharge</label>
+            <label><input type="checkbox" [(ngModel)]="preference.automationEnabled"> Notifications automatisations</label>
+          </div>
+          <button class="btn btn-primary btn-sm mt-3" [disabled]="saving" (click)="savePreferences()">
+            {{ saving ? 'Sauvegarde...' : 'Sauvegarder preferences' }}
+          </button>
+          <p class="mt-2 text-info mb-0" *ngIf="message">{{ message }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="noti-toolbar">
+            <h5 class="card-title mb-0">Flux notifications</h5>
+            <div class="noti-filters">
+              <button
+                type="button"
+                *ngFor="let type of types"
+                class="btn btn-xs"
+                [ngClass]="filter === type.value ? 'btn-primary' : 'btn-outline-secondary'"
+                (click)="applyFilter(type.value)">
+                {{ type.label }}
+              </button>
+            </div>
+          </div>
+
+          <div class="noti-list" *ngIf="!loading; else loadingTpl">
+            <article class="noti-item" *ngFor="let item of notifications" [class.unread]="!item.isRead">
+              <div class="noti-top">
+                <span class="badge badge-outline-info">{{ item.type || 'GENERAL' }}</span>
+                <small>{{ item.createdAt | date:'short' }}</small>
+              </div>
+              <p>{{ item.message }}</p>
+              <button class="btn btn-xs btn-outline-light" *ngIf="!item.isRead" (click)="markAsRead(item)">Marquer lu</button>
+            </article>
+            <div class="text-muted text-center py-3" *ngIf="notifications.length === 0">Aucune notification.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingTpl>
+  <div class="text-muted py-3">Chargement des notifications...</div>
+</ng-template>

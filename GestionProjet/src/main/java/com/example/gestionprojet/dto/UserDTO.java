@@ -13,6 +13,7 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String password;
+    private String avatarUrl;
     private Boolean isActive ;
     @Enumerated(EnumType.STRING)
     private RoleType role;
@@ -21,12 +22,23 @@ public class UserDTO {
 
 
     private Long cin ;
+    private Long organizationId;
+    private String organizationName;
+    private String organizationLogoUrl;
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public Long getId() {
@@ -89,5 +101,29 @@ public class UserDTO {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getOrganizationLogoUrl() {
+        return organizationLogoUrl;
+    }
+
+    public void setOrganizationLogoUrl(String organizationLogoUrl) {
+        this.organizationLogoUrl = organizationLogoUrl;
     }
 }

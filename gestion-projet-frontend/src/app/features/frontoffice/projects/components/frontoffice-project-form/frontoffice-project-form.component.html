@@ -1,0 +1,56 @@
+<div class="fpf-overlay" (click)="onOverlayClick($event)">
+  <div class="fpf-panel">
+    <div class="fpf-header">
+      <div>
+        <span class="fpf-kicker">TeamFlow</span>
+        <h3>Nouveau projet</h3>
+        <p>Cree un projet avec une interface plus legere et moderne.</p>
+      </div>
+      <button type="button" class="fpf-close" (click)="close.emit()">×</button>
+    </div>
+
+    <form class="fpf-form" #projectForm="ngForm" (ngSubmit)="save()">
+      <div class="fpf-grid">
+        <label class="fpf-field fpf-field-full">
+          <span>Nom du projet</span>
+          <input [(ngModel)]="project.name" name="name" required minlength="3" maxlength="120" placeholder="Ex: TeamFlow Mobile App" />
+        </label>
+
+        <label class="fpf-field fpf-field-full">
+          <span>Description</span>
+          <textarea [(ngModel)]="project.description" name="description" rows="4" maxlength="2000" placeholder="Objectif, perimetre, contexte..."></textarea>
+        </label>
+
+        <label class="fpf-field">
+          <span>Date de debut</span>
+          <input [(ngModel)]="project.startDate" name="startDate" type="date" [min]="today" />
+        </label>
+
+        <label class="fpf-field">
+          <span>Date de fin</span>
+          <input [(ngModel)]="project.endDate" name="endDate" type="date" [min]="project.startDate || today" />
+        </label>
+
+        <label class="fpf-field fpf-field-full">
+          <span>Statut</span>
+          <div class="fpf-statuses">
+            <button *ngFor="let status of statuses" type="button" class="fpf-status-btn" [class.active]="project.status === status.value" (click)="project.status = status.value">
+              {{ status.label }}
+            </button>
+          </div>
+        </label>
+      </div>
+
+      <div class="fpf-feedback success" *ngIf="successMessage">{{ successMessage }}</div>
+      <div class="fpf-feedback error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="fpf-feedback error" *ngIf="project.endDate && !hasValidDates()">La date de fin doit etre apres la date de debut.</div>
+
+      <div class="fpf-actions">
+        <button type="button" class="fpf-cancel" (click)="close.emit()">Annuler</button>
+        <button type="submit" class="fpf-submit" [disabled]="projectForm.invalid || !hasValidDates() || loading">
+          {{ loading ? 'Creation...' : 'Creer le projet' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

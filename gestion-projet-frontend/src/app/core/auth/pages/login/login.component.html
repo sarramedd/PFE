@@ -1,0 +1,141 @@
+<div class="container-xxl" *ngIf="assetsReady">
+  <div class="authentication-wrapper authentication-basic container-p-y">
+    <div class="authentication-inner">
+      <div class="card">
+        <div class="card-body">
+          <div class="app-brand justify-content-center">
+            <a routerLink="/login" class="app-brand-link gap-2">
+              <span class="app-brand-logo demo">
+                <img src="assets/images/teamflow.png" alt="TeamFlow" style="height: 42px; width: auto; object-fit: contain;" />
+              </span>
+              <span class="app-brand-text demo text-body fw-bolder">TeamFlow</span>
+            </a>
+          </div>
+
+          <h4 class="mb-2">Bienvenue</h4>
+          <p class="mb-4">Connectez-vous pour acceder a votre espace.</p>
+
+          <form class="mb-3" (ngSubmit)="login()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Entrer votre email"
+                [(ngModel)]="email"
+                required
+                autofocus
+              />
+            </div>
+
+            <div class="mb-3 form-password-toggle">
+              <div class="d-flex justify-content-between align-items-center">
+                <label class="form-label" for="password">Mot de passe</label>
+                <button type="button" class="tf-forgot-btn" (click)="openForgotPassword(); $event.stopPropagation()">
+                  <i class="bx bx-shield-quarter"></i>
+                  <span>Mot de passe oublie ?</span>
+                </button>
+              </div>
+              <div class="input-group input-group-merge">
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  name="password"
+                  placeholder="************"
+                  [(ngModel)]="password"
+                  required
+                />
+                <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
+              </div>
+            </div>
+
+            <div class="mb-3" *ngIf="errorMessage">
+              <div class="alert alert-danger mb-0" role="alert">
+                {{ errorMessage }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <button class="btn btn-primary d-grid w-100" type="submit" [disabled]="isSubmitting">
+                {{ isSubmitting ? 'Connexion...' : 'Se connecter' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tf-auth-modal-backdrop" *ngIf="showForgotPassword" (click)="closeForgotPassword()">
+    <section class="tf-auth-modal card" (click)="$event.stopPropagation()">
+      <div class="tf-auth-modal-header">
+        <div>
+          <h5 class="mb-1">Reinitialiser le mot de passe</h5>
+          <p class="mb-0 text-muted small">Flux securise TeamFlow</p>
+        </div>
+        <button type="button" class="tf-close-btn" aria-label="Close" (click)="closeForgotPassword()">
+          <i class="bx bx-x"></i>
+        </button>
+      </div>
+
+      <div class="tf-auth-modal-body">
+        <div class="alert alert-info py-2" *ngIf="forgotStep === 'request'">
+          Saisis ton email. Un code de verification sera envoye.
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input class="form-control" type="email" [(ngModel)]="forgotEmail" name="forgotEmail" placeholder="email@exemple.com" />
+        </div>
+
+        <div *ngIf="forgotStep !== 'request'">
+          <div class="mb-3">
+            <label class="form-label">Code de verification</label>
+            <input class="form-control" type="text" maxlength="6" [(ngModel)]="verificationCode" name="verificationCode" placeholder="Code recu par email" />
+          </div>
+        </div>
+
+        <div *ngIf="forgotStep === 'reset'">
+          <div class="mb-3">
+            <label class="form-label">Nouveau mot de passe</label>
+            <input class="form-control" type="password" [(ngModel)]="newPassword" name="newPassword" minlength="8" placeholder="Minimum 8 caracteres" />
+          </div>
+        </div>
+
+        <div class="alert alert-success py-2" *ngIf="forgotMessage">{{ forgotMessage }}</div>
+        <div class="alert alert-danger py-2" *ngIf="forgotError">{{ forgotError }}</div>
+      </div>
+
+      <div class="tf-auth-modal-footer">
+        <button type="button" class="btn btn-outline-secondary" (click)="closeForgotPassword()">Fermer</button>
+        <button
+          *ngIf="forgotStep === 'request'"
+          type="button"
+          class="btn btn-primary"
+          [disabled]="isRequestingReset || !forgotEmail.trim()"
+          (click)="requestReset()">
+          {{ isRequestingReset ? 'Envoi...' : 'Envoyer le code' }}
+        </button>
+        <button
+          *ngIf="forgotStep === 'verify'"
+          type="button"
+          class="btn btn-primary"
+          [disabled]="isVerifyingCode || !forgotEmail.trim() || verificationCode.trim().length !== 6"
+          (click)="verifyCode()">
+          {{ isVerifyingCode ? 'Verification...' : 'Verifier le code' }}
+        </button>
+        <button
+          *ngIf="forgotStep === 'reset'"
+          type="button"
+          class="btn btn-primary"
+          [disabled]="isResettingPassword || !verificationCode.trim() || newPassword.trim().length < 8"
+          (click)="submitReset()">
+          {{ isResettingPassword ? 'Validation...' : 'Changer le mot de passe' }}
+        </button>
+      </div>
+    </section>
+  </div>
+</div>

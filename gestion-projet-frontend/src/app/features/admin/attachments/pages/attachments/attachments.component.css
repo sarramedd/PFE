@@ -1,0 +1,300 @@
+:host {
+  display: block;
+}
+
+.plan-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 0.8rem;
+  background: linear-gradient(135deg, rgba(88, 101, 242, 0.22), rgba(22, 160, 133, 0.18));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.plan-header h3 {
+  margin: 0 0 0.25rem;
+  color: #fff;
+}
+
+.plan-header p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.plan-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.plan-table th,
+.plan-table td {
+  vertical-align: middle;
+}
+
+.curve-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+.curve-card {
+  border-radius: 0.9rem;
+  border: 1px solid rgba(124, 139, 255, 0.2);
+  padding: 0.7rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.92), rgba(238, 244, 255, 0.9));
+}
+
+.curve-card h6 {
+  margin: 0 0 0.55rem;
+  color: #334175;
+  font-weight: 700;
+}
+
+.curve-svg {
+  width: 100%;
+  height: auto;
+  border-radius: 0.8rem;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.curve-axis {
+  stroke: #cfd7f7;
+  stroke-width: 1;
+}
+
+.curve-mid {
+  stroke: #ffd8e3;
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+}
+
+.curve-line-main {
+  fill: none;
+  stroke: #6f88ff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.curve-line-open {
+  fill: none;
+  stroke: #4dc4a5;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 7 4;
+}
+
+.curve-line-variance {
+  fill: none;
+  stroke: #ff7d9a;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.curve-point-main {
+  fill: #ffffff;
+  stroke: #6f88ff;
+  stroke-width: 2.2;
+}
+
+.curve-label {
+  fill: #6e79a5;
+  font-size: 11px;
+  text-anchor: middle;
+}
+
+.plan-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.plan-select {
+  max-width: 260px;
+}
+
+.gantt-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.gantt-row {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.gantt-label {
+  display: flex;
+  flex-direction: column;
+}
+
+.gantt-label strong {
+  color: #fff;
+  font-size: 0.86rem;
+}
+
+.gantt-label small {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.gantt-track {
+  position: relative;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  min-width: 38px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7c83ff, #58d2ff);
+  color: #fff;
+  font-size: 0.66rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  font-weight: 700;
+}
+
+.gantt-svg-wrap {
+  border: 1px solid rgba(124, 139, 255, 0.2);
+  border-radius: 0.9rem;
+  padding: 0.5rem;
+  background: #ffffff;
+  overflow-x: auto;
+}
+
+.gantt-svg-title {
+  fill: #3a4779;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.gantt-svg-sub {
+  fill: #7e89af;
+  font-size: 10px;
+}
+
+.gantt-svg-line {
+  stroke: #e2e8ff;
+  stroke-width: 1;
+}
+
+.gantt-svg-status {
+  fill: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.plan-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.plan-form-grid .btn {
+  grid-column: span 2;
+}
+
+.plan-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: 230px;
+  overflow: auto;
+}
+
+.plan-chip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.plan-chip strong {
+  color: #fff;
+  display: block;
+  font-size: 0.82rem;
+}
+
+.plan-chip span {
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 0.72rem;
+}
+
+.plan-chip-automation > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.permission-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.permission-pill {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.permission-pill.allowed {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.permission-pill.denied {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.permission-table td,
+.permission-table th {
+  white-space: nowrap;
+}
+
+@media (max-width: 991px) {
+  .gantt-row {
+    grid-template-columns: 1fr;
+  }
+
+  .plan-actions {
+    width: 100%;
+  }
+
+  .plan-select {
+    max-width: 100%;
+  }
+}

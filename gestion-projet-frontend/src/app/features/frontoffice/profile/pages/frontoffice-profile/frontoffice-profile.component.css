@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.fo-profile-org-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid #e6e9f2;
+  border-radius: 999px;
+  padding: 0.22rem 0.62rem 0.22rem 0.22rem;
+  background: linear-gradient(135deg, #f8f9ff, #f2f7ff);
+  margin-bottom: 0.9rem;
+}
+
+.fo-profile-org-chip img {
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #d9deea;
+}
+
+.fo-profile-org-chip span {
+  font-size: 0.78rem;
+  color: #4a5772;
+  font-weight: 600;
+}

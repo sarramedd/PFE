@@ -1,0 +1,63 @@
+<div class="tfa-shell">
+  <div class="tfa-hero card border-0 shadow-sm">
+    <div class="card-body">
+      <span class="tfa-kicker">Workspace Activity</span>
+      <h2>Centre d'activite</h2>
+      <p>Retrouve ton historique recent et, si ton role le permet, l'activite globale de l'equipe.</p>
+    </div>
+  </div>
+
+  <div class="tfa-grid" *ngIf="!loading">
+    <section class="tfa-card card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="tfa-head">
+          <div>
+            <span class="tfa-section-kicker">Personnel</span>
+            <h4>Mon activite</h4>
+          </div>
+        </div>
+
+        <div class="tfa-list" *ngIf="myLogs.length > 0; else noMyLogs">
+          <article class="tfa-item" *ngFor="let log of myLogs">
+            <div class="tfa-dot"></div>
+            <div>
+              <strong>{{ formatAction(log.action) }}</strong>
+              <p>{{ log.entityType }} #{{ log.entityId }}</p>
+              <span>{{ formatDate(log.timestamp) }}</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="tfa-card card border-0 shadow-sm" *ngIf="canSeeTeamActivity">
+      <div class="card-body">
+        <div class="tfa-head">
+          <div>
+            <span class="tfa-section-kicker">Equipe</span>
+            <h4>Activite d'equipe</h4>
+          </div>
+        </div>
+
+        <div class="tfa-list" *ngIf="teamLogs.length > 0; else noTeamLogs">
+          <article class="tfa-item" *ngFor="let log of teamLogs">
+            <div class="tfa-dot team"></div>
+            <div>
+              <strong>{{ log.performedBy?.firstName }} {{ log.performedBy?.lastName }}</strong>
+              <p>{{ formatAction(log.action) }} · {{ log.entityType }} #{{ log.entityId }}</p>
+              <span>{{ formatDate(log.timestamp) }}</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<ng-template #noMyLogs>
+  <div class="tfa-empty">Aucune activite personnelle recente.</div>
+</ng-template>
+
+<ng-template #noTeamLogs>
+  <div class="tfa-empty">Aucune activite equipe recente.</div>
+</ng-template>

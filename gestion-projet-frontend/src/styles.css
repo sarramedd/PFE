@@ -1,1 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+
 /* You can add global styles to this file, and also import other style files */
+
+body.frontoffice-sneat {
+  font-family: 'Public Sans', sans-serif;
+  background-color: #f5f5f9;
+}
+
+body.frontoffice-sneat .layout-wrapper,
+body.frontoffice-sneat .layout-container,
+body.frontoffice-sneat .layout-page,
+body.frontoffice-sneat .content-wrapper {
+  min-height: 100vh;
+}
+
+body.frontoffice-sneat .content-wrapper {
+  background: transparent;
+}

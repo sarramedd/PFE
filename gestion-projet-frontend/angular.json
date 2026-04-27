@@ -24,22 +24,10 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": ["src/assets/template/vendors/css/vendor.bundle.base.css",
-  "src/assets/template/css/style.css",
+            "styles": [
               "src/styles.css"
             ],
-            "scripts": ["src/assets/template/vendors/js/vendor.bundle.base.js",
-"src/assets/template/vendors/chart.js/Chart.min.js",
-"src/assets/template/vendors/progressbar.js/progressbar.min.js",
-"src/assets/template/vendors/jvectormap/jquery-jvectormap.min.js",
-"src/assets/template/vendors/jvectormap/jquery-jvectormap-world-mill-en.js",
-"src/assets/template/vendors/owl-carousel-2/owl.carousel.min.js",
-"src/assets/template/js/off-canvas.js",
-"src/assets/template/js/hoverable-collapse.js",
-"src/assets/template/js/misc.js",
-"src/assets/template/js/settings.js",
-"src/assets/template/js/todolist.js",
-"src/assets/template/js/dashboard.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {

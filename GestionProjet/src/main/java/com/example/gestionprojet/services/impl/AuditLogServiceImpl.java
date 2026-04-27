@@ -6,6 +6,7 @@ import com.example.gestionprojet.repositories.AuditLogRepository;
 import com.example.gestionprojet.repositories.ProjectRepository;
 import com.example.gestionprojet.repositories.TaskRepository;
 import com.example.gestionprojet.repositories.UserRepository;
+import com.example.gestionprojet.security.TenantAccessService;
 import com.example.gestionprojet.services.interfaces.AuditLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,8 @@ private UserRepository userRepository;
 private ProjectRepository projectRepository;
 @Autowired
 private TaskRepository taskRepository;
+@Autowired
+private TenantAccessService tenantAccessService;
 
 
     @Override
@@ -46,17 +49,43 @@ private TaskRepository taskRepository;
 
     @Override
     public List<AuditLog> getAuditLogsByUser(Long userId) {
-        return auditLogRepository.findByPerformedById(userId);
+        return auditLogRepository.findByPerformedByIdOrderByTimestampDesc(userId);
     }
 
     @Override
     public List<AuditLog> getAuditLogsByEntity(String entityType, Long entityId) {
-        return auditLogRepository.findByEntityTypeAndEntityId(entityType, entityId);
+        return auditLogRepository.findByEntityTypeAndEntityIdOrderByTimestampDesc(entityType, entityId);
     }
 
     @Override
     public void deleteAuditLog(Long id) {
         AuditLog log = getAuditLogById(id);
         auditLogRepository.delete(log);
+    }
+
+    public AuditLog record(String action, String entityType, Long entityId) {
+        AuditLog auditLog = new AuditLog();
+        auditLog.setAction(action);
+        auditLog.setEntityType(entityType);
+        auditLog.setEntityId(entityId);
+        auditLog.setPerformedBy(tenantAccessService.getCurrentUser());
+        auditLog.setTimestamp(LocalDateTime.now());
+        return auditLogRepository.save(auditLog);
+    }
+
+    public List<AuditLog> getMyActivity() {
+        return auditLogRepository.findByPerformedByIdOrderByTimestampDesc(tenantAccessService.getCurrentUserId());
+    }
+
+    public List<AuditLog> getTeamActivity() {
+        if (tenantAccessService.isSuperAdmin()) {
+            return auditLogRepository.findAll().stream()
+                    .sorted((a, b) -> b.getTimestamp().compareTo(a.getTimestamp()))
+                    .toList();
+        }
+
+        return auditLogRepository.findByPerformedBy_Organization_IdOrderByTimestampDesc(
+                tenantAccessService.getCurrentOrganizationId()
+        );
     }
 }

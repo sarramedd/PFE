@@ -1,0 +1,220 @@
+<div class="tfk-shell">
+  <div class="tfk-hero card border-0 shadow-sm">
+    <div class="card-body">
+      <div class="tfk-hero-top">
+        <div>
+          <a routerLink="/frontoffice/projects" class="tfk-back">Retour aux projets</a>
+          <h2 class="tfk-title">{{ project?.name || 'Project Calendar' }}</h2>
+          <p class="tfk-subtitle">{{ project?.description || 'Une vue calendrier moderne, claire et fluide pour organiser le rythme du projet.' }}</p>
+        </div>
+
+        <button *ngIf="canCreateTasks && project" class="btn btn-primary tfk-add-btn" (click)="openAddModal()">
+          Nouvelle tache
+        </button>
+      </div>
+
+      <div class="tfk-stats">
+        <div class="tfk-stat-card tone-lilac">
+          <span class="tfk-stat-value">{{ totalTasks }}</span>
+          <span class="tfk-stat-label">Taches</span>
+        </div>
+        <div class="tfk-stat-card tone-sky">
+          <span class="tfk-stat-value">{{ tasksThisMonth }}</span>
+          <span class="tfk-stat-label">Ce mois-ci</span>
+        </div>
+        <div class="tfk-stat-card tone-mint">
+          <span class="tfk-stat-value">{{ completedTasks }}</span>
+          <span class="tfk-stat-label">Terminees</span>
+        </div>
+        <div class="tfk-progress-card">
+          <div class="tfk-progress-head">
+            <span>Progression</span>
+            <strong>{{ progressPercent }}%</strong>
+          </div>
+          <div class="progress tfk-progress">
+            <div class="progress-bar" role="progressbar" [style.width.%]="progressPercent"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="loading" class="tfk-loading card">
+    <div class="card-body">Chargement du calendrier...</div>
+  </div>
+
+  <div *ngIf="!loading" class="tfk-layout">
+    <div class="tfk-calendar card border-0 shadow-sm">
+      <div class="tfk-calendar-toolbar">
+        <div class="tfk-toolbar-left">
+          <button type="button" class="tfk-nav-btn" (click)="previousMonth()">&#8249;</button>
+          <h3>{{ calendarTitle }}</h3>
+          <button type="button" class="tfk-nav-btn" (click)="nextMonth()">&#8250;</button>
+        </div>
+
+        <button type="button" class="tfk-today-btn" (click)="goToToday()">Today</button>
+      </div>
+
+      <div class="tfk-weekdays">
+        <span *ngFor="let label of weekLabels">{{ label }}</span>
+      </div>
+
+      <div class="tfk-grid">
+        <button
+          type="button"
+          *ngFor="let day of calendarDays"
+          class="tfk-day"
+          [class.outside]="!day.isCurrentMonth"
+          [class.today]="day.isToday"
+          [class.selected]="isSelected(day.date)"
+          [class.has-tasks]="day.tasks.length > 0"
+          (click)="selectDate(day.date)">
+          <span class="tfk-day-number">{{ day.date.getDate() }}</span>
+          <div class="tfk-day-markers">
+            <span
+              *ngFor="let task of day.tasks | slice:0:3"
+              class="tfk-marker"
+              [ngClass]="'status-' + getStatusTone(task.status)"></span>
+          </div>
+          <small *ngIf="day.tasks.length > 0" class="tfk-day-count">{{ day.tasks.length }} task{{ day.tasks.length > 1 ? 's' : '' }}</small>
+        </button>
+      </div>
+    </div>
+
+    <div class="tfk-side">
+      <div class="tfk-panel card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="tfk-panel-head">
+            <div>
+              <span class="tfk-panel-kicker">Selected day</span>
+              <h4>{{ formatDayLabel(selectedDate) }}</h4>
+            </div>
+            <span class="tfk-chip">{{ selectedDayTasks.length }}</span>
+          </div>
+
+          <div *ngIf="selectedDayTasks.length === 0" class="tfk-empty">
+            Aucune tache prevue pour cette date.
+          </div>
+
+          <div class="tfk-agenda" *ngIf="selectedDayTasks.length > 0">
+            <div *ngFor="let task of selectedDayTasks" class="tfk-agenda-item">
+              <div class="tfk-agenda-top">
+                <span class="tfk-badge" [ngClass]="'priority-' + getPriorityTone(task.priority)">
+                  {{ task.priority || 'NORMAL' }}
+                </span>
+                <span class="tfk-status" [ngClass]="'status-' + getStatusTone(task.status)">
+                  {{ task.status }}
+                </span>
+              </div>
+
+              <h5>{{ task.title }}</h5>
+              <p>{{ task.description || 'Aucune description pour cette tache.' }}</p>
+
+              <div class="tfk-agenda-meta">
+                <div class="tfk-avatar">{{ getInitials(task) }}</div>
+                <div>
+                  <span class="tfk-meta-label">Assigne a</span>
+                  <strong>{{ getAssigneeName(task) }}</strong>
+                </div>
+              </div>
+
+              <div class="tfk-agenda-meta">
+                <div>
+                  <span class="tfk-meta-label">Charge</span>
+                  <strong>{{ task.estimatedHours || 0 }}h</strong>
+                </div>
+                <div *ngIf="task.dependsOn">
+                  <span class="tfk-meta-label">Depend de</span>
+                  <strong>{{ task.dependsOn.title }}</strong>
+                </div>
+                <div *ngIf="task.parentTask">
+                  <span class="tfk-meta-label">Sous-tache de</span>
+                  <strong>{{ task.parentTask.title }}</strong>
+                </div>
+              </div>
+
+              <div class="tfk-agenda-actions" *ngIf="canManageTasks">
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditModal(task)">Modifier</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteTask(task)">Supprimer</button>
+              </div>
+
+              <div class="tfk-status-switch" *ngIf="canChangeStatus(task)">
+                <button
+                  type="button"
+                  class="tfk-status-btn"
+                  [class.active]="task.status === 'TODO'"
+                  (click)="changeTaskStatus(task, TaskStatus.TODO)">
+                  To do
+                </button>
+                <button
+                  type="button"
+                  class="tfk-status-btn"
+                  [class.active]="task.status === 'IN_PROGRESS'"
+                  (click)="changeTaskStatus(task, TaskStatus.IN_PROGRESS)">
+                  In progress
+                </button>
+                <button
+                  type="button"
+                  class="tfk-status-btn"
+                  [class.active]="task.status === 'DONE'"
+                  (click)="changeTaskStatus(task, TaskStatus.DONE)">
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tfk-panel card border-0 shadow-sm">
+        <div class="card-body">
+          <div class="tfk-panel-head">
+            <div>
+              <span class="tfk-panel-kicker">Upcoming</span>
+              <h4>Prochaines echeances</h4>
+            </div>
+          </div>
+
+          <div *ngIf="upcomingTasks.length === 0" class="tfk-empty">
+            Rien a venir pour le moment.
+          </div>
+
+          <div class="tfk-upcoming" *ngIf="upcomingTasks.length > 0">
+            <div *ngFor="let task of upcomingTasks" class="tfk-upcoming-item">
+              <div class="tfk-upcoming-dot" [ngClass]="'status-' + getStatusTone(task.status)"></div>
+              <div class="tfk-upcoming-content">
+                <strong>{{ task.title }}</strong>
+                <span>{{ formatDate(task.dueDate) }}</span>
+              </div>
+              <button *ngIf="canManageTasks" type="button" class="tfk-link-btn" (click)="openEditModal(task)">Ouvrir</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-frontoffice-task-form
+  *ngIf="showAddModal && project"
+  [projectId]="project.id"
+  [defaultStatus]="defaultStatus"
+  [users]="addTaskUsers"
+  [existingTasks]="tasks"
+  [hideAssignedUser]="currentUser?.role === 'MEMBER'"
+  [lockedAssignedUserId]="currentUser?.role === 'MEMBER' ? currentUser?.id ?? null : null"
+  (taskAdded)="onTaskAdded()"
+  (close)="closeAddModal()">
+</app-frontoffice-task-form>
+
+<app-frontoffice-task-editor
+  *ngIf="showEditModal && selectedTask"
+  [task]="selectedTask"
+  [users]="users"
+  [existingTasks]="tasks"
+  [canManageTasks]="canManageTasks"
+  (taskUpdated)="onTaskUpdated()"
+  (close)="closeEditModal()">
+</app-frontoffice-task-editor>

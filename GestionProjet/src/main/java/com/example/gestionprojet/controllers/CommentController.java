@@ -47,6 +47,12 @@ public class CommentController {
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
+    @GetMapping("/project/{projectId}")
+    public ResponseEntity<List<Comment>> getCommentsByProject(@PathVariable Long projectId) {
+        List<Comment> comments = commentService.getCommentsByProject(projectId);
+        return new ResponseEntity<>(comments, HttpStatus.OK);
+    }
+
     @GetMapping("/author/{authorId}")
     public ResponseEntity<List<Comment>> getCommentsByAuthor(@PathVariable Long authorId) {
         List<Comment> comments = commentService.getCommentsByAuthor(authorId);

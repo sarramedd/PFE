@@ -9,5 +9,11 @@ public interface AuditLogRepository extends JpaRepository<AuditLog, Long> {
 
     List<AuditLog> findByPerformedById(Long userId);
 
+    List<AuditLog> findByPerformedByIdOrderByTimestampDesc(Long userId);
+
     List<AuditLog> findByEntityTypeAndEntityId(String entityType, Long entityId);
+
+    List<AuditLog> findByEntityTypeAndEntityIdOrderByTimestampDesc(String entityType, Long entityId);
+
+    List<AuditLog> findByPerformedBy_Organization_IdOrderByTimestampDesc(Long organizationId);
 }

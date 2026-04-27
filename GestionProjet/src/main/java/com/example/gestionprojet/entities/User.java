@@ -1,6 +1,7 @@
 package com.example.gestionprojet.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +25,19 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(length = 500)
+    private String avatarUrl;
+
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     private RoleType role;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Organization organization;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -70,12 +80,28 @@ public class User {
         this.passwordHash = passwordHash;
     }
 
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     public RoleType getRole() {
         return role;
     }
 
     public void setRole(RoleType role) {
         this.role = role;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
     @JsonProperty("createdAt")
     public LocalDateTime getCreatedAt() {

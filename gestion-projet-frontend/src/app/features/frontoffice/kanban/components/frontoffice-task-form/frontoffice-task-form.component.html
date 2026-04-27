@@ -1,0 +1,85 @@
+<div class="ftf-overlay" (click)="onOverlayClick($event)">
+  <div class="ftf-panel">
+    <div class="ftf-header">
+      <div>
+        <span class="ftf-kicker">Focus mode</span>
+        <h3>Nouvelle tache</h3>
+        <p>Un formulaire plus simple, lumineux et plus naturel pour le frontoffice.</p>
+      </div>
+      <button type="button" class="ftf-close" (click)="close.emit()">×</button>
+    </div>
+
+    <form class="ftf-form" #taskForm="ngForm" (ngSubmit)="save()">
+      <div class="ftf-grid">
+        <label class="ftf-field ftf-field-full">
+          <span>Titre</span>
+          <input [(ngModel)]="task.title" name="title" required minlength="3" maxlength="120" placeholder="Ex: Preparer la maquette mobile" />
+        </label>
+
+        <label class="ftf-field ftf-field-full">
+          <span>Description</span>
+          <textarea [(ngModel)]="task.description" name="description" rows="4" maxlength="2000" placeholder="Donne un contexte rapide sur la tache..."></textarea>
+        </label>
+
+        <label class="ftf-field">
+          <span>Echeance</span>
+          <input [(ngModel)]="task.dueDate" name="dueDate" type="date" [min]="today" />
+        </label>
+
+        <label class="ftf-field">
+          <span>Charge estimee (h)</span>
+          <input [(ngModel)]="task.estimatedHours" name="estimatedHours" type="number" min="1" max="500" placeholder="Ex: 6" />
+        </label>
+
+        <label class="ftf-field" *ngIf="!hideAssignedUser">
+          <span>Assignee a</span>
+          <select [(ngModel)]="task.assignedUserId" name="assignedUserId">
+            <option [ngValue]="null">Non assignee</option>
+            <option *ngFor="let user of users" [ngValue]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
+          </select>
+        </label>
+
+        <div class="ftf-field" *ngIf="hideAssignedUser">
+          <span>Assignee a</span>
+          <div class="ftf-self-note">Cette tache vous sera automatiquement attribuee.</div>
+        </div>
+
+        <label class="ftf-field">
+          <span>Tache parent</span>
+          <select [(ngModel)]="task.parentTaskId" name="parentTaskId">
+            <option [ngValue]="null">Aucune</option>
+            <option *ngFor="let item of availableParentTasks" [ngValue]="item.id">{{ item.title }}</option>
+          </select>
+        </label>
+
+        <label class="ftf-field">
+          <span>Depend de</span>
+          <select [(ngModel)]="task.dependsOnId" name="dependsOnId">
+            <option [ngValue]="null">Aucune</option>
+            <option *ngFor="let item of availableParentTasks" [ngValue]="item.id">{{ item.title }}</option>
+          </select>
+        </label>
+
+        <label class="ftf-field ftf-field-full">
+          <span>Statut initial</span>
+          <div class="ftf-statuses">
+            <button *ngFor="let status of statuses" type="button" class="ftf-status-btn" [class.active]="task.status === status.value" (click)="task.status = status.value">
+              {{ status.label }}
+            </button>
+          </div>
+        </label>
+      </div>
+
+      <div class="ftf-feedback success" *ngIf="successMessage">{{ successMessage }}</div>
+      <div class="ftf-feedback error" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="ftf-feedback error" *ngIf="task.dueDate && !hasValidDueDate()">La date d'echeance ne peut pas etre dans le passe.</div>
+
+      <div class="ftf-actions">
+        <button type="button" class="ftf-cancel" (click)="close.emit()">Annuler</button>
+        <button type="submit" class="ftf-submit" [disabled]="taskForm.invalid || !hasValidDueDate() || loading">
+          {{ loading ? 'Creation...' : 'Creer la tache' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

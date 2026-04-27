@@ -1,0 +1,271 @@
+<div class="sad-admin-wrap">
+  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card corona-gradient-card">
+        <div class="card-body py-3 px-3 px-sm-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+              <h4 class="mb-1">{{ isSuperAdmin ? 'Super Admin Dashboard' : 'Organization Admin Dashboard' }}</h4>
+              <p class="mb-0 text-muted">
+                {{ isSuperAdmin
+                  ? 'Vue globale de la plateforme: organisations, utilisateurs, projets et execution.'
+                  : 'Vue organisation: pilotage des utilisateurs, projets et taches.' }}
+              </p>
+            </div>
+            <div class="sad-org-chip" *ngIf="!isSuperAdmin">
+              <img [src]="organizationLogo" [alt]="currentOrganizationName" class="sad-org-chip-logo" />
+              <div>
+                <small>Organization</small>
+                <strong>{{ currentOrganizationName }}</strong>
+              </div>
+            </div>
+            <button type="button" class="btn btn-outline-light btn-rounded" (click)="loadDashboard()">
+              <i class="mdi mdi-refresh"></i>
+              Actualiser
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-xl-2 col-sm-6 grid-margin stretch-card" *ngIf="isSuperAdmin">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ totalOrganizations }}</h3>
+            <div class="icon icon-box-info"><span class="mdi mdi-domain icon-item"></span></div>
+          </div>
+          <h6 class="text-muted font-weight-normal mb-0">Organizations</h6>
+          <small class="text-muted">{{ activeOrganizations }} actives</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-2 col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ totalUsers }}</h3>
+            <div class="icon icon-box-primary"><span class="mdi mdi-account-group icon-item"></span></div>
+          </div>
+          <h6 class="text-muted font-weight-normal mb-0">Users</h6>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-2 col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ totalProjects }}</h3>
+            <div class="icon icon-box-success"><span class="mdi mdi-folder-multiple icon-item"></span></div>
+          </div>
+          <h6 class="text-muted font-weight-normal mb-0">Projects</h6>
+          <small class="text-muted">{{ archivedProjects }} archives</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ totalTasks }}</h3>
+            <div class="icon icon-box-warning"><span class="mdi mdi-clipboard-text icon-item"></span></div>
+          </div>
+          <h6 class="text-muted font-weight-normal mb-0">Tasks</h6>
+          <small class="text-muted">{{ completedTasks }} done - {{ delayedTasks }} en retard</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-3 col-sm-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">{{ platformCompletionRate }}%</h3>
+            <div class="icon icon-box-danger"><span class="mdi mdi-chart-line icon-item"></span></div>
+          </div>
+          <h6 class="text-muted font-weight-normal mb-2">Execution Rate</h6>
+          <div class="progress progress-md sad-progress">
+            <div class="progress-bar bg-success" role="progressbar" [style.width.%]="platformCompletionRate"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading && !isSuperAdmin">
+    <div class="col-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <img [src]="organizationLogo" [alt]="currentOrganizationName" class="sad-org-panel-logo">
+              <div>
+                <h4 class="card-title mb-1">Organization Control Center</h4>
+                <p class="text-muted mb-0">Tu geres les membres, les projets et la performance de {{ currentOrganizationName }}.</p>
+              </div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <a routerLink="/admin/users" class="btn btn-outline-primary btn-sm">
+                <i class="mdi mdi-account-plus"></i>
+                Gerer les membres
+              </a>
+              <a routerLink="/admin/projects" class="btn btn-outline-success btn-sm">
+                <i class="mdi mdi-folder-plus"></i>
+                Gerer les projets
+              </a>
+              <a routerLink="/admin/organizations" class="btn btn-outline-info btn-sm">
+                <i class="mdi mdi-image-filter"></i>
+                Branding org
+              </a>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-4 mt-2 mt-md-0">
+              <div class="sad-mini-metric sad-mini-metric-users">
+                <span class="mdi mdi-account-multiple"></span>
+                <div>
+                  <strong>{{ totalUsers }}</strong>
+                  <small>Membres actifs de l'organisation</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-2 mt-md-0">
+              <div class="sad-mini-metric sad-mini-metric-projects">
+                <span class="mdi mdi-folder-multiple"></span>
+                <div>
+                  <strong>{{ totalProjects }}</strong>
+                  <small>Projets de l'organisation</small>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 mt-2 mt-md-0">
+              <div class="sad-mini-metric sad-mini-metric-tasks">
+                <span class="mdi mdi-clipboard-text"></span>
+                <div>
+                  <strong>{{ delayedTasks }}</strong>
+                  <small>Taches en retard a surveiller</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Distribution des roles</h4>
+          <div class="preview-list">
+            <div class="preview-item border-bottom" *ngFor="let item of usersByRole">
+              <div class="preview-item-content w-100">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <h6 class="preview-subject mb-0">{{ roleLabel(item.role) }}</h6>
+                  <span class="text-muted">{{ item.count }}</span>
+                </div>
+                <div class="progress progress-sm">
+                  <div class="progress-bar bg-info" role="progressbar" [style.width.%]="item.percent"></div>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0" *ngIf="usersByRole.length === 0">Aucune donnee de roles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 grid-margin stretch-card" *ngIf="isSuperAdmin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Performance par organisation</h4>
+          <div class="table-responsive">
+            <table class="table sad-table">
+              <thead>
+                <tr>
+                  <th>Organization</th>
+                  <th>Users</th>
+                  <th>Projects</th>
+                  <th>Tasks</th>
+                  <th>Rate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of orgPerformance">
+                  <td>{{ item.organization.name }}</td>
+                  <td>{{ item.users }}</td>
+                  <td>{{ item.projects }}</td>
+                  <td>{{ item.tasks }}</td>
+                  <td>
+                    <span class="badge badge-outline-success">{{ item.completionRate }}%</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="text-muted mb-0" *ngIf="orgPerformance.length === 0">Aucune organisation visible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="!loading">
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Derniers utilisateurs</h4>
+          <div class="preview-list">
+            <div class="preview-item border-bottom" *ngFor="let user of latestUsers">
+              <div class="preview-item-content d-flex justify-content-between align-items-center w-100">
+                <div>
+                  <h6 class="preview-subject mb-0">{{ user.firstName }} {{ user.lastName }}</h6>
+                  <p class="text-muted mb-0">{{ user.email }}</p>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-outline-info mb-1">{{ roleLabel(user.role) }}</span>
+                  <p class="text-muted mb-0">{{ formatDate(user.createdAt) }}</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0" *ngIf="latestUsers.length === 0">Aucun utilisateur recent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Derniers projets</h4>
+          <div class="preview-list">
+            <div class="preview-item border-bottom" *ngFor="let project of latestProjects">
+              <div class="preview-item-content d-flex justify-content-between align-items-center w-100">
+                <div>
+                  <h6 class="preview-subject mb-0">{{ project.name }}</h6>
+                  <p class="text-muted mb-0">{{ project.organizationName || 'Organization' }}</p>
+                </div>
+                <div class="text-right">
+                  <span class="badge badge-outline-warning mb-1">{{ project.status || 'ACTIVE' }}</span>
+                  <p class="text-muted mb-0">{{ formatDate(project.createdAt) }}</p>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mb-0" *ngIf="latestProjects.length === 0">Aucun projet recent.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="loading">
+    <div class="card-body">Chargement du dashboard...</div>
+  </div>
+</div>

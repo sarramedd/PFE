@@ -28,26 +28,36 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
+        if (request.getServletPath().startsWith("/api/auth/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
+            try {
+                String token = header.substring(7);
+                String email = jwtUtil.extractUsername(token);
+                Long userId = jwtUtil.extractUserId(token);
+                Long organizationId = jwtUtil.extractOrganizationId(token);
 
-            String token = header.substring(7);
-            String email = jwtUtil.extractUsername(token);
+                var userDetails = userService.loadUserByUsername(email);
 
-            var userDetails = userService.loadUserByUsername(email);
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    var authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    userDetails,
+                                    null,
+                                    userDetails.getAuthorities()
+                            );
+                    authentication.setDetails(new JwtUserContext(userId, organizationId));
 
-            if (jwtUtil.validateToken(token, userDetails)) {
-
-                var authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
+                }
+            } catch (Exception ex) {
+                SecurityContextHolder.clearContext();
             }
         }
 

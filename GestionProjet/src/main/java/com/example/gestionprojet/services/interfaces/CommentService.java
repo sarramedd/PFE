@@ -15,5 +15,7 @@ public interface CommentService {
 
     List<Comment> getCommentsByTask(Long taskId);
 
+    List<Comment> getCommentsByProject(Long projectId);
+
     List<Comment> getCommentsByAuthor(Long authorId);
 }

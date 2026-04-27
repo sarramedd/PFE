@@ -1,0 +1,26 @@
+.fpf-overlay { position: fixed; inset: 0; background: rgba(36,45,68,0.42); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 1200; }
+.fpf-panel { width: min(100%, 760px); border-radius: 28px; background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%); box-shadow: 0 28px 80px rgba(45, 60, 95, 0.2); overflow: hidden; }
+.fpf-header { display: flex; justify-content: space-between; gap: 1rem; padding: 1.6rem 1.8rem 1.2rem; background: radial-gradient(circle at top right, rgba(255, 205, 226, 0.65), transparent 30%), radial-gradient(circle at bottom left, rgba(208, 235, 255, 0.8), transparent 34%), linear-gradient(180deg, #fffafc 0%, #ffffff 100%); }
+.fpf-kicker { display: inline-block; color: #9299b1; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.35rem; }
+.fpf-header h3 { margin: 0; color: #47536b; font-size: 1.5rem; }
+.fpf-header p { margin: 0.45rem 0 0; color: #8592a3; }
+.fpf-close { width: 2.3rem; height: 2.3rem; border: 0; border-radius: 999px; background: rgba(255,255,255,0.95); color: #7b84a0; font-size: 1.35rem; }
+.fpf-form { padding: 1.5rem 1.8rem 1.8rem; }
+.fpf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.fpf-field { display: flex; flex-direction: column; gap: 0.45rem; }
+.fpf-field-full { grid-column: 1 / -1; }
+.fpf-field span { color: #6f7992; font-size: 0.82rem; font-weight: 700; }
+.fpf-field input, .fpf-field textarea { width: 100%; border: 1px solid #ebedf5; border-radius: 18px; background: #fbfbfe; color: #48536b; padding: 0.95rem 1rem; outline: none; }
+.fpf-field input:focus, .fpf-field textarea:focus { border-color: #adb5ff; box-shadow: 0 0 0 4px rgba(173,181,255,0.16); }
+.fpf-statuses { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.fpf-status-btn { border: 0; border-radius: 999px; padding: 0.7rem 1rem; background: #f3f5fb; color: #75809b; font-weight: 700; }
+.fpf-status-btn.active { background: #e9ecff; color: #696cff; }
+.fpf-feedback { margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 16px; font-size: 0.9rem; }
+.fpf-feedback.success { background: #ebfaf4; color: #3f9e74; }
+.fpf-feedback.error { background: #fff0f3; color: #d66d84; }
+.fpf-actions { margin-top: 1.3rem; display: flex; justify-content: flex-end; gap: 0.8rem; }
+.fpf-cancel, .fpf-submit { border: 0; border-radius: 999px; padding: 0.85rem 1.25rem; font-weight: 700; }
+.fpf-cancel { background: #f3f5fb; color: #77819a; }
+.fpf-submit { background: linear-gradient(135deg, #8995ff 0%, #6fd6c5 100%); color: #fff; box-shadow: 0 14px 26px rgba(116,145,255,0.24); }
+.fpf-submit:disabled { opacity: 0.6; }
+@media (max-width: 767.98px) { .fpf-grid { grid-template-columns: 1fr; } }

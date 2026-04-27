@@ -1,0 +1,72 @@
+<div class="tfh-backdrop" (click)="close.emit()">
+  <div class="tfh-modal" (click)="$event.stopPropagation()" *ngIf="task">
+    <div class="tfh-header">
+      <div>
+        <span class="tfh-kicker">Task Space</span>
+        <h3>{{ task.title }}</h3>
+        <p>{{ task.project?.name || ('Projet #' + (task.projectId || '')) }}</p>
+      </div>
+      <button type="button" class="tfh-close" (click)="close.emit()">
+        <i class="bx bx-x"></i>
+      </button>
+    </div>
+
+    <div class="tfh-grid">
+      <section class="tfh-panel">
+        <div class="tfh-panel-head">
+          <h4>Discussion</h4>
+        </div>
+
+        <div class="tfh-comments" *ngIf="comments.length > 0; else noComments">
+          <article class="tfh-comment" *ngFor="let comment of comments">
+            <div class="tfh-avatar">{{ getInitials(comment) }}</div>
+            <div class="tfh-comment-copy">
+              <div class="tfh-comment-meta">
+                <strong>{{ comment.author?.firstName }} {{ comment.author?.lastName }}</strong>
+                <span>{{ formatDate(comment.createdAt) }}</span>
+              </div>
+              <p>{{ comment.content }}</p>
+            </div>
+          </article>
+        </div>
+
+        <ng-template #noComments>
+          <div class="tfh-empty">Aucun commentaire pour cette tache.</div>
+        </ng-template>
+
+        <div class="tfh-compose">
+          <textarea [(ngModel)]="message" rows="4" placeholder="Ecrire un commentaire sur cette tache..."></textarea>
+          <button type="button" class="tfh-primary-btn" (click)="submitComment()">Envoyer</button>
+        </div>
+      </section>
+
+      <section class="tfh-panel">
+        <div class="tfh-panel-head">
+          <h4>Pieces jointes</h4>
+        </div>
+
+        <div class="tfh-upload">
+          <input type="file" (change)="onFileSelected($event)" />
+          <button type="button" class="tfh-primary-btn" (click)="uploadAttachment()" [disabled]="!selectedFile">Ajouter</button>
+        </div>
+
+        <div class="tfh-files" *ngIf="attachments.length > 0; else noAttachments">
+          <article class="tfh-file" *ngFor="let attachment of attachments">
+            <div class="tfh-file-copy">
+              <strong>{{ attachment.fileName }}</strong>
+              <span>{{ formatDate(attachment.uploadedAt) }}</span>
+            </div>
+            <div class="tfh-file-actions">
+              <a *ngIf="resolveFileUrl(attachment.filePath) as fileUrl" [href]="fileUrl" target="_blank" rel="noreferrer">Ouvrir</a>
+              <button type="button" (click)="deleteAttachment(attachment)">Supprimer</button>
+            </div>
+          </article>
+        </div>
+
+        <ng-template #noAttachments>
+          <div class="tfh-empty">Aucune piece jointe pour cette tache.</div>
+        </ng-template>
+      </section>
+    </div>
+  </div>
+</div>

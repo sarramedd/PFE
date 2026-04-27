@@ -1,0 +1,131 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+
+  <!-- Logo -->
+  <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top">
+    <a class="sidebar-brand brand-logo" routerLink="/">
+      <img src="assets/images/teamflow.png" alt="TeamFlow" />
+    </a>
+    <a class="sidebar-brand brand-logo-mini" routerLink="/">
+      <img src="assets/images/teamflow.png" alt="TeamFlow" />
+    </a>
+  </div>
+
+  <ul class="nav">
+
+    <!-- Profile -->
+    <li class="nav-item profile">
+      <div class="profile-desc">
+        <div class="profile-pic">
+          <div class="count-indicator">
+            <img *ngIf="userAvatar; else userInitialBadge"
+                 class="img-xs rounded-circle"
+                 [src]="userAvatar"
+                 [alt]="profileName">
+            <ng-template #userInitialBadge>
+              <div class="tf-initials-badge">{{ userInitials }}</div>
+            </ng-template>
+            <span class="count bg-success"></span>
+          </div>
+          <div class="profile-name">
+            <h5 class="mb-0 font-weight-normal">{{ profileName }}</h5>
+            <span>{{ profileRoleLabel }}</span>
+          </div>
+        </div>
+        <div class="tf-org-chip" *ngIf="!isSuperAdmin">
+          <img [src]="organizationLogo" [alt]="organizationName" class="tf-org-logo">
+          <span>{{ organizationName }}</span>
+        </div>
+      </div>
+    </li>
+
+    <!-- Admin Section -->
+    <li class="nav-item nav-category">
+      <span class="nav-link">Administration</span>
+    </li>
+
+    <!-- Dashboard -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/dashboard"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-speedometer"></i>
+        </span>
+        <span class="menu-title">Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Users -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/users"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-account"></i>
+        </span>
+        <span class="menu-title">Users</span>
+      </a>
+    </li>
+
+    <!-- Organizations -->
+    <li class="nav-item menu-items" *ngIf="isSuperAdmin || isOrganizationAdmin">
+      <a class="nav-link"
+         routerLink="/admin/organizations"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-domain"></i>
+        </span>
+        <span class="menu-title">{{ isSuperAdmin ? 'Organizations' : 'My Organization' }}</span>
+      </a>
+    </li>
+
+    <!-- Projects -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/projects"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-folder"></i>
+        </span>
+        <span class="menu-title">Projects</span>
+      </a>
+    </li>
+
+    <!-- Tasks -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/tasks"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-clipboard-text"></i>
+        </span>
+        <span class="menu-title">Tasks</span>
+      </a>
+    </li>
+
+    <!-- Attachments -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/attachments"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-chart-gantt"></i>
+        </span>
+        <span class="menu-title">Planning & Reports</span>
+      </a>
+    </li>
+
+    <!-- Notifications -->
+    <li class="nav-item menu-items">
+      <a class="nav-link"
+         routerLink="/admin/notifications"
+         routerLinkActive="active">
+        <span class="menu-icon">
+          <i class="mdi mdi-bell"></i>
+        </span>
+        <span class="menu-title">Notifications Center</span>
+      </a>
+    </li>
+
+  </ul>
+</nav>

@@ -1,7 +1,8 @@
     package com.example.gestionprojet.controllers;
 
+    import com.example.gestionprojet.dto.ProjectInvitationRequest;
     import com.example.gestionprojet.entities.ProjectMember;
-    import com.example.gestionprojet.entities.RoleType;
+    import com.example.gestionprojet.entities.ProjectMemberRole;
     import com.example.gestionprojet.services.impl.ProjectMemberServiceImpl;
     import com.example.gestionprojet.services.interfaces.ProjectMemberService;
     import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@
         public ResponseEntity<ProjectMember> updateRole(
                 @RequestParam Long projectId,
                 @RequestParam Long userId,
-                @RequestParam RoleType roleInProject) {
+                @RequestParam ProjectMemberRole roleInProject) {
 
             ProjectMember updated = projectMemberService
                     .updateRole(projectId, userId, roleInProject);
@@ -64,5 +65,15 @@
                     projectMemberService.getProjectsByUser(userId);
 
             return new ResponseEntity<>(projects, HttpStatus.OK);
+        }
+
+        @PostMapping("/invite")
+        public ResponseEntity<String> inviteMember(@RequestBody ProjectInvitationRequest request) {
+            String message = projectMemberService.inviteMember(
+                    request.getProjectId(),
+                    request.getEmail(),
+                    request.getRole()
+            );
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
     }

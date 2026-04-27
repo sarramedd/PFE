@@ -21,9 +21,14 @@ public class Notification {
 
     private String message;
 
+    @Enumerated(EnumType.STRING)
+    private NotificationType type = NotificationType.GENERAL;
+
     private Boolean isRead = false;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime readAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -51,6 +56,7 @@ public class Notification {
 
     public void setRead(Boolean read) {
         isRead = read;
+        readAt = Boolean.TRUE.equals(read) ? LocalDateTime.now() : null;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -59,6 +65,22 @@ public class Notification {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public NotificationType getType() {
+        return type;
+    }
+
+    public void setType(NotificationType type) {
+        this.type = type;
+    }
+
+    public LocalDateTime getReadAt() {
+        return readAt;
+    }
+
+    public void setReadAt(LocalDateTime readAt) {
+        this.readAt = readAt;
     }
 
     public User getUser() {

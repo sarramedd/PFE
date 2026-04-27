@@ -55,13 +55,10 @@ public class SecurityConfig {
                         // ✅ Laisse passer tous les preflight CORS (OPTIONS)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // ✅ Routes publiques
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/users/**",
-                                "/api/projects/**",
-                                "/api/project-members/**",
-                                "/api/tasks/**"
-                        ).permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/tasks/**").permitAll()
+                        .requestMatchers("/api/organizations/bootstrap/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter,

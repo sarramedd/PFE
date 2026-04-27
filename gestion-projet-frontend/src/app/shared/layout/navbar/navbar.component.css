@@ -1,0 +1,88 @@
+.tf-user-initials {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  background: linear-gradient(135deg, #5865f2, #3b82f6);
+}
+
+.tf-org-chip-modern {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 0.28rem 0.65rem 0.28rem 0.34rem;
+  max-width: 220px;
+}
+
+.tf-org-chip-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0f131d;
+  flex-shrink: 0;
+}
+
+.tf-org-chip-meta {
+  min-width: 0;
+}
+
+.tf-org-chip-meta small {
+  display: block;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.15rem;
+}
+
+.tf-org-chip-meta span {
+  display: block;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tf-profile-org-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  padding: 0.2rem 0.58rem 0.2rem 0.22rem;
+  background: rgba(255, 255, 255, 0.05);
+  max-width: 100%;
+}
+
+.tf-profile-org-chip img {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.tf-profile-org-chip span {
+  color: #cfd3df;
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
