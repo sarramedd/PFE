@@ -7,7 +7,7 @@ import { NotificationPreference } from 'src/app/shared/models/notification-prefe
   providedIn: 'root'
 })
 export class NotificationPreferenceService {
-  private readonly apiUrl = 'http://localhost:8088/api/notification-preferences';
+  private readonly apiUrl = '/api/notification-preferences';
 
   constructor(private http: HttpClient) {}
 

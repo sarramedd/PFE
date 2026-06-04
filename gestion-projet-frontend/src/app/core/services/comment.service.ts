@@ -8,7 +8,7 @@ import { CommentMessage, CreateCommentPayload } from 'src/app/shared/models/comm
   providedIn: 'root'
 })
 export class CommentService {
-  private readonly apiUrl = 'http://localhost:8088/api/comments';
+  private readonly apiUrl = '/api/comments';
   private readonly projectSockets = new Map<number, WebSocket>();
   private readonly projectMessages$ = new Map<number, BehaviorSubject<CommentMessage[]>>();
   private readonly reconnectTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -79,7 +79,7 @@ export class CommentService {
       return;
     }
 
-    const wsUrl = this.authService.buildWebSocketUrl(`/ws/projects/${projectId}/messages`);
+    const wsUrl = this.authService.buildWebSocketUrl(`/api/ws/projects/${projectId}/messages`);
     const socket = new WebSocket(wsUrl);
     this.projectSockets.set(projectId, socket);
 

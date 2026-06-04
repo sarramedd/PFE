@@ -8,7 +8,7 @@ import { User } from 'src/app/shared/models/user.model';
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:8088/api/users';
+  private apiUrl = 'api/users';
   private backendBaseUrl = 'http://localhost:8088';
 
   constructor(private http: HttpClient) {}

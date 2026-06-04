@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class CurrentUserService {
-  private readonly apiUrl = 'http://localhost:8088/api/users';
+  private readonly apiUrl = '/api/users';
   private readonly userSubject = new BehaviorSubject<User | null>(null);
 
   readonly user$ = this.userSubject.asObservable();

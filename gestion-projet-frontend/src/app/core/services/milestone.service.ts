@@ -7,7 +7,7 @@ import { Milestone } from 'src/app/shared/models/milestone.model';
   providedIn: 'root'
 })
 export class MilestoneService {
-  private readonly apiUrl = 'http://localhost:8088/api/milestones';
+  private readonly apiUrl = '/api/milestones';
 
   constructor(private http: HttpClient) {}
 

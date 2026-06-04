@@ -7,7 +7,7 @@ import { PermissionMatrix, PermissionByAction } from 'src/app/shared/models/perm
   providedIn: 'root'
 })
 export class PermissionService {
-  private readonly apiUrl = 'http://localhost:8088/api/permissions';
+  private readonly apiUrl = '/api/permissions';
 
   constructor(private http: HttpClient) {}
 

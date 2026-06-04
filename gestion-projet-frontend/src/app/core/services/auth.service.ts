@@ -37,7 +37,7 @@ export class AuthService {
   private readonly roleKey = 'role';
   private readonly userIdKey = 'userId';
   private readonly organizationIdKey = 'organizationId';
-  private readonly apiUrl = 'http://localhost:8088/api/auth';
+  private readonly apiUrl = '/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -110,10 +110,14 @@ export class AuthService {
 
   buildWebSocketUrl(path: string): string {
     const token = this.getToken();
-    const base = this.apiUrl.replace(/^http/i, 'ws').replace(/\/api\/auth$/, '');
-    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsBase = `${protocol}//${window.location.host}`;
+    let normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    if (normalizedPath.startsWith('/ws/')) {
+      normalizedPath = `/api${normalizedPath}`;
+    }
     const separator = normalizedPath.includes('?') ? '&' : '?';
-    return `${base}${normalizedPath}${token ? `${separator}token=${encodeURIComponent(token)}` : ''}`;
+    return `${wsBase}${normalizedPath}${token ? `${separator}token=${encodeURIComponent(token)}` : ''}`;
   }
 
   logout() {

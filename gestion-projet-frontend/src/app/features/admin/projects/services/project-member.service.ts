@@ -6,7 +6,7 @@ import { ProjectMember, ProjectMemberRole } from 'src/app/shared/models/project-
 @Injectable({ providedIn: 'root' })
 export class ProjectMemberService {
 
-  private apiUrl = 'http://localhost:8088/api/project-members';
+  private apiUrl = '/api/project-members';
 
   constructor(private http: HttpClient) {}
 

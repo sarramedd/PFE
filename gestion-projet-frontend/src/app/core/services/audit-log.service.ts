@@ -7,7 +7,7 @@ import { AuditLogItem } from 'src/app/shared/models/audit-log.model';
   providedIn: 'root'
 })
 export class AuditLogService {
-  private readonly apiUrl = 'http://localhost:8088/api/audit-logs';
+  private readonly apiUrl = '/api/audit-logs';
 
   constructor(private http: HttpClient) {}
 

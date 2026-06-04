@@ -8,7 +8,7 @@ import { NotificationItem } from 'src/app/shared/models/notification.model';
   providedIn: 'root'
 })
 export class NotificationService {
-  private readonly apiUrl = 'http://localhost:8088/api/notifications';
+  private readonly apiUrl = '/api/notifications';
   private socket: WebSocket | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private intentionallyClosed = false;
@@ -71,7 +71,7 @@ export class NotificationService {
     }
 
     this.intentionallyClosed = false;
-    const wsUrl = this.authService.buildWebSocketUrl('/ws/notifications');
+    const wsUrl = this.authService.buildWebSocketUrl('/api/ws/notifications');
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {

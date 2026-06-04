@@ -16,8 +16,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserService userService;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil,
-                                  UserService userService) {
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserService userService) {
         this.jwtUtil = jwtUtil;
         this.userService = userService;
     }
@@ -28,7 +27,16 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                     FilterChain chain)
             throws ServletException, IOException {
 
-        if (request.getServletPath().startsWith("/api/auth/")) {
+        String path = request.getServletPath();
+
+        // ✅ bypass login
+        if (path.startsWith("/api/auth/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // ✅ bypass CORS preflight
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             chain.doFilter(request, response);
             return;
         }
@@ -38,25 +46,27 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         if (header != null && header.startsWith("Bearer ")) {
             try {
                 String token = header.substring(7);
+
                 String email = jwtUtil.extractUsername(token);
                 Long userId = jwtUtil.extractUserId(token);
-                Long organizationId = jwtUtil.extractOrganizationId(token);
+                Long orgId = jwtUtil.extractOrganizationId(token);
 
                 var userDetails = userService.loadUserByUsername(email);
 
                 if (jwtUtil.validateToken(token, userDetails)) {
-                    var authentication =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities()
-                            );
-                    authentication.setDetails(new JwtUserContext(userId, organizationId));
 
-                    SecurityContextHolder.getContext()
-                            .setAuthentication(authentication);
+                    var auth = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+
+                    auth.setDetails(new JwtUserContext(userId, orgId));
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
-            } catch (Exception ex) {
+
+            } catch (Exception e) {
                 SecurityContextHolder.clearContext();
             }
         }

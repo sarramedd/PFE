@@ -1,327 +1,397 @@
 <div class="plan-shell">
-  <div class="plan-header">
-    <div>
-      <h3>Planning, Permissions & Reporting Center</h3>
-      <p>Centre unifie pour Gantt, automatisations, permissions par action, time tracking et exports management.</p>
+  <section class="plan-hero">
+    <div class="plan-hero-copy">
+      <span class="plan-kicker">Admin Intelligence Hub</span>
+      <h2>Planning, Permissions & Reporting Center</h2>
+      <p>Un cockpit moderne pour piloter les rapports, le Gantt, les permissions fines, les jalons et les automatisations depuis une seule interface.</p>
     </div>
-    <div class="plan-actions">
-      <button class="btn btn-outline-light btn-sm" (click)="loadData()">Rafraichir</button>
-      <button class="btn btn-outline-info btn-sm" (click)="exportKpi('csv')">KPI CSV</button>
-      <button class="btn btn-outline-info btn-sm" (click)="exportKpi('xlsx')">KPI Excel</button>
-      <button class="btn btn-outline-info btn-sm" (click)="exportKpi('pdf')">KPI PDF</button>
-      <button class="btn btn-outline-success btn-sm" (click)="exportLoad('csv')">Load CSV</button>
-      <button class="btn btn-outline-success btn-sm" (click)="exportLoad('xlsx')">Load Excel</button>
-      <button class="btn btn-outline-success btn-sm" (click)="exportLoad('pdf')">Load PDF</button>
-      <button class="btn btn-outline-warning btn-sm" (click)="exportEffort('csv')">Effort CSV</button>
-      <button class="btn btn-outline-warning btn-sm" (click)="exportEffort('xlsx')">Effort Excel</button>
-      <button class="btn btn-outline-warning btn-sm" (click)="exportEffort('pdf')">Effort PDF</button>
+
+    <div class="plan-hero-stats">
+      <div class="plan-stat-card lilac">
+        <strong>{{ projects.length }}</strong>
+        <span>Projects</span>
+      </div>
+      <div class="plan-stat-card sky">
+        <strong>{{ tasks.length }}</strong>
+        <span>Tasks</span>
+      </div>
+      <div class="plan-stat-card mint">
+        <strong>{{ automations.length }}</strong>
+        <span>Rules</span>
+      </div>
+      <div class="plan-stat-card peach">
+        <strong>{{ filteredMilestones.length }}</strong>
+        <span>Milestones</span>
+      </div>
     </div>
-  </div>
+
+    <div class="plan-hero-actions">
+      <button class="plan-btn ghost" (click)="loadData()">
+        <i class="mdi mdi-refresh"></i>
+        <span>Rafraichir</span>
+      </button>
+      <button class="plan-btn primary" (click)="exportKpi('pdf')">
+        <i class="mdi mdi-file-pdf-box"></i>
+        <span>KPI PDF</span>
+      </button>
+    </div>
+  </section>
 
   <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
 
-  <div *ngIf="!loading; else loadingTpl">
-    <div class="row">
-      <div class="col-md-4 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">KPI Dashboard</h5>
-            <p class="mb-1">Projects: <strong>{{ kpiSummary?.['projects'] || 0 }}</strong></p>
-            <p class="mb-1">Tasks: <strong>{{ kpiSummary?.['tasks'] || 0 }}</strong></p>
-            <p class="mb-1">Done: <strong>{{ kpiSummary?.['doneTasks'] || 0 }}</strong></p>
-            <p class="mb-0">Completion: <strong>{{ kpiSummary?.['completionRate'] || 0 }}%</strong></p>
-          </div>
+  <div *ngIf="!loading; else loadingTpl" class="plan-content">
+    <section class="plan-export-panel">
+      <div class="plan-section-head">
+        <div>
+          <span class="plan-section-kicker">Exports</span>
+          <h3>Rapports telechargeables</h3>
         </div>
       </div>
 
-      <div class="col-md-8 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Charge hebdo par membre (temps reel vs charge ouverte)</h5>
-            <div class="table-responsive">
-              <table class="table table-dark plan-table">
-                <thead>
-                  <tr>
-                    <th>Membre</th>
-                    <th>Logged</th>
-                    <th>Open hours</th>
-                    <th>Etat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let row of weeklyLoad">
-                    <td>{{ row['name'] }}</td>
-                    <td>{{ row['loggedHours'] }}h</td>
-                    <td>{{ row['estimatedOpenHours'] }}h</td>
-                    <td>
-                      <span class="badge" [ngClass]="row['overloaded'] ? 'badge-outline-danger' : 'badge-outline-success'">
-                        {{ row['overloaded'] ? 'Surcharge' : 'Equilibre' }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+      <div class="plan-export-grid">
+        <article class="plan-export-card export-kpi">
+          <div class="plan-export-icon">
+            <i class="mdi mdi-chart-donut-variant"></i>
+          </div>
+          <div class="plan-export-copy">
+            <h4>KPI Report</h4>
+            <p>Vue executive des projets, taches terminees et taux de completion.</p>
+          </div>
+          <div class="plan-export-actions">
+            <button class="plan-mini-btn" (click)="exportKpi('csv')">CSV</button>
+            <button class="plan-mini-btn" (click)="exportKpi('xlsx')">Excel</button>
+            <button class="plan-mini-btn solid" (click)="exportKpi('pdf')">PDF</button>
+          </div>
+        </article>
+
+        <article class="plan-export-card export-load">
+          <div class="plan-export-icon">
+            <i class="mdi mdi-finance"></i>
+          </div>
+          <div class="plan-export-copy">
+            <h4>Member Load</h4>
+            <p>Charge reelle vs charge ouverte pour identifier les surcharges equipe.</p>
+          </div>
+          <div class="plan-export-actions">
+            <button class="plan-mini-btn" (click)="exportLoad('csv')">CSV</button>
+            <button class="plan-mini-btn" (click)="exportLoad('xlsx')">Excel</button>
+            <button class="plan-mini-btn solid" (click)="exportLoad('pdf')">PDF</button>
+          </div>
+        </article>
+
+        <article class="plan-export-card export-effort">
+          <div class="plan-export-icon">
+            <i class="mdi mdi-timer-sand"></i>
+          </div>
+          <div class="plan-export-copy">
+            <h4>Effort Summary</h4>
+            <p>Variance entre effort estime et effort reel par membre.</p>
+          </div>
+          <div class="plan-export-actions">
+            <button class="plan-mini-btn" (click)="exportEffort('csv')">CSV</button>
+            <button class="plan-mini-btn" (click)="exportEffort('xlsx')">Excel</button>
+            <button class="plan-mini-btn solid" (click)="exportEffort('pdf')">PDF</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="plan-summary-grid">
+      <article class="plan-summary-card">
+        <span class="plan-section-kicker">KPI Snapshot</span>
+        <div class="plan-kpi-stack">
+          <div class="plan-kpi-row">
+            <span>Projects</span>
+            <strong>{{ kpiSummary?.['projects'] || 0 }}</strong>
+          </div>
+          <div class="plan-kpi-row">
+            <span>Tasks</span>
+            <strong>{{ kpiSummary?.['tasks'] || 0 }}</strong>
+          </div>
+          <div class="plan-kpi-row">
+            <span>Done</span>
+            <strong>{{ kpiSummary?.['doneTasks'] || 0 }}</strong>
+          </div>
+          <div class="plan-kpi-row accent">
+            <span>Completion</span>
+            <strong>{{ kpiSummary?.['completionRate'] || 0 }}%</strong>
           </div>
         </div>
-      </div>
-    </div>
+      </article>
 
-    <div class="row">
-      <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <div class="plan-toolbar">
-              <h5 class="card-title mb-0">Courbes reporting modernes</h5>
-              <div class="plan-actions">
-                <button class="btn btn-outline-primary btn-sm" (click)="exportSvgAsPng('loadCurveSvg', 'load-curve.png')">Load PNG</button>
-                <button class="btn btn-outline-primary btn-sm" (click)="exportSvg('loadCurveSvg', 'load-curve.svg')">Load SVG</button>
-                <button class="btn btn-outline-warning btn-sm" (click)="exportSvgAsPng('varianceCurveSvg', 'variance-curve.png')">Variance PNG</button>
-                <button class="btn btn-outline-warning btn-sm" (click)="exportSvg('varianceCurveSvg', 'variance-curve.svg')">Variance SVG</button>
-              </div>
+      <article class="plan-summary-card">
+        <span class="plan-section-kicker">Team Load</span>
+        <div class="plan-load-list">
+          <div class="plan-load-item" *ngFor="let row of weeklyLoad | slice:0:4">
+            <div>
+              <strong>{{ row['name'] }}</strong>
+              <small>{{ row['loggedHours'] }}h logged / {{ row['estimatedOpenHours'] }}h open</small>
             </div>
-
-            <div class="curve-grid">
-              <div class="curve-card">
-                <h6>Charge hebdo: reel vs ouverte</h6>
-                <svg id="loadCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
-                  <defs>
-                    <linearGradient id="loadAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stop-color="#6f88ff" stop-opacity="0.35"></stop>
-                      <stop offset="100%" stop-color="#6f88ff" stop-opacity="0.04"></stop>
-                    </linearGradient>
-                    <linearGradient id="openAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stop-color="#4dc4a5" stop-opacity="0.28"></stop>
-                      <stop offset="100%" stop-color="#4dc4a5" stop-opacity="0.03"></stop>
-                    </linearGradient>
-                  </defs>
-
-                  <line x1="32" y1="208" x2="808" y2="208" class="curve-axis" stroke="#cfd7f7" stroke-width="1"></line>
-                  <line x1="32" y1="32" x2="32" y2="208" class="curve-axis" stroke="#cfd7f7" stroke-width="1"></line>
-
-                  <path [attr.d]="areaPath(chartOpenValues, maxLoadValue)" fill="url(#openAreaGradient)"></path>
-                  <path [attr.d]="areaPath(chartLoadValues, maxLoadValue)" fill="url(#loadAreaGradient)"></path>
-
-                  <path [attr.d]="linePath(chartOpenValues, maxLoadValue)" class="curve-line-open" fill="none" stroke="#4dc4a5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 4"></path>
-                  <path [attr.d]="linePath(chartLoadValues, maxLoadValue)" class="curve-line-main" fill="none" stroke="#6f88ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-
-                  <g *ngFor="let row of weeklyLoad; let i = index">
-                    <circle [attr.cx]="pointX(i, chartLoadValues.length)" [attr.cy]="pointY(chartLoadValues[i], maxLoadValue)" r="4" class="curve-point-main" fill="#ffffff" stroke="#6f88ff" stroke-width="2.2"></circle>
-                    <text [attr.x]="pointX(i, chartLoadValues.length)" y="226" class="curve-label" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartLoadLabels[i] }}</text>
-                  </g>
-                </svg>
-              </div>
-
-              <div class="curve-card">
-                <h6>Variance effort (reel - estime)</h6>
-                <svg id="varianceCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
-                  <line x1="32" y1="120" x2="808" y2="120" class="curve-mid" stroke="#ffd8e3" stroke-width="1" stroke-dasharray="5 4"></line>
-                  <line x1="32" y1="208" x2="808" y2="208" class="curve-axis" stroke="#cfd7f7" stroke-width="1"></line>
-                  <line x1="32" y1="32" x2="32" y2="208" class="curve-axis" stroke="#cfd7f7" stroke-width="1"></line>
-
-                  <path [attr.d]="varianceLinePath(chartVarianceValues, maxVarianceAbsValue)" class="curve-line-variance" fill="none" stroke="#ff7d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-
-                  <g *ngFor="let row of effortSummary; let i = index">
-                    <circle
-                      [attr.cx]="pointX(i, chartVarianceValues.length)"
-                      [attr.cy]="variancePointY(chartVarianceValues[i], maxVarianceAbsValue)"
-                      r="4"
-                      [attr.fill]="chartVarianceValues[i] > 0 ? '#ff6d8e' : '#42bb97'"></circle>
-                    <text [attr.x]="pointX(i, chartVarianceValues.length)" y="226" class="curve-label" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartVarianceLabels[i] }}</text>
-                  </g>
-                </svg>
-              </div>
-            </div>
+            <span class="plan-state-badge" [ngClass]="row['overloaded'] ? 'danger' : 'success'">
+              {{ row['overloaded'] ? 'Surcharge' : 'Equilibre' }}
+            </span>
           </div>
         </div>
-      </div>
-    </div>
+      </article>
+    </section>
 
-    <div class="row">
-      <div class="col-md-7 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Centre de permissions fin (droits par action)</h5>
-            <div class="mb-3">
-              <strong class="text-info">Mes droits actuels</strong>
-              <div class="permission-pills mt-2">
-                <span *ngFor="let item of permissionActions"
-                      class="permission-pill"
-                      [ngClass]="hasPermission(item.key) ? 'allowed' : 'denied'">
-                  {{ item.label }}: {{ hasPermission(item.key) ? 'Allowed' : 'Denied' }}
-                </span>
-              </div>
-            </div>
-
-            <div class="table-responsive">
-              <table class="table table-dark plan-table permission-table">
-                <thead>
-                  <tr>
-                    <th>Role</th>
-                    <th *ngFor="let item of permissionActions">{{ item.label }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let role of permissionRoles">
-                    <td>{{ role }}</td>
-                    <td *ngFor="let item of permissionActions">
-                      <span class="badge"
-                            [ngClass]="permissionMatrix[role]?.[item.key] ? 'badge-outline-success' : 'badge-outline-danger'">
-                        {{ permissionMatrix[role]?.[item.key] ? 'Yes' : 'No' }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+    <section class="plan-block">
+      <div class="plan-section-head">
+        <div>
+          <span class="plan-section-kicker">Visual Reporting</span>
+          <h3>Courbes reporting modernes</h3>
+        </div>
+        <div class="plan-actions">
+          <button class="plan-mini-btn" (click)="exportSvgAsPng('loadCurveSvg', 'load-curve.png')">Load PNG</button>
+          <button class="plan-mini-btn" (click)="exportSvg('loadCurveSvg', 'load-curve.svg')">Load SVG</button>
+          <button class="plan-mini-btn" (click)="exportSvgAsPng('varianceCurveSvg', 'variance-curve.png')">Variance PNG</button>
+          <button class="plan-mini-btn" (click)="exportSvg('varianceCurveSvg', 'variance-curve.svg')">Variance SVG</button>
         </div>
       </div>
 
-      <div class="col-md-5 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Effort Report: reel vs estime</h5>
-            <div class="table-responsive">
-              <table class="table table-dark plan-table">
-                <thead>
+      <div class="curve-grid">
+        <div class="curve-card">
+          <div class="curve-head">
+            <div>
+              <h6>Charge hebdo: reel vs ouverte</h6>
+              <small>Comparer la consommation reelle avec la charge encore ouverte.</small>
+            </div>
+          </div>
+          <svg id="loadCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
+            <defs>
+              <linearGradient id="loadAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#6f88ff" stop-opacity="0.35"></stop>
+                <stop offset="100%" stop-color="#6f88ff" stop-opacity="0.04"></stop>
+              </linearGradient>
+              <linearGradient id="openAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#4dc4a5" stop-opacity="0.28"></stop>
+                <stop offset="100%" stop-color="#4dc4a5" stop-opacity="0.03"></stop>
+              </linearGradient>
+            </defs>
+
+            <line x1="32" y1="208" x2="808" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
+            <line x1="32" y1="32" x2="32" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
+
+            <path [attr.d]="areaPath(chartOpenValues, maxLoadValue)" fill="url(#openAreaGradient)"></path>
+            <path [attr.d]="areaPath(chartLoadValues, maxLoadValue)" fill="url(#loadAreaGradient)"></path>
+            <path [attr.d]="linePath(chartOpenValues, maxLoadValue)" fill="none" stroke="#4dc4a5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 4"></path>
+            <path [attr.d]="linePath(chartLoadValues, maxLoadValue)" fill="none" stroke="#6f88ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+
+            <g *ngFor="let row of weeklyLoad; let i = index">
+              <circle [attr.cx]="pointX(i, chartLoadValues.length)" [attr.cy]="pointY(chartLoadValues[i], maxLoadValue)" r="4" fill="#ffffff" stroke="#6f88ff" stroke-width="2.2"></circle>
+              <text [attr.x]="pointX(i, chartLoadValues.length)" y="226" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartLoadLabels[i] }}</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="curve-card">
+          <div class="curve-head">
+            <div>
+              <h6>Variance effort (reel - estime)</h6>
+              <small>Voir rapidement quels membres depassent ou respectent les estimations.</small>
+            </div>
+          </div>
+          <svg id="varianceCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
+            <line x1="32" y1="120" x2="808" y2="120" stroke="#ffd8e3" stroke-width="1" stroke-dasharray="5 4"></line>
+            <line x1="32" y1="208" x2="808" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
+            <line x1="32" y1="32" x2="32" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
+            <path [attr.d]="varianceLinePath(chartVarianceValues, maxVarianceAbsValue)" fill="none" stroke="#ff7d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+
+            <g *ngFor="let row of effortSummary; let i = index">
+              <circle [attr.cx]="pointX(i, chartVarianceValues.length)" [attr.cy]="variancePointY(chartVarianceValues[i], maxVarianceAbsValue)" r="4" [attr.fill]="chartVarianceValues[i] > 0 ? '#ff6d8e' : '#42bb97'"></circle>
+              <text [attr.x]="pointX(i, chartVarianceValues.length)" y="226" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartVarianceLabels[i] }}</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <div class="plan-two-col">
+      <section class="plan-block">
+        <div class="plan-section-head">
+          <div>
+            <span class="plan-section-kicker">Access Control</span>
+            <h3>Centre de permissions fines</h3>
+          </div>
+        </div>
+
+        <div class="permission-panel">
+          <div class="permission-current">
+            <strong>Mes droits actuels</strong>
+            <div class="permission-pills mt-2">
+              <span *ngFor="let item of permissionActions" class="permission-pill" [ngClass]="hasPermission(item.key) ? 'allowed' : 'denied'">
+                {{ item.label }}: {{ hasPermission(item.key) ? 'Allowed' : 'Denied' }}
+              </span>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-dark plan-table permission-table">
+              <thead>
                 <tr>
-                  <th>Membre</th>
-                  <th>Estime</th>
-                  <th>Reel</th>
-                  <th>Variance</th>
+                  <th>Role</th>
+                  <th *ngFor="let item of permissionActions">{{ item.label }}</th>
                 </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let row of effortSummary">
-                  <td>{{ row['member'] }}</td>
-                  <td>{{ row['estimatedHours'] }}h</td>
-                  <td>{{ row['loggedHours'] }}h</td>
-                  <td [ngClass]="varianceClass(row)">
-                    {{ row['varianceHours'] }}h
+              </thead>
+              <tbody>
+                <tr *ngFor="let role of permissionRoles">
+                  <td>{{ role }}</td>
+                  <td *ngFor="let item of permissionActions">
+                    <span class="badge" [ngClass]="permissionMatrix[role][item.key] ? 'badge-outline-success' : 'badge-outline-danger'">
+                      {{ permissionMatrix[role][item.key] ? 'Yes' : 'No' }}
+                    </span>
                   </td>
                 </tr>
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
+      </section>
+
+      <section class="plan-block">
+        <div class="plan-section-head">
+          <div>
+            <span class="plan-section-kicker">Effort Analytics</span>
+            <h3>Effort report detaille</h3>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-dark plan-table">
+            <thead>
+              <tr>
+                <th>Membre</th>
+                <th>Estime</th>
+                <th>Reel</th>
+                <th>Variance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of effortSummary">
+                <td>{{ row['member'] }}</td>
+                <td>{{ row['estimatedHours'] }}h</td>
+                <td>{{ row['loggedHours'] }}h</td>
+                <td [ngClass]="varianceClass(row)">{{ row['varianceHours'] }}h</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
 
-    <div class="row">
-      <div class="col-12 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <div class="plan-toolbar">
-              <h5 class="card-title mb-0">Gantt interactif</h5>
-              <div class="plan-actions">
-                <select class="form-control form-control-sm plan-select" [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
-                  <option [ngValue]="null">Tous les projets</option>
-                  <option *ngFor="let project of projects" [ngValue]="project.id">{{ project.name }}</option>
-                </select>
-                <button class="btn btn-outline-primary btn-sm" (click)="exportSvgAsPng('ganttSvg', 'gantt-modern.png')">Gantt PNG</button>
-                <button class="btn btn-outline-primary btn-sm" (click)="exportSvg('ganttSvg', 'gantt-modern.svg')">Gantt SVG</button>
-              </div>
-            </div>
-
-            <div class="gantt-board">
-              <div class="gantt-row" *ngFor="let task of filteredTasks">
-                <div class="gantt-label">
-                  <strong>{{ task.title }}</strong>
-                  <small>{{ task.dueDate || 'sans echeance' }}</small>
-                </div>
-                <div class="gantt-track">
-                  <div class="gantt-bar" [style.left.%]="ganttLeftPercent(task)" [style.width.%]="ganttWidthPercent(task)">
-                    {{ task.status }}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="gantt-svg-wrap">
-              <svg id="ganttSvg" [attr.width]="920" [attr.height]="ganttSvgHeight" [attr.viewBox]="'0 0 920 ' + ganttSvgHeight">
-                <rect x="0" y="0" width="920" [attr.height]="ganttSvgHeight" rx="14" fill="#f8faff"></rect>
-                <rect x="260" y="16" width="620" height="20" rx="10" fill="#edf1ff"></rect>
-
-                <g *ngFor="let task of filteredTasks; let i = index">
-                  <text x="20" [attr.y]="ganttSvgY(i) + 12" class="gantt-svg-title">{{ shortTaskTitle(task) }}</text>
-                  <text x="20" [attr.y]="ganttSvgY(i) + 28" class="gantt-svg-sub">{{ task.dueDate || 'sans echeance' }}</text>
-                  <line x1="260" [attr.y1]="ganttSvgY(i) + 18" x2="880" [attr.y2]="ganttSvgY(i) + 18" class="gantt-svg-line"></line>
-                  <rect
-                    [attr.x]="ganttSvgLeft(task)"
-                    [attr.y]="ganttSvgY(i) + 8"
-                    [attr.width]="ganttSvgWidth(task)"
-                    height="20"
-                    rx="10"
-                    [attr.fill]="taskTone(task)"></rect>
-                  <text [attr.x]="ganttSvgLeft(task) + 8" [attr.y]="ganttSvgY(i) + 22" class="gantt-svg-status">{{ task.status }}</text>
-                </g>
-              </svg>
-            </div>
-          </div>
+    <section class="plan-block">
+      <div class="plan-section-head">
+        <div>
+          <span class="plan-section-kicker">Roadmap View</span>
+          <h3>Gantt interactif</h3>
+        </div>
+        <div class="plan-actions">
+          <select class="form-control form-control-sm plan-select" [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange()">
+            <option [ngValue]="null">Tous les projets</option>
+            <option *ngFor="let project of projects" [ngValue]="project.id">{{ project.name }}</option>
+          </select>
+          <button class="plan-mini-btn" (click)="exportSvgAsPng('ganttSvg', 'gantt-modern.png')">Gantt PNG</button>
+          <button class="plan-mini-btn" (click)="exportSvg('ganttSvg', 'gantt-modern.svg')">Gantt SVG</button>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Jalons (Milestones)</h5>
-            <div class="plan-form-grid">
-              <input class="form-control" placeholder="Titre jalon" [(ngModel)]="newMilestone.title">
-              <input class="form-control" type="date" [(ngModel)]="newMilestone.dueDate">
-              <input class="form-control" placeholder="Description" [(ngModel)]="newMilestone.description">
-              <button class="btn btn-primary btn-sm" (click)="createMilestone()">Ajouter jalon</button>
-            </div>
-            <div class="plan-list">
-              <article *ngFor="let milestone of filteredMilestones" class="plan-chip">
-                <strong>{{ milestone.title }}</strong>
-                <span>{{ milestone.dueDate }}</span>
-              </article>
+      <div class="gantt-board">
+        <div class="gantt-row" *ngFor="let task of filteredTasks">
+          <div class="gantt-label">
+            <strong>{{ task.title }}</strong>
+            <small>{{ task.dueDate || 'sans echeance' }}</small>
+          </div>
+          <div class="gantt-track">
+            <div class="gantt-bar" [style.left.%]="ganttLeftPercent(task)" [style.width.%]="ganttWidthPercent(task)">
+              {{ task.status }}
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-md-6 grid-margin stretch-card">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Automatisations</h5>
-            <div class="plan-form-grid">
-              <input class="form-control" placeholder="Nom de la regle" [(ngModel)]="newAutomation.name">
-              <select class="form-control" [(ngModel)]="newAutomation.triggerStatus">
-                <option value="TODO">TODO</option>
-                <option value="IN_PROGRESS">IN_PROGRESS</option>
-                <option value="DONE">DONE</option>
-              </select>
-              <select class="form-control" [(ngModel)]="newAutomation.actionType">
-                <option value="NOTIFY_PROJECT_MANAGER">Notifier PM</option>
-                <option value="CREATE_FOLLOWUP_TASK">Creer task suivante</option>
-              </select>
-              <button class="btn btn-success btn-sm" (click)="createAutomation()">Ajouter regle</button>
-            </div>
-            <div class="plan-list">
-              <article *ngFor="let rule of automations" class="plan-chip plan-chip-automation">
-                <div>
-                  <strong>{{ rule.name }}</strong>
-                  <span>{{ rule.triggerStatus }} -> {{ rule.actionType }}</span>
-                </div>
-                <button class="btn btn-xs btn-outline-light" (click)="toggleRule(rule)">
-                  {{ rule.enabled ? 'Desactiver' : 'Activer' }}
-                </button>
-              </article>
-            </div>
+      <div class="gantt-svg-wrap">
+        <svg id="ganttSvg" [attr.width]="920" [attr.height]="ganttSvgHeight" [attr.viewBox]="'0 0 920 ' + ganttSvgHeight">
+          <rect x="0" y="0" width="920" [attr.height]="ganttSvgHeight" rx="18" fill="#f8faff"></rect>
+          <rect x="260" y="16" width="620" height="20" rx="10" fill="#edf1ff"></rect>
+
+          <g *ngFor="let task of filteredTasks; let i = index">
+            <text x="20" [attr.y]="ganttSvgY(i) + 12" class="gantt-svg-title">{{ shortTaskTitle(task) }}</text>
+            <text x="20" [attr.y]="ganttSvgY(i) + 28" class="gantt-svg-sub">{{ task.dueDate || 'sans echeance' }}</text>
+            <line x1="260" [attr.y1]="ganttSvgY(i) + 18" x2="880" [attr.y2]="ganttSvgY(i) + 18" class="gantt-svg-line"></line>
+            <rect [attr.x]="ganttSvgLeft(task)" [attr.y]="ganttSvgY(i) + 8" [attr.width]="ganttSvgWidth(task)" height="20" rx="10" [attr.fill]="taskTone(task)"></rect>
+            <text [attr.x]="ganttSvgLeft(task) + 8" [attr.y]="ganttSvgY(i) + 22" class="gantt-svg-status">{{ task.status }}</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <div class="plan-two-col">
+      <section class="plan-block">
+        <div class="plan-section-head">
+          <div>
+            <span class="plan-section-kicker">Milestones</span>
+            <h3>Jalons du projet</h3>
           </div>
         </div>
-      </div>
+
+        <div class="plan-form-grid modern">
+          <input class="form-control" placeholder="Titre jalon" [(ngModel)]="newMilestone.title">
+          <input class="form-control" type="date" [(ngModel)]="newMilestone.dueDate">
+          <input class="form-control form-control-wide" placeholder="Description" [(ngModel)]="newMilestone.description">
+          <button class="plan-btn primary compact" (click)="createMilestone()">Ajouter jalon</button>
+        </div>
+
+        <div class="plan-list timeline-list">
+          <article *ngFor="let milestone of filteredMilestones" class="plan-chip timeline-chip">
+            <div class="timeline-dot"></div>
+            <div>
+              <strong>{{ milestone.title }}</strong>
+              <span>{{ milestone.dueDate }}</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="plan-block">
+        <div class="plan-section-head">
+          <div>
+            <span class="plan-section-kicker">Automation Rules</span>
+            <h3>Automatisations intelligentes</h3>
+          </div>
+        </div>
+
+        <div class="plan-form-grid modern">
+          <input class="form-control" placeholder="Nom de la regle" [(ngModel)]="newAutomation.name">
+          <select class="form-control" [(ngModel)]="newAutomation.triggerStatus">
+            <option value="TODO">TODO</option>
+            <option value="IN_PROGRESS">IN_PROGRESS</option>
+            <option value="DONE">DONE</option>
+          </select>
+          <select class="form-control form-control-wide" [(ngModel)]="newAutomation.actionType">
+            <option value="NOTIFY_PROJECT_MANAGER">Notifier PM</option>
+            <option value="CREATE_FOLLOWUP_TASK">Creer task suivante</option>
+          </select>
+          <button class="plan-btn success compact" (click)="createAutomation()">Ajouter regle</button>
+        </div>
+
+        <div class="plan-list">
+          <article *ngFor="let rule of automations" class="plan-chip plan-chip-automation modern-rule">
+            <div>
+              <strong>{{ rule.name }}</strong>
+              <span>{{ rule.triggerStatus }} -> {{ rule.actionType }}</span>
+            </div>
+            <button class="plan-mini-btn" (click)="toggleRule(rule)">
+              {{ rule.enabled ? 'Desactiver' : 'Activer' }}
+            </button>
+          </article>
+        </div>
+      </section>
     </div>
   </div>
 </div>
 
 <ng-template #loadingTpl>
-  <div class="card">
-    <div class="card-body">Chargement des interfaces...</div>
+  <div class="plan-loading-card">
+    <div class="card-body">Chargement du centre planning & reporting...</div>
   </div>
 </ng-template>

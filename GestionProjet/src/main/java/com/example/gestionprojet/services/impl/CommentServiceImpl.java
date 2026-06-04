@@ -14,6 +14,7 @@ import com.example.gestionprojet.repositories.UserRepository;
 import com.example.gestionprojet.security.TenantAccessService;
 import com.example.gestionprojet.services.interfaces.CommentService;
 import com.example.gestionprojet.validation.ValidationUtils;
+import com.example.gestionprojet.websocket.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,8 @@ public class CommentServiceImpl implements CommentService {
     private NotificationServiceImpl notificationService;
     @Autowired
     private AuditLogServiceImpl auditLogService;
+    @Autowired
+    private WebSocketSessionRegistry webSocketSessionRegistry;
 
     @Override
     public Comment createComment(Comment comment) {
@@ -70,6 +73,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setCreatedAt(LocalDateTime.now());
         Comment createdComment = commentRepository.save(comment);
         auditLogService.record("COMMENT_CREATED", "TASK_COMMENT", createdComment.getId());
+        if (createdComment.getProject() != null && createdComment.getProject().getId() != null) {
+            webSocketSessionRegistry.publishProjectMessage(createdComment.getProject().getId(), createdComment);
+        }
 
         notifyProjectMembers(createdComment);
         notifyMentions(createdComment);

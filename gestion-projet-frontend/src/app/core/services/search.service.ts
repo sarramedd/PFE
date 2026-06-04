@@ -5,7 +5,7 @@ import { GlobalSearchResult } from 'src/app/shared/models/search.model';
 
 @Injectable({ providedIn: 'root' })
 export class SearchService {
-  private readonly apiUrl = 'http://localhost:8088/api/search';
+  private readonly apiUrl = '/api/search';
 
   constructor(private http: HttpClient) {}
 

@@ -1,3 +1,56 @@
+.tf-admin-navbar {
+  backdrop-filter: blur(14px);
+  background:
+    linear-gradient(90deg, rgba(17, 21, 33, 0.96), rgba(26, 31, 48, 0.94)),
+    radial-gradient(circle at top right, rgba(88, 101, 242, 0.2), transparent 32%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.18);
+}
+
+.tf-nav-toggle {
+  color: #f3f4f6;
+}
+
+.tf-navbar-overview {
+  align-items: center;
+  gap: 0.9rem;
+  padding-left: 1rem;
+}
+
+.tf-navbar-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #5865f2, #22c55e);
+  box-shadow: 0 12px 24px rgba(88, 101, 242, 0.25);
+}
+
+.tf-navbar-copy small {
+  display: block;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.12rem;
+}
+
+.tf-navbar-copy strong {
+  display: block;
+  color: #ffffff;
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.tf-navbar-right {
+  align-items: center;
+  gap: 0.65rem;
+}
+
 .tf-user-initials {
   width: 32px;
   height: 32px;
@@ -12,15 +65,47 @@
   background: linear-gradient(135deg, #5865f2, #3b82f6);
 }
 
+.tf-quick-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  color: #dce5ff;
+  border: 1px solid rgba(116, 132, 255, 0.22);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.tf-quick-link:hover {
+  color: #ffffff;
+  border-color: rgba(116, 132, 255, 0.4);
+  background: rgba(88, 101, 242, 0.12);
+  transform: translateY(-1px);
+}
+
+.tf-quick-link.alt {
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.tf-quick-link.alt:hover {
+  border-color: rgba(34, 197, 94, 0.36);
+  background: rgba(34, 197, 94, 0.1);
+}
+
 .tf-org-chip-modern {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  padding: 0.28rem 0.65rem 0.28rem 0.34rem;
-  max-width: 220px;
+  padding: 0.34rem 0.75rem 0.34rem 0.38rem;
+  max-width: 245px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .tf-org-chip-logo {
@@ -58,6 +143,45 @@
   text-overflow: ellipsis;
 }
 
+.tf-profile-trigger {
+  padding-right: 0 !important;
+}
+
+.tf-profile-copy {
+  min-width: 0;
+  margin-left: 0.25rem;
+}
+
+.tf-profile-copy small {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 0.68rem;
+  line-height: 1.1;
+}
+
+.tf-profile-menu {
+  min-width: 265px;
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #191d2b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+}
+
+.tf-profile-menu-head {
+  padding: 1rem 1rem 0.55rem;
+}
+
+.tf-profile-menu-head h6 {
+  margin: 0 0 0.18rem;
+  color: #ffffff;
+}
+
+.tf-profile-menu-head p {
+  margin: 0;
+  color: #aeb8d3;
+  font-size: 0.76rem;
+}
+
 .tf-profile-org-chip {
   display: inline-flex;
   align-items: center;
@@ -85,4 +209,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@media (max-width: 991.98px) {
+  .tf-navbar-right {
+    gap: 0.4rem;
+  }
+
+  .tf-org-chip-modern,
+  .tf-quick-link {
+    display: none !important;
+  }
 }

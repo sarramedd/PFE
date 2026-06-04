@@ -7,7 +7,7 @@ import { Project } from 'src/app/shared/models/project.model';
   providedIn: 'root'
 })
 export class ProjectService {
-  private readonly apiUrl = 'http://localhost:8088/api/projects';
+  private readonly apiUrl = '/api/projects';
 
   constructor(private http: HttpClient) {}
 

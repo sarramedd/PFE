@@ -2,12 +2,131 @@
   display: block;
 }
 
+.sad-admin-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
 .sad-admin-wrap .card {
-  border-radius: 0.6rem;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 36px rgba(14, 20, 34, 0.14);
 }
 
 .sad-admin-wrap .corona-gradient-card .card-body {
-  border-radius: 0.6rem;
+  border-radius: 1rem;
+}
+
+.sad-hero-card {
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.18), transparent 28%),
+    radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.24), transparent 34%);
+}
+
+.sad-hero-copy {
+  max-width: 42rem;
+}
+
+.sad-hero-copy h4 {
+  font-size: 1.65rem;
+}
+
+.sad-title-with-icon,
+.sad-section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.sad-title-icon,
+.sad-section-title-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #c7d2fe;
+  flex-shrink: 0;
+}
+
+.sad-section-title-icon {
+  width: 1.9rem;
+  height: 1.9rem;
+  background: rgba(129, 140, 248, 0.14);
+  border-color: rgba(129, 140, 248, 0.2);
+}
+
+.sad-hero-kicker {
+  display: inline-block;
+  margin-bottom: 0.45rem;
+  color: #c6d1f1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sad-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.sad-hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  font-size: 0.73rem;
+  font-weight: 600;
+}
+
+.sad-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.sad-hero-stat {
+  min-width: 94px;
+  padding: 0.7rem 0.85rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.sad-hero-stat strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1.1rem;
+  line-height: 1.1;
+}
+
+.sad-hero-stat i {
+  display: inline-flex;
+  margin-bottom: 0.25rem;
+  color: #c7d2fe;
+  font-size: 1rem;
+}
+
+.sad-hero-stat span {
+  display: block;
+  margin-top: 0.18rem;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 0.72rem;
 }
 
 .sad-progress {
@@ -51,8 +170,236 @@
   vertical-align: middle;
 }
 
+.sad-ops-card {
+  background:
+    radial-gradient(circle at top right, rgba(129, 140, 248, 0.09), transparent 24%),
+    linear-gradient(180deg, rgba(17, 24, 39, 0.98), rgba(13, 18, 32, 0.98));
+}
+
+.sad-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.sad-section-kicker {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  color: #a5b4fc;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.sad-insight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.sad-insight-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.sad-insight-icon {
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.sad-insight-card strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1.2rem;
+  line-height: 1.1;
+}
+
+.sad-insight-card span {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(226, 232, 240, 0.72);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.tone-indigo .sad-insight-icon {
+  background: rgba(129, 140, 248, 0.16);
+  color: #a5b4fc;
+}
+
+.tone-emerald .sad-insight-icon {
+  background: rgba(16, 185, 129, 0.16);
+  color: #6ee7b7;
+}
+
+.tone-amber .sad-insight-icon {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fcd34d;
+}
+
+.tone-rose .sad-insight-icon {
+  background: rgba(244, 63, 94, 0.14);
+  color: #fda4af;
+}
+
+.sad-health-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.sad-health-block {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sad-health-block small {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sad-health-block strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1.15rem;
+}
+
+.sad-health-block span {
+  display: block;
+  margin-top: 0.25rem;
+  color: rgba(226, 232, 240, 0.68);
+  font-size: 0.75rem;
+}
+
+.sad-brand-card .card-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sad-brand-spotlight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background:
+    radial-gradient(circle at top left, rgba(129, 140, 248, 0.15), transparent 26%),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sad-brand-logo {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 1.2rem;
+  object-fit: cover;
+  background: #0f131d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+}
+
+.sad-brand-copy strong {
+  display: block;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.sad-brand-copy span {
+  display: block;
+  margin-top: 0.2rem;
+  color: rgba(226, 232, 240, 0.7);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.sad-brand-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.sad-metric-card .card-body {
+  position: relative;
+}
+
+.sad-metric-card .card-body::after {
+  content: "";
+  position: absolute;
+  inset: auto 16px 0;
+  height: 3px;
+  border-radius: 999px;
+  opacity: 0.9;
+}
+
+.sad-metric-card-info .card-body::after {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+}
+
+.sad-metric-card-primary .card-body::after {
+  background: linear-gradient(90deg, #818cf8, #5865f2);
+}
+
+.sad-metric-card-success .card-body::after {
+  background: linear-gradient(90deg, #34d399, #10b981);
+}
+
+.sad-metric-card-warning .card-body::after {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.sad-metric-card-danger .card-body::after {
+  background: linear-gradient(90deg, #fb7185, #ef4444);
+}
+
 .sad-admin-wrap .preview-item:last-child {
   border-bottom: 0 !important;
+}
+
+.sad-role-list,
+.sad-activity-item {
+  position: relative;
+}
+
+.sad-role-item,
+.sad-activity-item {
+  padding-block: 0.7rem;
+}
+
+.sad-role-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  padding-inline: 0.55rem;
+  border-radius: 999px;
+  background: rgba(129, 140, 248, 0.14);
+  color: #c7d2fe;
+  font-weight: 700;
 }
 
 .sad-org-panel-logo {
@@ -104,4 +451,26 @@
 .sad-mini-metric-tasks {
   background: rgba(251, 191, 36, 0.14);
   border-color: rgba(251, 191, 36, 0.3);
+}
+
+@media (max-width: 991.98px) {
+  .sad-hero-copy h4 {
+    font-size: 1.35rem;
+  }
+
+  .sad-hero-stats {
+    width: 100%;
+  }
+
+  .sad-insight-grid,
+  .sad-health-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .sad-brand-spotlight {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

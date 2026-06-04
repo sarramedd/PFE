@@ -7,7 +7,7 @@ import { CommentReaction, ReactionType } from 'src/app/shared/models/comment-rea
   providedIn: 'root'
 })
 export class CommentReactionService {
-  private readonly apiUrl = 'http://localhost:8088/api/comment-reactions';
+  private readonly apiUrl = '/api/comment-reactions';
 
   constructor(private http: HttpClient) {}
 

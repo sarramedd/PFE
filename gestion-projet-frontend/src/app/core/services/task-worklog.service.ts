@@ -7,7 +7,7 @@ import { TaskWorklog } from 'src/app/shared/models/task-worklog.model';
   providedIn: 'root'
 })
 export class TaskWorklogService {
-  private readonly apiUrl = 'http://localhost:8088/api/worklogs';
+  private readonly apiUrl = '/api/worklogs';
 
   constructor(private http: HttpClient) {}
 

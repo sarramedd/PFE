@@ -46,6 +46,22 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     this.notificationsSub?.unsubscribe();
   }
 
+  get unreadCount(): number {
+    return this.allNotifications.filter((item) => !item.isRead).length;
+  }
+
+  get readCount(): number {
+    return this.allNotifications.filter((item) => item.isRead).length;
+  }
+
+  get automationCount(): number {
+    return this.allNotifications.filter((item) => item.type === 'AUTOMATION').length;
+  }
+
+  get mentionCount(): number {
+    return this.allNotifications.filter((item) => item.type === 'COMMENT_MENTION').length;
+  }
+
   loadNotifications(): void {
     this.loading = true;
     this.notificationsSub?.unsubscribe();
@@ -110,5 +126,62 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         item.isRead = true;
       }
     });
+  }
+
+  typeLabel(type?: NotificationItem['type']): string {
+    switch (type) {
+      case 'TASK_UPDATE':
+        return 'Task update';
+      case 'COMMENT_MENTION':
+        return 'Mention';
+      case 'DUE_REMINDER':
+        return 'Deadline';
+      case 'OVERLOAD_ALERT':
+        return 'Overload';
+      case 'DAILY_DIGEST':
+        return 'Digest';
+      case 'AUTOMATION':
+        return 'Automation';
+      default:
+        return 'General';
+    }
+  }
+
+  typeIcon(type?: NotificationItem['type']): string {
+    switch (type) {
+      case 'TASK_UPDATE':
+        return 'mdi-clipboard-check-outline';
+      case 'COMMENT_MENTION':
+        return 'mdi-at';
+      case 'DUE_REMINDER':
+        return 'mdi-calendar-alert';
+      case 'OVERLOAD_ALERT':
+        return 'mdi-alert-octagon-outline';
+      case 'DAILY_DIGEST':
+        return 'mdi-email-newsletter';
+      case 'AUTOMATION':
+        return 'mdi-creation-outline';
+      default:
+        return 'mdi-bell-outline';
+    }
+  }
+
+  typeTone(type?: NotificationItem['type']): string {
+    switch (type) {
+      case 'TASK_UPDATE':
+        return 'tone-task';
+      case 'COMMENT_MENTION':
+        return 'tone-mention';
+      case 'DUE_REMINDER':
+        return 'tone-reminder';
+      case 'OVERLOAD_ALERT':
+        return 'tone-alert';
+      case 'DAILY_DIGEST':
+        return 'tone-digest';
+      case 'AUTOMATION':
+        return 'tone-automation';
+      default:
+        return 'tone-general';
+    }
   }
 }

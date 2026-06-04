@@ -1,60 +1,191 @@
 <div class="noti-shell">
-  <div class="noti-header">
-    <div>
-      <h3>Notifications Center</h3>
-      <p>Filtrage par type + preferences avancees (digest, rappels, surcharge, automations).</p>
+  <section class="noti-hero">
+    <div class="noti-hero-copy">
+      <span class="noti-kicker">Real-time command center</span>
+      <h3 class="noti-title-with-icon">
+        <span class="noti-title-icon"><i class="mdi mdi-bell-badge-outline"></i></span>
+        Notifications Center
+      </h3>
+      <p>Supervisez les alertes, les mentions, les rappels et les automatisations dans une vue claire et pilotable.</p>
     </div>
-    <button class="btn btn-outline-light btn-sm" (click)="loadNotifications()">Rafraichir</button>
-  </div>
+
+    <div class="noti-hero-actions">
+      <div class="noti-stat">
+        <strong>{{ unreadCount }}</strong>
+        <span>Non lues</span>
+      </div>
+      <div class="noti-stat">
+        <strong>{{ automationCount }}</strong>
+        <span>Automations</span>
+      </div>
+      <div class="noti-stat">
+        <strong>{{ mentionCount }}</strong>
+        <span>Mentions</span>
+      </div>
+      <button class="btn btn-outline-light btn-sm noti-refresh-btn" (click)="loadNotifications()">
+        <i class="mdi mdi-refresh"></i>
+        Rafraichir
+      </button>
+    </div>
+  </section>
 
   <div class="row">
-    <div class="col-md-4 grid-margin stretch-card">
-      <div class="card">
+    <div class="col-xl-4 grid-margin stretch-card">
+      <div class="card noti-panel">
         <div class="card-body">
-          <h5 class="card-title">Preferences</h5>
-          <div class="form-check noti-switch" *ngIf="preference">
-            <label><input type="checkbox" [(ngModel)]="preference.inAppEnabled"> In-app notifications</label>
-            <label><input type="checkbox" [(ngModel)]="preference.emailEnabled"> Email notifications</label>
-            <label><input type="checkbox" [(ngModel)]="preference.dailyDigestEnabled"> Digest quotidien</label>
-            <label><input type="checkbox" [(ngModel)]="preference.dueReminderEnabled"> Rappel echeances</label>
-            <label><input type="checkbox" [(ngModel)]="preference.overloadAlertEnabled"> Alertes surcharge</label>
-            <label><input type="checkbox" [(ngModel)]="preference.automationEnabled"> Notifications automatisations</label>
+          <div class="noti-panel-head">
+            <div>
+              <span class="noti-panel-kicker">Preferences</span>
+              <h5 class="card-title mb-1 noti-section-title">
+                <span class="noti-section-icon"><i class="mdi mdi-tune-vertical-variant"></i></span>
+                Canaux et priorites
+              </h5>
+              <p class="text-muted mb-0">Definissez comment vous souhaitez etre informe.</p>
+            </div>
+            <div class="noti-mini-ring">
+              <strong>{{ readCount + unreadCount }}</strong>
+              <span>Total</span>
+            </div>
           </div>
-          <button class="btn btn-primary btn-sm mt-3" [disabled]="saving" (click)="savePreferences()">
-            {{ saving ? 'Sauvegarde...' : 'Sauvegarder preferences' }}
-          </button>
-          <p class="mt-2 text-info mb-0" *ngIf="message">{{ message }}</p>
+
+          <div class="noti-pref-grid" *ngIf="preference">
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.inAppEnabled">
+              <span class="noti-pref-icon tone-general"><i class="mdi mdi-bell-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>In-app</strong>
+                <small>Notifications directes dans la plateforme</small>
+              </span>
+            </label>
+
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.emailEnabled">
+              <span class="noti-pref-icon tone-digest"><i class="mdi mdi-email-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>Email</strong>
+                <small>Messages envoyes sur votre boite mail</small>
+              </span>
+            </label>
+
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.dailyDigestEnabled">
+              <span class="noti-pref-icon tone-digest"><i class="mdi mdi-newspaper-variant-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>Digest quotidien</strong>
+                <small>Resume journalier des mouvements importants</small>
+              </span>
+            </label>
+
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.dueReminderEnabled">
+              <span class="noti-pref-icon tone-reminder"><i class="mdi mdi-calendar-clock-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>Rappels d'echeance</strong>
+                <small>Alertes avant et pendant les deadlines</small>
+              </span>
+            </label>
+
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.overloadAlertEnabled">
+              <span class="noti-pref-icon tone-alert"><i class="mdi mdi-alert-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>Surcharge</strong>
+                <small>Detection des membres trop charges</small>
+              </span>
+            </label>
+
+            <label class="noti-pref-card">
+              <input type="checkbox" [(ngModel)]="preference.automationEnabled">
+              <span class="noti-pref-icon tone-automation"><i class="mdi mdi-creation-outline"></i></span>
+              <span class="noti-pref-copy">
+                <strong>Automatisations</strong>
+                <small>Retours des workflows et actions automatiques</small>
+              </span>
+            </label>
+          </div>
+
+          <div class="noti-preferences-footer">
+            <button class="btn btn-primary noti-save-btn" [disabled]="saving" (click)="savePreferences()">
+              <i class="mdi" [ngClass]="saving ? 'mdi-loading mdi-spin' : 'mdi-content-save-outline'"></i>
+              {{ saving ? 'Sauvegarde...' : 'Sauvegarder preferences' }}
+            </button>
+            <p class="mb-0" [class.text-success]="message === 'Preferences sauvegardees.'" [class.text-danger]="message === 'Echec sauvegarde preferences.'" *ngIf="message">
+              {{ message }}
+            </p>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-8 grid-margin stretch-card">
-      <div class="card">
+    <div class="col-xl-8 grid-margin stretch-card">
+      <div class="card noti-panel">
         <div class="card-body">
-          <div class="noti-toolbar">
-            <h5 class="card-title mb-0">Flux notifications</h5>
-            <div class="noti-filters">
-              <button
-                type="button"
-                *ngFor="let type of types"
-                class="btn btn-xs"
-                [ngClass]="filter === type.value ? 'btn-primary' : 'btn-outline-secondary'"
-                (click)="applyFilter(type.value)">
-                {{ type.label }}
-              </button>
+          <div class="noti-feed-head">
+            <div>
+              <span class="noti-panel-kicker">Live feed</span>
+              <h5 class="card-title mb-1 noti-section-title">
+                <span class="noti-section-icon"><i class="mdi mdi-lightning-bolt-outline"></i></span>
+                Flux notifications
+              </h5>
+              <p class="text-muted mb-0">Les nouveaux evenements arrivent ici en temps reel.</p>
             </div>
+
+            <div class="noti-feed-summary">
+              <div class="noti-summary-pill unread">
+                <span class="dot"></span>
+                {{ unreadCount }} a traiter
+              </div>
+              <div class="noti-summary-pill">
+                {{ readCount }} lues
+              </div>
+            </div>
+          </div>
+
+          <div class="noti-filters">
+            <button
+              type="button"
+              *ngFor="let type of types"
+              class="noti-filter-chip"
+              [class.active]="filter === type.value"
+              (click)="applyFilter(type.value)">
+              {{ type.label }}
+            </button>
           </div>
 
           <div class="noti-list" *ngIf="!loading; else loadingTpl">
             <article class="noti-item" *ngFor="let item of notifications" [class.unread]="!item.isRead">
-              <div class="noti-top">
-                <span class="badge badge-outline-info">{{ item.type || 'GENERAL' }}</span>
-                <small>{{ item.createdAt | date:'short' }}</small>
+              <div class="noti-item-icon" [ngClass]="typeTone(item.type)">
+                <i class="mdi" [ngClass]="typeIcon(item.type)"></i>
               </div>
-              <p>{{ item.message }}</p>
-              <button class="btn btn-xs btn-outline-light" *ngIf="!item.isRead" (click)="markAsRead(item)">Marquer lu</button>
+
+              <div class="noti-item-body">
+                <div class="noti-top">
+                  <div class="noti-meta">
+                    <span class="noti-type" [ngClass]="typeTone(item.type)">{{ typeLabel(item.type) }}</span>
+                    <span class="noti-state" *ngIf="!item.isRead">Nouveau</span>
+                  </div>
+                  <small>{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+                </div>
+
+                <p>{{ item.message }}</p>
+
+                <div class="noti-actions">
+                  <button class="btn btn-xs btn-outline-light" *ngIf="!item.isRead" (click)="markAsRead(item)">
+                    <i class="mdi mdi-check"></i>
+                    Marquer lu
+                  </button>
+                  <span class="noti-read-label" *ngIf="item.isRead">Deja consultée</span>
+                </div>
+              </div>
             </article>
-            <div class="text-muted text-center py-3" *ngIf="notifications.length === 0">Aucune notification.</div>
+
+            <div class="noti-empty" *ngIf="notifications.length === 0">
+              <div class="noti-empty-icon">
+                <i class="mdi mdi-bell-sleep-outline"></i>
+              </div>
+              <h6>Aucune notification</h6>
+              <p>Le flux est propre pour le moment. Les nouveaux evenements apparaitront ici.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -63,5 +194,8 @@
 </div>
 
 <ng-template #loadingTpl>
-  <div class="text-muted py-3">Chargement des notifications...</div>
+  <div class="noti-loading">
+    <i class="mdi mdi-loading mdi-spin"></i>
+    Chargement des notifications...
+  </div>
 </ng-template>

@@ -5,7 +5,7 @@ import { Task } from 'src/app/shared/models/task.model';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-  private readonly base = 'http://localhost:8088/api';
+  private readonly base = '/api';
 
   constructor(private http: HttpClient) {}
 

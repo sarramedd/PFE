@@ -14,7 +14,7 @@
 
     <!-- Profile -->
     <li class="nav-item profile">
-      <div class="profile-desc">
+      <div class="profile-desc tf-sidebar-profile-card">
         <div class="profile-pic">
           <div class="count-indicator">
             <img *ngIf="userAvatar; else userInitialBadge"
@@ -35,16 +35,23 @@
           <img [src]="organizationLogo" [alt]="organizationName" class="tf-org-logo">
           <span>{{ organizationName }}</span>
         </div>
+        <div class="tf-sidebar-profile-footer">
+          <span class="tf-sidebar-dot"></span>
+          <small>{{ isSuperAdmin ? 'Global control active' : 'Tenant workspace active' }}</small>
+        </div>
       </div>
     </li>
 
     <!-- Admin Section -->
     <li class="nav-item nav-category">
-      <span class="nav-link">Administration</span>
+      <span class="nav-link tf-nav-category-label">
+        <span class="tf-nav-category-icon"><i class="mdi mdi-tune-variant"></i></span>
+        Administration
+      </span>
     </li>
 
     <!-- Dashboard -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-dashboard">
       <a class="nav-link"
          routerLink="/admin/dashboard"
          routerLinkActive="active">
@@ -52,59 +59,64 @@
           <i class="mdi mdi-speedometer"></i>
         </span>
         <span class="menu-title">Dashboard</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Users -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-users">
       <a class="nav-link"
          routerLink="/admin/users"
          routerLinkActive="active">
         <span class="menu-icon">
-          <i class="mdi mdi-account"></i>
+          <i class="mdi mdi-account-group-outline"></i>
         </span>
         <span class="menu-title">Users</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Organizations -->
-    <li class="nav-item menu-items" *ngIf="isSuperAdmin || isOrganizationAdmin">
+    <li class="nav-item menu-items tf-menu-org" *ngIf="isSuperAdmin || isOrganizationAdmin">
       <a class="nav-link"
          routerLink="/admin/organizations"
          routerLinkActive="active">
         <span class="menu-icon">
-          <i class="mdi mdi-domain"></i>
+          <i class="mdi mdi-office-building-outline"></i>
         </span>
         <span class="menu-title">{{ isSuperAdmin ? 'Organizations' : 'My Organization' }}</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Projects -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-projects">
       <a class="nav-link"
          routerLink="/admin/projects"
          routerLinkActive="active">
         <span class="menu-icon">
-          <i class="mdi mdi-folder"></i>
+          <i class="mdi mdi-briefcase-outline"></i>
         </span>
         <span class="menu-title">Projects</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Tasks -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-tasks">
       <a class="nav-link"
          routerLink="/admin/tasks"
          routerLinkActive="active">
         <span class="menu-icon">
-          <i class="mdi mdi-clipboard-text"></i>
+          <i class="mdi mdi-clipboard-check-outline"></i>
         </span>
         <span class="menu-title">Tasks</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Attachments -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-reports">
       <a class="nav-link"
          routerLink="/admin/attachments"
          routerLinkActive="active">
@@ -112,19 +124,31 @@
           <i class="mdi mdi-chart-gantt"></i>
         </span>
         <span class="menu-title">Planning & Reports</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
     </li>
 
     <!-- Notifications -->
-    <li class="nav-item menu-items">
+    <li class="nav-item menu-items tf-menu-notifications">
       <a class="nav-link"
          routerLink="/admin/notifications"
          routerLinkActive="active">
         <span class="menu-icon">
-          <i class="mdi mdi-bell"></i>
+          <i class="mdi mdi-bell-badge-outline"></i>
         </span>
         <span class="menu-title">Notifications Center</span>
+        <span class="tf-menu-arrow"><i class="mdi mdi-chevron-right"></i></span>
       </a>
+    </li>
+
+    <li class="nav-item px-3 mt-4 d-none d-lg-block">
+      <div class="tf-sidebar-bottom-card">
+        <span class="mdi mdi-rocket-launch-outline"></span>
+        <div>
+          <strong>TeamFlow Admin</strong>
+          <small>{{ isSuperAdmin ? 'Platform oversight' : 'Organization delivery hub' }}</small>
+        </div>
+      </div>
     </li>
 
   </ul>

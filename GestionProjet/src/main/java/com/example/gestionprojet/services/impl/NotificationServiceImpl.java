@@ -8,6 +8,7 @@ import com.example.gestionprojet.repositories.NotificationRepository;
 import com.example.gestionprojet.repositories.UserRepository;
 import com.example.gestionprojet.security.TenantAccessService;
 import com.example.gestionprojet.services.interfaces.NotificationService;
+import com.example.gestionprojet.websocket.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,8 @@ private UserRepository userRepository;
 private TenantAccessService tenantAccessService;
 @Autowired
 private NotificationPreferenceServiceImpl notificationPreferenceService;
+@Autowired
+private WebSocketSessionRegistry webSocketSessionRegistry;
     @Override
     public Notification createNotification(Notification notification) {
 
@@ -49,7 +52,11 @@ private NotificationPreferenceServiceImpl notificationPreferenceService;
         }
         notification.setRead(false);
 
-        return notificationRepository.save(notification);
+        Notification saved = notificationRepository.save(notification);
+        if (saved.getUser() != null) {
+            webSocketSessionRegistry.publishNotification(saved.getUser().getId(), saved);
+        }
+        return saved;
     }
 
     @Override
@@ -82,7 +89,11 @@ private NotificationPreferenceServiceImpl notificationPreferenceService;
     public Notification markAsRead(Long id) {
         Notification notification = getNotificationById(id);
         notification.setRead(true);
-        return notificationRepository.save(notification);
+        Notification saved = notificationRepository.save(notification);
+        if (saved.getUser() != null) {
+            webSocketSessionRegistry.publishNotification(saved.getUser().getId(), saved);
+        }
+        return saved;
     }
 
     public List<Notification> getNotificationsByType(Long userId, NotificationType type) {
@@ -152,7 +163,10 @@ private NotificationPreferenceServiceImpl notificationPreferenceService;
                     notification.setType(type == null ? NotificationType.GENERAL : type);
                     notification.setCreatedAt(LocalDateTime.now());
                     notification.setRead(false);
-                    notificationRepository.save(notification);
+                    Notification saved = notificationRepository.save(notification);
+                    if (saved.getUser() != null) {
+                        webSocketSessionRegistry.publishNotification(saved.getUser().getId(), saved);
+                    }
                 });
     }
 }

@@ -7,7 +7,7 @@ import { AutomationRule } from 'src/app/shared/models/automation-rule.model';
   providedIn: 'root'
 })
 export class AutomationService {
-  private readonly apiUrl = 'http://localhost:8088/api/automations';
+  private readonly apiUrl = '/api/automations';
 
   constructor(private http: HttpClient) {}
 
