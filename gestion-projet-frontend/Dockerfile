@@ -10,8 +10,6 @@ RUN npm run build -- --configuration=production
 FROM nginx:alpine
 # Copier les fichiers compilés
 COPY --from=build /app/dist/gestion-projet-frontend /usr/share/nginx/html
-# Copier la config nginx si elle existe
-COPY nginx.conf /etc/nginx/conf.d/default.conf 2>/dev/null || true
 # Copier l'entrypoint qui applique le fix localhost:8088
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
