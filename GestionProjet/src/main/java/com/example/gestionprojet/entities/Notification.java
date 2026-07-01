@@ -1,16 +1,18 @@
 package com.example.gestionprojet.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
+
+/**
+ * Notification utilisateur.
+ *
+ * NE PAS utiliser @Getter @Setter de Lombok ici : le champ Boolean "isRead"
+ * provoque des conflits de noms de getters entre Lombok (getIsRead) et le
+ * standard Java Bean (isRead). On ecrit explicitement getter/setter avec
+ * une annotation @JsonProperty pour figer le nom serialise cote API.
+ */
 @Entity
 @Table(name = "notifications")
 public class Notification {
@@ -24,6 +26,12 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType type = NotificationType.GENERAL;
 
+    /**
+     * Etat lu / non lu. Annotation sur le champ : Jackson serialisera
+     * TOUJOURS sous la cle "isRead" dans la reponse JSON, quel que soit
+     * le nom de la methode getter utilisee derriere.
+     */
+    @JsonProperty("isRead")
     private Boolean isRead = false;
 
     private LocalDateTime createdAt;
@@ -34,60 +42,53 @@ public class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Long getId() {
-        return id;
+    public Notification() {
     }
 
-    public void setId(Long id) {
+    public Notification(Long id, String message, NotificationType type, Boolean isRead,
+                        LocalDateTime createdAt, LocalDateTime readAt, User user) {
         this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
-    }
-
-    public Boolean getRead() {
-        return isRead;
-    }
-
-    public void setRead(Boolean read) {
-        isRead = read;
-        readAt = Boolean.TRUE.equals(read) ? LocalDateTime.now() : null;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public void setType(NotificationType type) {
         this.type = type;
-    }
-
-    public LocalDateTime getReadAt() {
-        return readAt;
-    }
-
-    public void setReadAt(LocalDateTime readAt) {
+        this.isRead = isRead;
+        this.createdAt = createdAt;
         this.readAt = readAt;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
         this.user = user;
+    }
+
+    // ---------- Getters ----------
+
+    public Long getId() { return id; }
+    public String getMessage() { return message; }
+    public NotificationType getType() { return type; }
+
+    /** Lecture du flag de lecture. Le nom JSON est figure par @JsonProperty sur le champ. */
+    public Boolean getIsRead() { return isRead; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getReadAt() { return readAt; }
+    public User getUser() { return user; }
+
+    // ---------- Setters ----------
+
+    public void setId(Long id) { this.id = id; }
+    public void setMessage(String message) { this.message = message; }
+    public void setType(NotificationType type) { this.type = type; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setReadAt(LocalDateTime readAt) { this.readAt = readAt; }
+    public void setUser(User user) { this.user = user; }
+
+    /**
+     * Setter principal : met aussi a jour readAt automatiquement
+     * (utilise par la deserialisation Jackson et par le code metier).
+     */
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
+        this.readAt = Boolean.TRUE.equals(isRead) ? LocalDateTime.now() : null;
+    }
+
+    /** Alias historique conserve pour le code metier (NotificationServiceImpl.markAsRead). */
+    public void setRead(Boolean read) {
+        setIsRead(read);
     }
 }

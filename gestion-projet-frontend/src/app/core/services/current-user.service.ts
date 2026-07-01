@@ -40,7 +40,7 @@ export class CurrentUserService {
     );
   }
 
-  updateProfile(payload: { firstName: string; lastName: string; email: string; cin?: number | null; password?: string }, avatar?: File | null): Observable<User> {
+  updateProfile(payload: { firstName: string; lastName: string; email: string; cin?: number | null; password?: string; oldPassword?: string }, avatar?: File | null): Observable<User> {
     const currentUser = this.userSubject.value;
 
     if (!currentUser) {
@@ -53,6 +53,7 @@ export class CurrentUserService {
     formData.append('email', payload.email);
     formData.append('cin', payload.cin != null ? String(payload.cin) : '');
     formData.append('password', payload.password ?? '');
+    formData.append('oldPassword', payload.oldPassword ?? '');
     formData.append('role', currentUser.role);
 
     if (avatar) {

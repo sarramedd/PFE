@@ -21,35 +21,39 @@
               </p>
 
               <div class="sad-hero-tags">
-                <span class="sad-hero-tag">
+                <span class="sad-hero-tag sad-hero-tag-success">
+                  <i class="mdi mdi-folder-check-outline"></i>
+                  {{ activeProjectsCount }} projets actifs
+                </span>
+                <span class="sad-hero-tag sad-hero-tag-warning" *ngIf="delayedTasks > 0">
                   <i class="mdi mdi-clock-alert-outline"></i>
-                  {{ delayedTasks }} taches en retard
+                  {{ delayedTasks }} tâches en retard
                 </span>
-                <span class="sad-hero-tag">
+                <span class="sad-hero-tag sad-hero-tag-info">
                   <i class="mdi mdi-check-decagram-outline"></i>
-                  {{ completedTasks }} taches terminees
+                  {{ platformCompletionRate }}% complété
                 </span>
-                <span class="sad-hero-tag" *ngIf="isSuperAdmin">
+                <span class="sad-hero-tag sad-hero-tag-purple" *ngIf="isSuperAdmin">
                   <i class="mdi mdi-domain"></i>
-                  {{ activeOrganizations }} organisations actives
+                  {{ activeOrganizations }} orgs actives
                 </span>
               </div>
             </div>
             <div class="sad-hero-stats">
               <div class="sad-hero-stat">
-                <i class="mdi mdi-folder-multiple-outline"></i>
-                <strong>{{ totalProjects }}</strong>
-                <span>Projects</span>
+                <i class="mdi mdi-account-group-outline"></i>
+                <strong>{{ totalUsers }}</strong>
+                <span>Membres</span>
               </div>
               <div class="sad-hero-stat">
-                <i class="mdi mdi-clipboard-text-outline"></i>
-                <strong>{{ totalTasks }}</strong>
-                <span>Tasks</span>
+                <i class="mdi mdi-folder-multiple-outline"></i>
+                <strong>{{ activeProjectsCount }}</strong>
+                <span>Projets actifs</span>
               </div>
               <div class="sad-hero-stat">
                 <i class="mdi mdi-chart-arc"></i>
                 <strong>{{ platformCompletionRate }}%</strong>
-                <span>Execution</span>
+                <span>Complétion</span>
               </div>
             </div>
             <div class="sad-org-chip" *ngIf="!isSuperAdmin">
@@ -66,6 +70,13 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Widget "Mes prochaines reunions" : bien visible apres la hero -->
+  <div class="row" *ngIf="!loading">
+    <div class="col-12 grid-margin">
+      <app-my-meetings-widget></app-my-meetings-widget>
     </div>
   </div>
 
@@ -112,11 +123,11 @@
       <div class="card sad-metric-card sad-metric-card-warning">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
-            <h3 class="mb-0">{{ totalTasks }}</h3>
-            <div class="icon icon-box-warning"><span class="mdi mdi-clipboard-text icon-item"></span></div>
+            <h3 class="mb-0">{{ activeProjectsCount }}</h3>
+            <div class="icon icon-box-warning"><span class="mdi mdi-folder-open-outline icon-item"></span></div>
           </div>
-          <h6 class="text-muted font-weight-normal mb-0">Tasks</h6>
-          <small class="text-muted">{{ completedTasks }} done - {{ delayedTasks }} en retard</small>
+          <h6 class="text-muted font-weight-normal mb-0">Projets actifs</h6>
+          <small class="text-muted">{{ archivedProjects }} archivés · {{ delayedTasks }} tâches en retard</small>
         </div>
       </div>
     </div>
@@ -319,10 +330,10 @@
             </div>
             <div class="col-md-4 mt-2 mt-md-0">
               <div class="sad-mini-metric sad-mini-metric-tasks">
-                <span class="mdi mdi-clipboard-text"></span>
+                <span class="mdi mdi-clock-alert-outline"></span>
                 <div>
                   <strong>{{ delayedTasks }}</strong>
-                  <small>Taches en retard a surveiller</small>
+                  <small>Tâches en retard à surveiller</small>
                 </div>
               </div>
             </div>
@@ -452,19 +463,33 @@
           </div>
           <div class="preview-list">
             <div class="preview-item border-bottom sad-activity-item" *ngFor="let project of latestProjects">
-              <div class="preview-item-content d-flex justify-content-between align-items-center w-100">
+              <div class="preview-item-content d-flex justify-content-between align-items-center w-100 flex-wrap" style="gap:8px;">
                 <div>
                   <h6 class="preview-subject mb-0">{{ project.name }}</h6>
                   <p class="text-muted mb-0">{{ project.organizationName || 'Organization' }}</p>
                 </div>
-                <div class="text-right">
-                  <span class="badge badge-outline-warning mb-1">{{ project.status || 'ACTIVE' }}</span>
-                  <p class="text-muted mb-0">{{ formatDate(project.createdAt) }}</p>
+                <div class="text-right d-flex align-items-center" style="gap:8px;">
+                  <span class="badge badge-outline-warning">{{ project.status || 'ACTIVE' }}</span>
+                  <app-ai-brief-modal [projectId]="project.id"></app-ai-brief-modal>
                 </div>
               </div>
             </div>
             <p class="text-muted mb-0" *ngIf="latestProjects.length === 0">Aucun projet recent.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Widget IA : taches a risque du projet le plus recent -->
+  <div class="row" *ngIf="!loading && latestProjects.length">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title mb-3">
+            Analyse IA : taches a risque sur "{{ latestProjects[0].name }}"
+          </h4>
+          <app-ai-risk-tasks [projectId]="latestProjects[0].id"></app-ai-risk-tasks>
         </div>
       </div>
     </div>

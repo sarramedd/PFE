@@ -2,6 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TaskService } from 'src/app/features/admin/tasks/services/task.service';
 import { TaskStatus } from 'src/app/shared/models/task.model';
 import { User } from 'src/app/shared/models/user.model';
+import {
+  AssigneeSuggestion,
+  TaskDescriptionResponse
+} from 'src/app/shared/models/ai-assistant.model';
 
 @Component({
   selector: 'app-add-task',
@@ -83,5 +87,31 @@ export class AddTaskComponent {
 
   hasValidDueDate(): boolean {
     return !this.task.dueDate || this.task.dueDate >= this.today;
+  }
+
+  // ---- IA : description generee ----
+  // Patch la description, l'estimation et la priorite a partir du brief IA.
+  onAiDescriptionGenerated(resp: TaskDescriptionResponse): void {
+    if (resp.description) {
+      // Ajoute aussi les criteres d'acceptation a la suite de la description
+      let txt = resp.description;
+      if (resp.acceptanceCriteria?.length) {
+        txt += '\n\nCriteres d\'acceptation :\n' +
+          resp.acceptanceCriteria.map(c => '- ' + c).join('\n');
+      }
+      this.task.description = txt;
+    }
+    // Stocke aussi l'estimation et la priorite si vos champs existent
+    if (resp.estimatedHours && (this.task as any).estimatedHours !== undefined) {
+      (this.task as any).estimatedHours = resp.estimatedHours;
+    }
+    if (resp.suggestedPriority && (this.task as any).priority !== undefined) {
+      (this.task as any).priority = resp.suggestedPriority;
+    }
+  }
+
+  // ---- IA : assignee suggere ----
+  onAiAssigneePicked(s: AssigneeSuggestion): void {
+    this.task.assignedUserId = s.userId;
   }
 }

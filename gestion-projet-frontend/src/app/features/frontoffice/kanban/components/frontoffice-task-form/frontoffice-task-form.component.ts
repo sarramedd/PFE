@@ -2,6 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TaskService } from 'src/app/features/admin/tasks/services/task.service';
 import { Task, TaskStatus } from 'src/app/shared/models/task.model';
 import { User } from 'src/app/shared/models/user.model';
+import {
+  AssigneeSuggestion,
+  TaskDescriptionResponse
+} from 'src/app/shared/models/ai-assistant.model';
 
 @Component({
   selector: 'app-frontoffice-task-form',
@@ -19,9 +23,9 @@ export class FrontofficeTaskFormComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   readonly statuses = [
-    { value: TaskStatus.TODO, label: 'To do' },
-    { value: TaskStatus.IN_PROGRESS, label: 'In progress' },
-    { value: TaskStatus.DONE, label: 'Done' }
+    { value: TaskStatus.TODO, label: 'kanban.todo' },
+    { value: TaskStatus.IN_PROGRESS, label: 'kanban.inProgress' },
+    { value: TaskStatus.DONE, label: 'kanban.done' }
   ];
 
   task = {
@@ -97,5 +101,25 @@ export class FrontofficeTaskFormComponent implements OnInit {
     if ((event.target as HTMLElement).classList.contains('ftf-overlay')) {
       this.close.emit();
     }
+  }
+
+  // ---- IA : description generee depuis le titre ----
+  onAiDescriptionGenerated(resp: TaskDescriptionResponse): void {
+    if (resp.description) {
+      let txt = resp.description;
+      if (resp.acceptanceCriteria?.length) {
+        txt += '\n\nCriteres d\'acceptation :\n' +
+          resp.acceptanceCriteria.map(c => '- ' + c).join('\n');
+      }
+      this.task.description = txt;
+    }
+    if (resp.estimatedHours) {
+      this.task.estimatedHours = resp.estimatedHours;
+    }
+  }
+
+  // ---- IA : assignee suggere ----
+  onAiAssigneePicked(s: AssigneeSuggestion): void {
+    this.task.assignedUserId = s.userId;
   }
 }

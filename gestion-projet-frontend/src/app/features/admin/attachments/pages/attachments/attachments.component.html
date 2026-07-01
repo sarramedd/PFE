@@ -135,73 +135,83 @@
       </article>
     </section>
 
+    <!-- Charge par membre (calculée depuis les tâches réelles) -->
     <section class="plan-block">
       <div class="plan-section-head">
         <div>
-          <span class="plan-section-kicker">Visual Reporting</span>
-          <h3>Courbes reporting modernes</h3>
-        </div>
-        <div class="plan-actions">
-          <button class="plan-mini-btn" (click)="exportSvgAsPng('loadCurveSvg', 'load-curve.png')">Load PNG</button>
-          <button class="plan-mini-btn" (click)="exportSvg('loadCurveSvg', 'load-curve.svg')">Load SVG</button>
-          <button class="plan-mini-btn" (click)="exportSvgAsPng('varianceCurveSvg', 'variance-curve.png')">Variance PNG</button>
-          <button class="plan-mini-btn" (click)="exportSvg('varianceCurveSvg', 'variance-curve.svg')">Variance SVG</button>
+          <span class="plan-section-kicker">Team Workload</span>
+          <h3>Charge de travail par membre</h3>
+          <p class="plan-section-desc">Répartition des tâches assignées : terminées, en cours, à faire et en retard.</p>
         </div>
       </div>
 
-      <div class="curve-grid">
-        <div class="curve-card">
-          <div class="curve-head">
+      <div *ngIf="memberStats.length === 0" class="plan-empty">
+        <i class="mdi mdi-account-question-outline"></i>
+        <p>Aucune tâche n'est encore assignée à un membre.</p>
+      </div>
+
+      <div class="member-stats-grid" *ngIf="memberStats.length > 0">
+        <div class="member-stat-card" *ngFor="let m of memberStats">
+          <div class="member-stat-header">
+            <div class="member-avatar">{{ m.name | slice:0:1 }}{{ m.name.split(' ')[1]?.[0] || '' }}</div>
             <div>
-              <h6>Charge hebdo: reel vs ouverte</h6>
-              <small>Comparer la consommation reelle avec la charge encore ouverte.</small>
+              <strong>{{ m.name }}</strong>
+              <span>{{ m.total }} tâche{{ m.total > 1 ? 's' : '' }} assignée{{ m.total > 1 ? 's' : '' }}</span>
             </div>
+            <span class="member-rate" [ngClass]="m.completionRate >= 75 ? 'rate-good' : m.completionRate >= 40 ? 'rate-mid' : 'rate-low'">
+              {{ m.completionRate }}%
+            </span>
           </div>
-          <svg id="loadCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
-            <defs>
-              <linearGradient id="loadAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#6f88ff" stop-opacity="0.35"></stop>
-                <stop offset="100%" stop-color="#6f88ff" stop-opacity="0.04"></stop>
-              </linearGradient>
-              <linearGradient id="openAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#4dc4a5" stop-opacity="0.28"></stop>
-                <stop offset="100%" stop-color="#4dc4a5" stop-opacity="0.03"></stop>
-              </linearGradient>
-            </defs>
-
-            <line x1="32" y1="208" x2="808" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
-            <line x1="32" y1="32" x2="32" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
-
-            <path [attr.d]="areaPath(chartOpenValues, maxLoadValue)" fill="url(#openAreaGradient)"></path>
-            <path [attr.d]="areaPath(chartLoadValues, maxLoadValue)" fill="url(#loadAreaGradient)"></path>
-            <path [attr.d]="linePath(chartOpenValues, maxLoadValue)" fill="none" stroke="#4dc4a5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 4"></path>
-            <path [attr.d]="linePath(chartLoadValues, maxLoadValue)" fill="none" stroke="#6f88ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-
-            <g *ngFor="let row of weeklyLoad; let i = index">
-              <circle [attr.cx]="pointX(i, chartLoadValues.length)" [attr.cy]="pointY(chartLoadValues[i], maxLoadValue)" r="4" fill="#ffffff" stroke="#6f88ff" stroke-width="2.2"></circle>
-              <text [attr.x]="pointX(i, chartLoadValues.length)" y="226" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartLoadLabels[i] }}</text>
-            </g>
-          </svg>
+          <div class="member-progress-bar">
+            <div class="mpb-done"   [style.width.%]="(m.done / m.total) * 100"       title="Terminées : {{ m.done }}"></div>
+            <div class="mpb-doing"  [style.width.%]="(m.inProgress / m.total) * 100" title="En cours : {{ m.inProgress }}"></div>
+            <div class="mpb-todo"   [style.width.%]="(m.todo / m.total) * 100"        title="À faire : {{ m.todo }}"></div>
+          </div>
+          <div class="member-stat-chips">
+            <span class="ms-chip done">✓ {{ m.done }} terminée{{ m.done > 1 ? 's' : '' }}</span>
+            <span class="ms-chip doing">⟳ {{ m.inProgress }} en cours</span>
+            <span class="ms-chip todo">○ {{ m.todo }} à faire</span>
+            <span class="ms-chip overdue" *ngIf="m.overdue > 0">⚠ {{ m.overdue }} en retard</span>
+            <span class="ms-chip hours" *ngIf="m.estimatedHours > 0">⏱ {{ m.estimatedHours }}h estimées</span>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <div class="curve-card">
-          <div class="curve-head">
-            <div>
-              <h6>Variance effort (reel - estime)</h6>
-              <small>Voir rapidement quels membres depassent ou respectent les estimations.</small>
+    <!-- Progression par projet -->
+    <section class="plan-block">
+      <div class="plan-section-head">
+        <div>
+          <span class="plan-section-kicker">Project Progress</span>
+          <h3>Avancement par projet</h3>
+          <p class="plan-section-desc">Taux de complétion des tâches pour chaque projet actif.</p>
+        </div>
+      </div>
+
+      <div *ngIf="projectTaskStats.length === 0" class="plan-empty">
+        <i class="mdi mdi-folder-question-outline"></i>
+        <p>Aucune tâche trouvée dans les projets.</p>
+      </div>
+
+      <div class="project-progress-list" *ngIf="projectTaskStats.length > 0">
+        <div class="project-progress-row" *ngFor="let p of projectTaskStats">
+          <div class="pp-left">
+            <strong class="pp-name">{{ p.name }}</strong>
+            <div class="pp-meta">
+              <span class="ms-chip done">✓ {{ p.done }}</span>
+              <span class="ms-chip doing">⟳ {{ p.inProgress }}</span>
+              <span class="ms-chip overdue" *ngIf="p.overdue > 0">⚠ {{ p.overdue }} retard</span>
+              <span class="plan-section-desc">/ {{ p.total }} tâches</span>
             </div>
           </div>
-          <svg id="varianceCurveSvg" [attr.width]="840" [attr.height]="240" viewBox="0 0 840 240" class="curve-svg">
-            <line x1="32" y1="120" x2="808" y2="120" stroke="#ffd8e3" stroke-width="1" stroke-dasharray="5 4"></line>
-            <line x1="32" y1="208" x2="808" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
-            <line x1="32" y1="32" x2="32" y2="208" stroke="#cfd7f7" stroke-width="1"></line>
-            <path [attr.d]="varianceLinePath(chartVarianceValues, maxVarianceAbsValue)" fill="none" stroke="#ff7d9a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-
-            <g *ngFor="let row of effortSummary; let i = index">
-              <circle [attr.cx]="pointX(i, chartVarianceValues.length)" [attr.cy]="variancePointY(chartVarianceValues[i], maxVarianceAbsValue)" r="4" [attr.fill]="chartVarianceValues[i] > 0 ? '#ff6d8e' : '#42bb97'"></circle>
-              <text [attr.x]="pointX(i, chartVarianceValues.length)" y="226" fill="#6e79a5" font-size="11" text-anchor="middle">{{ chartVarianceLabels[i] }}</text>
-            </g>
-          </svg>
+          <div class="pp-right">
+            <div class="pp-bar-track">
+              <div class="pp-bar-fill" [style.width.%]="p.completionRate"
+                   [ngClass]="p.completionRate >= 75 ? 'fill-good' : p.completionRate >= 40 ? 'fill-mid' : 'fill-low'">
+              </div>
+            </div>
+            <span class="pp-pct">{{ p.completionRate }}%</span>
+          </div>
         </div>
       </div>
     </section>
@@ -211,7 +221,7 @@
         <div class="plan-section-head">
           <div>
             <span class="plan-section-kicker">Access Control</span>
-            <h3>Centre de permissions fines</h3>
+            <h3>Matrice des permissions</h3>
           </div>
         </div>
 
@@ -220,7 +230,7 @@
             <strong>Mes droits actuels</strong>
             <div class="permission-pills mt-2">
               <span *ngFor="let item of permissionActions" class="permission-pill" [ngClass]="hasPermission(item.key) ? 'allowed' : 'denied'">
-                {{ item.label }}: {{ hasPermission(item.key) ? 'Allowed' : 'Denied' }}
+                {{ item.label }}: {{ hasPermission(item.key) ? '✓ Autorisé' : '✗ Refusé' }}
               </span>
             </div>
           </div>
@@ -229,7 +239,7 @@
             <table class="table table-dark plan-table permission-table">
               <thead>
                 <tr>
-                  <th>Role</th>
+                  <th>Rôle</th>
                   <th *ngFor="let item of permissionActions">{{ item.label }}</th>
                 </tr>
               </thead>
@@ -238,7 +248,7 @@
                   <td>{{ role }}</td>
                   <td *ngFor="let item of permissionActions">
                     <span class="badge" [ngClass]="permissionMatrix[role][item.key] ? 'badge-outline-success' : 'badge-outline-danger'">
-                      {{ permissionMatrix[role][item.key] ? 'Yes' : 'No' }}
+                      {{ permissionMatrix[role][item.key] ? 'Oui' : 'Non' }}
                     </span>
                   </td>
                 </tr>
@@ -251,27 +261,43 @@
       <section class="plan-block">
         <div class="plan-section-head">
           <div>
-            <span class="plan-section-kicker">Effort Analytics</span>
-            <h3>Effort report detaille</h3>
+            <span class="plan-section-kicker">Performance</span>
+            <h3>Performance par membre</h3>
           </div>
         </div>
 
-        <div class="table-responsive">
+        <div *ngIf="memberStats.length === 0" class="plan-empty">
+          <p>Aucune tâche assignée.</p>
+        </div>
+
+        <div class="table-responsive" *ngIf="memberStats.length > 0">
           <table class="table table-dark plan-table">
             <thead>
               <tr>
                 <th>Membre</th>
-                <th>Estime</th>
-                <th>Reel</th>
-                <th>Variance</th>
+                <th>Total</th>
+                <th>Terminées</th>
+                <th>En retard</th>
+                <th>H estimées</th>
+                <th>Taux</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let row of effortSummary">
-                <td>{{ row['member'] }}</td>
-                <td>{{ row['estimatedHours'] }}h</td>
-                <td>{{ row['loggedHours'] }}h</td>
-                <td [ngClass]="varianceClass(row)">{{ row['varianceHours'] }}h</td>
+              <tr *ngFor="let m of memberStats">
+                <td>{{ m.name }}</td>
+                <td>{{ m.total }}</td>
+                <td><span class="badge badge-outline-success">{{ m.done }}</span></td>
+                <td>
+                  <span class="badge" [ngClass]="m.overdue > 0 ? 'badge-outline-danger' : 'badge-outline-secondary'">
+                    {{ m.overdue }}
+                  </span>
+                </td>
+                <td>{{ m.estimatedHours > 0 ? m.estimatedHours + 'h' : '—' }}</td>
+                <td>
+                  <span class="badge" [ngClass]="m.completionRate >= 75 ? 'badge-outline-success' : m.completionRate >= 40 ? 'badge-outline-warning' : 'badge-outline-danger'">
+                    {{ m.completionRate }}%
+                  </span>
+                </td>
               </tr>
             </tbody>
           </table>

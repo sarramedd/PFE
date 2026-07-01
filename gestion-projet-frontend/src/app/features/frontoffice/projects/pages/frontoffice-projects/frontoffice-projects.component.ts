@@ -18,6 +18,7 @@ export class FrontofficeProjectsComponent implements OnInit {
   showMembersModal = false;
   selectedProject: Project | null = null;
   statusFilter: 'ALL' | 'ACTIVE' | 'COMPLETED' | 'ARCHIVED' = 'ALL';
+  searchQuery = '';
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -61,10 +62,43 @@ export class FrontofficeProjectsComponent implements OnInit {
   }
 
   get filteredProjects(): Project[] {
-    if (this.statusFilter === 'ALL') {
-      return this.projects;
+    let list = this.statusFilter === 'ALL'
+      ? this.projects
+      : this.projects.filter(p => (p.status || 'ACTIVE') === this.statusFilter);
+
+    const q = this.searchQuery.trim().toLowerCase();
+    if (q) {
+      list = list.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        (p.description ?? '').toLowerCase().includes(q)
+      );
     }
-    return this.projects.filter((project) => (project.status || 'ACTIVE') === this.statusFilter);
+    return list;
+  }
+
+  countByStatus(status: string): number {
+    return this.projects.filter(p => (p.status || 'ACTIVE') === status).length;
+  }
+
+  projectInitials(name: string): string {
+    return (name ?? '').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?';
+  }
+
+  statusLabel(status?: string): string {
+    switch (status) {
+      case 'COMPLETED': return 'Terminé';
+      case 'ARCHIVED':  return 'Archivé';
+      default:          return 'Actif';
+    }
+  }
+
+  timeProgress(project: Project): number {
+    if (!project.startDate || !project.endDate) return 0;
+    const start = new Date(project.startDate).getTime();
+    const end   = new Date(project.endDate).getTime();
+    const now   = Date.now();
+    if (end <= start) return 100;
+    return Math.min(100, Math.max(0, Math.round(((now - start) / (end - start)) * 100)));
   }
 
   setStatusFilter(filter: 'ALL' | 'ACTIVE' | 'COMPLETED' | 'ARCHIVED'): void {

@@ -1,3 +1,26 @@
 :host {
   display: block;
 }
+
+.tf-fo-brand-link { display: flex; align-items: center; text-decoration: none; }
+
+.tf-fo-brand-icon {
+  height: 36px !important;
+  width: 36px !important;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.tf-fo-brand-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.3px;
+}
+
+.tf-fo-brand-accent {
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

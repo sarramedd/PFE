@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { CommentMessage, CreateCommentPayload } from 'src/app/shared/models/comment.model';
 
@@ -42,19 +43,25 @@ export class CommentService {
   }
 
   sendProjectMessage(projectId: number, content: string): Observable<CommentMessage> {
-    const socket = this.projectSockets.get(projectId);
+    // Toujours passer par HTTP POST + injection optimiste dans le flux local.
+    // La WebSocket est reservee a la reception des messages des autres utilisateurs.
+    // Cela garantit que le message s'affiche immediatement sans attendre l'echo WS.
+    return this.create({ content, project: { id: projectId } }).pipe(
+      tap((created) => this.appendToStream(projectId, created))
+    );
+  }
 
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify({ projectId, content }));
-      return of({
-        id: Date.now(),
-        content,
-        createdAt: new Date().toISOString(),
-        project: { id: projectId } as any
-      } as CommentMessage);
+  private appendToStream(projectId: number, message: CommentMessage): void {
+    const stream = this.projectMessages$.get(projectId);
+    if (!stream) {
+      return;
     }
-
-    return this.create({ content, project: { id: projectId } });
+    const current = stream.value ?? [];
+    // Evite les doublons si la WS finit par delivrer le meme message.
+    if (message?.id != null && current.some((m) => m?.id === message.id)) {
+      return;
+    }
+    stream.next(this.sortOldest([...current, message]));
   }
 
   disconnectProject(projectId: number): void {

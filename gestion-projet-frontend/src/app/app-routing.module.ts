@@ -21,6 +21,8 @@ import { FrontofficeProjectsComponent } from './features/frontoffice/projects/pa
 import { FrontofficeSearchComponent } from './features/frontoffice/search/pages/frontoffice-search/frontoffice-search.component';
 import { FrontofficeTasksComponent } from './features/frontoffice/tasks/pages/frontoffice-tasks/frontoffice-tasks.component';
 import { AdminLayoutComponent } from './shared/layout/admin-layout/admin-layout.component';
+import { JitsiRoomComponent } from './features/frontoffice/meetings/pages/jitsi-room/jitsi-room.component';
+import { FrontofficeReunionsComponent } from './features/frontoffice/meetings/pages/frontoffice-reunions/frontoffice-reunions.component';
 
 
 const routes: Routes = [
@@ -41,7 +43,9 @@ const routes: Routes = [
       { path: 'messages', component: FrontofficeMessagesComponent },
       { path: 'search', component: FrontofficeSearchComponent },
       { path: 'tasks', component: FrontofficeTasksComponent },
-      { path: 'profile', component: FrontofficeProfileComponent }
+      { path: 'profile', component: FrontofficeProfileComponent },
+      { path: 'meetings', component: FrontofficeReunionsComponent },
+      { path: 'meetings/:id/room', component: JitsiRoomComponent }
     ]
   },
   {

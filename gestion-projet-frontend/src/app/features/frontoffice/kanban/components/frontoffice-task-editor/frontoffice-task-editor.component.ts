@@ -17,9 +17,9 @@ export class FrontofficeTaskEditorComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
 
   readonly statuses = [
-    { value: TaskStatus.TODO, label: 'To do' },
-    { value: TaskStatus.IN_PROGRESS, label: 'In progress' },
-    { value: TaskStatus.DONE, label: 'Done' }
+    { value: TaskStatus.TODO, label: 'kanban.todo' },
+    { value: TaskStatus.IN_PROGRESS, label: 'kanban.inProgress' },
+    { value: TaskStatus.DONE, label: 'kanban.done' }
   ];
 
   form = {

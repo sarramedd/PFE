@@ -56,6 +56,12 @@ public class NotificationController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 
+    @PatchMapping("/me/read-all")
+    public ResponseEntity<Void> markAllAsRead() {
+        notificationService.markAllAsRead(tenantAccessService.getCurrentUserId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteNotification(@PathVariable Long id) {
         notificationService.deleteNotification(id);

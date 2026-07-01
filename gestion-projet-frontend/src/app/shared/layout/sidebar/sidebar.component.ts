@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CurrentUserService } from 'src/app/core/services/current-user.service';
 import { OrganizationService } from 'src/app/features/admin/organizations/services/organization.service';
@@ -17,8 +18,14 @@ export class SidebarComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private currentUserService: CurrentUserService,
-    private organizationService: OrganizationService
+    private organizationService: OrganizationService,
+    private router: Router
   ) {}
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/login');
+  }
 
   ngOnInit(): void {
     this.currentUserService.refresh().subscribe((user) => {
@@ -96,7 +103,7 @@ export class SidebarComponent implements OnInit {
   }
 
   get organizationLogo(): string {
-    return this.organizationLogoUrl || 'assets/images/teamflow.png';
+    return this.organizationLogoUrl || 'assets/images/teamflow-logo.svg';
   }
 
   get userInitials(): string {

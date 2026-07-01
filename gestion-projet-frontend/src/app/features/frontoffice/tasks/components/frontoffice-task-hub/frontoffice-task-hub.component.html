@@ -2,7 +2,7 @@
   <div class="tfh-modal" (click)="$event.stopPropagation()" *ngIf="task">
     <div class="tfh-header">
       <div>
-        <span class="tfh-kicker">Task Space</span>
+        <span class="tfh-kicker">{{ 'taskHub.title' | tf }}</span>
         <h3>{{ task.title }}</h3>
         <p>{{ task.project?.name || ('Projet #' + (task.projectId || '')) }}</p>
       </div>
@@ -14,7 +14,7 @@
     <div class="tfh-grid">
       <section class="tfh-panel">
         <div class="tfh-panel-head">
-          <h4>Discussion</h4>
+          <h4>{{ 'taskHub.discussion' | tf }}</h4>
         </div>
 
         <div class="tfh-comments" *ngIf="comments.length > 0; else noComments">
@@ -31,23 +31,23 @@
         </div>
 
         <ng-template #noComments>
-          <div class="tfh-empty">Aucun commentaire pour cette tache.</div>
+          <div class="tfh-empty">{{ 'taskHub.noComments' | tf }}</div>
         </ng-template>
 
         <div class="tfh-compose">
-          <textarea [(ngModel)]="message" rows="4" placeholder="Ecrire un commentaire sur cette tache..."></textarea>
-          <button type="button" class="tfh-primary-btn" (click)="submitComment()">Envoyer</button>
+          <textarea [(ngModel)]="message" rows="4" [placeholder]="'taskHub.commentPlaceholder' | tf"></textarea>
+          <button type="button" class="tfh-primary-btn" (click)="submitComment()">{{ 'taskHub.send' | tf }}</button>
         </div>
       </section>
 
       <section class="tfh-panel">
         <div class="tfh-panel-head">
-          <h4>Pieces jointes</h4>
+          <h4>{{ 'taskHub.attachments' | tf }}</h4>
         </div>
 
         <div class="tfh-upload">
           <input type="file" (change)="onFileSelected($event)" />
-          <button type="button" class="tfh-primary-btn" (click)="uploadAttachment()" [disabled]="!selectedFile">Ajouter</button>
+          <button type="button" class="tfh-primary-btn" (click)="uploadAttachment()" [disabled]="!selectedFile">{{ 'taskHub.add' | tf }}</button>
         </div>
 
         <div class="tfh-files" *ngIf="attachments.length > 0; else noAttachments">
@@ -57,14 +57,14 @@
               <span>{{ formatDate(attachment.uploadedAt) }}</span>
             </div>
             <div class="tfh-file-actions">
-              <a *ngIf="resolveFileUrl(attachment.filePath) as fileUrl" [href]="fileUrl" target="_blank" rel="noreferrer">Ouvrir</a>
-              <button type="button" (click)="deleteAttachment(attachment)">Supprimer</button>
+              <a *ngIf="resolveFileUrl(attachment.filePath) as fileUrl" [href]="fileUrl" target="_blank" rel="noreferrer">{{ 'taskHub.open' | tf }}</a>
+              <button type="button" (click)="deleteAttachment(attachment)">{{ 'taskHub.delete' | tf }}</button>
             </div>
           </article>
         </div>
 
         <ng-template #noAttachments>
-          <div class="tfh-empty">Aucune piece jointe pour cette tache.</div>
+          <div class="tfh-empty">{{ 'taskHub.noAttachments' | tf }}</div>
         </ng-template>
       </section>
     </div>

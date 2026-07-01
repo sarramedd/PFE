@@ -26,3 +26,92 @@
   color: #4a5772;
   font-weight: 600;
 }
+
+/* ── Avatar ─────────────────────────────────────────────────── */
+.fo-avatar-img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border: 3px solid #e6eaff;
+  box-shadow: 0 4px 14px rgba(105, 108, 255, .15);
+}
+
+/* ── Save button ─────────────────────────────────────────────── */
+.fo-save-btn {
+  min-width: 160px;
+  border-radius: 8px;
+}
+
+/* ── Readonly field ──────────────────────────────────────────── */
+.fo-readonly {
+  background: #f8f9fc;
+  color: #8a92a6;
+  cursor: default;
+}
+
+/* ── Security card ───────────────────────────────────────────── */
+.fo-security-card .card-header {
+  background: linear-gradient(135deg, #f8f9ff, #f1f4ff);
+  border-bottom: 1px solid #e6e9f2;
+}
+
+/* ── Password input wrapper ──────────────────────────────────── */
+.fo-pwd-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.fo-pwd-input {
+  padding-right: 2.6rem;
+  border-radius: 8px;
+}
+
+.fo-pwd-toggle {
+  position: absolute;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #8a92a6;
+  font-size: 1.15rem;
+  line-height: 1;
+  transition: color .2s;
+}
+
+.fo-pwd-toggle:hover {
+  color: #696cff;
+}
+
+/* ── Strength bar ────────────────────────────────────────────── */
+.fo-strength-bar {
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.fo-strength-track {
+  flex: 1;
+  height: 5px;
+  background: #e6e9f2;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.fo-strength-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width .35s ease, background .35s ease;
+}
+
+.fo-strength-fill.level-weak   { background: #ff4d4f; }
+.fo-strength-fill.level-fair   { background: #fa8c16; }
+.fo-strength-fill.level-strong { background: #52c41a; }
+
+.fo-strength-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  white-space: nowrap;
+}

@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: gestion_projet
+      MYSQL_DATABASE: gestionprojet
     ports:
       - "3306:3306"
     volumes:
@@ -22,9 +22,12 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gestion_projet
+      # En Docker, le hostname du service MySQL est "mysql" (pas localhost).
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gestionprojet?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      # Cle Gemini (gratuite). Laisser vide = fallback heuristique.
+      APP_AI_API_KEY: ${APP_AI_API_KEY:-}
     volumes:
       - ./GestionProjet/uploads:/app/uploads
 

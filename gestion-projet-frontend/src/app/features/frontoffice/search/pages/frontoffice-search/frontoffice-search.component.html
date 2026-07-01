@@ -2,14 +2,14 @@
   <section class="tfs-hero card border-0 shadow-sm">
     <div class="card-body">
       <span class="tfs-kicker">TeamFlow Search</span>
-      <h2>Recherche globale</h2>
-      <p>Retrouve rapidement un projet, une tache ou un membre de ton espace de travail.</p>
+      <h2>{{ 'search.title' | tf }}</h2>
+      <p>{{ 'search.subtitle' | tf }}</p>
 
       <div class="tfs-searchbar">
-        <input [(ngModel)]="query" (keyup.enter)="search()" type="text" placeholder="Projet, tache, membre..." />
+        <input [(ngModel)]="query" (keyup.enter)="search()" type="text" [placeholder]="'search.placeholder' | tf" />
         <button type="button" (click)="search()">
           <i class="bx bx-search"></i>
-          <span>Rechercher</span>
+          <span>{{ 'search.button' | tf }}</span>
         </button>
       </div>
     </div>
@@ -18,23 +18,23 @@
   <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
 
   <div class="tfs-loading card border-0 shadow-sm" *ngIf="loading">
-    <div class="card-body">Recherche en cours...</div>
+    <div class="card-body">{{ 'search.loading' | tf }}</div>
   </div>
 
   <div class="tfs-grid" *ngIf="!loading">
     <section class="tfs-card card border-0 shadow-sm">
       <div class="card-body">
         <div class="tfs-section-head">
-          <h4>Projects</h4>
+          <h4>{{ 'search.projects' | tf }}</h4>
           <span>{{ results.projects.length }}</span>
         </div>
 
-        <div class="tfs-empty" *ngIf="results.projects.length === 0">Aucun projet.</div>
+        <div class="tfs-empty" *ngIf="results.projects.length === 0">{{ 'search.noProject' | tf }}</div>
 
         <a class="tfs-item" *ngFor="let project of results.projects" [routerLink]="['/frontoffice/projects', project.id, 'kanban']">
           <div>
             <strong>{{ project.name }}</strong>
-            <p>{{ project.description || 'Aucune description.' }}</p>
+            <p>{{ project.description || ('search.noDescription' | tf) }}</p>
           </div>
           <small>{{ project.status || 'ACTIVE' }}</small>
         </a>
@@ -44,16 +44,16 @@
     <section class="tfs-card card border-0 shadow-sm">
       <div class="card-body">
         <div class="tfs-section-head">
-          <h4>Tasks</h4>
+          <h4>{{ 'search.tasks' | tf }}</h4>
           <span>{{ results.tasks.length }}</span>
         </div>
 
-        <div class="tfs-empty" *ngIf="results.tasks.length === 0">Aucune tache.</div>
+        <div class="tfs-empty" *ngIf="results.tasks.length === 0">{{ 'search.noTask' | tf }}</div>
 
         <a class="tfs-item" *ngFor="let task of results.tasks" routerLink="/frontoffice/tasks">
           <div>
             <strong>{{ task.title }}</strong>
-            <p>{{ task.project?.name || 'Projet non precise' }}</p>
+            <p>{{ task.project?.name || ('search.noProject2' | tf) }}</p>
           </div>
           <small>{{ formatDate(task.dueDate) }}</small>
         </a>
@@ -63,11 +63,11 @@
     <section class="tfs-card card border-0 shadow-sm">
       <div class="card-body">
         <div class="tfs-section-head">
-          <h4>Members</h4>
+          <h4>{{ 'search.members' | tf }}</h4>
           <span>{{ results.users.length }}</span>
         </div>
 
-        <div class="tfs-empty" *ngIf="results.users.length === 0">Aucun membre.</div>
+        <div class="tfs-empty" *ngIf="results.users.length === 0">{{ 'search.noMember' | tf }}</div>
 
         <div class="tfs-item" *ngFor="let user of results.users">
           <div>
@@ -81,6 +81,6 @@
   </div>
 
   <div class="tfs-empty-state card border-0 shadow-sm" *ngIf="!loading && !hasResults && !errorMessage">
-    <div class="card-body">Lance une recherche pour voir des resultats.</div>
+    <div class="card-body">{{ 'search.noResults' | tf }}</div>
   </div>
 </div>

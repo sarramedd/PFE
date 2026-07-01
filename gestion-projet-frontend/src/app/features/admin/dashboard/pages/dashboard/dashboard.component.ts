@@ -85,6 +85,10 @@ export class DashboardComponent implements OnInit {
     return this.projects.filter((project) => project.status === ProjectStatus.ARCHIVED).length;
   }
 
+  get activeProjectsCount(): number {
+    return this.projects.filter((project) => project.status !== ProjectStatus.ARCHIVED).length;
+  }
+
   get completedTasks(): number {
     return this.tasks.filter((task) => task.status === TaskStatus.DONE).length;
   }
@@ -194,7 +198,7 @@ export class DashboardComponent implements OnInit {
   private resolveOrganizationBranding(): void {
     if (this.isSuperAdmin) {
       this.currentOrganizationName = 'TeamFlow Platform';
-      this.currentOrganizationLogoUrl = 'assets/images/teamflow.png';
+      this.currentOrganizationLogoUrl = 'assets/images/teamflow-logo.svg';
       return;
     }
 

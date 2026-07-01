@@ -164,6 +164,12 @@ public class UserService implements UserDetailsService {
                 });
 
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            if (dto.getOldPassword() == null || dto.getOldPassword().isEmpty()) {
+                throw ValidationUtils.badRequest("Current password is required to set a new one.");
+            }
+            if (!passwordEncoder.matches(dto.getOldPassword(), user.getPasswordHash())) {
+                throw ValidationUtils.badRequest("Current password is incorrect.");
+            }
             ValidationUtils.requirePassword(dto.getPassword(), false);
             user.setPasswordHash(passwordEncoder.encode(dto.getPassword().trim()));
         }

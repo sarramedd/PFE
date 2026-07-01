@@ -88,37 +88,68 @@ export class AttachmentsComponent implements OnInit {
     return Object.keys(this.permissionMatrix || {});
   }
 
-  get chartLoadValues(): number[] {
-    return this.weeklyLoad.map((row) => Number(row['loggedHours'] ?? 0));
-  }
-
-  get chartOpenValues(): number[] {
-    return this.weeklyLoad.map((row) => Number(row['estimatedOpenHours'] ?? 0));
-  }
-
-  get chartLoadLabels(): string[] {
-    return this.weeklyLoad.map((row) => String(row['name'] ?? 'User'));
-  }
-
-  get chartVarianceValues(): number[] {
-    return this.effortSummary.map((row) => Number(row['varianceHours'] ?? 0));
-  }
-
-  get chartVarianceLabels(): string[] {
-    return this.effortSummary.map((row) => String(row['member'] ?? 'Member'));
-  }
-
-  get maxLoadValue(): number {
-    return Math.max(...this.chartLoadValues, ...this.chartOpenValues, 1);
-  }
-
-  get maxVarianceAbsValue(): number {
-    const values = this.chartVarianceValues.map((value) => Math.abs(value));
-    return Math.max(...values, 1);
-  }
-
   get ganttSvgHeight(): number {
     return Math.max(this.filteredTasks.length * 40 + 80, 220);
+  }
+
+  /** Répartition des tâches par membre — calculé depuis les tâches chargées */
+  get memberStats(): Array<{
+    name: string; total: number; done: number;
+    inProgress: number; todo: number; overdue: number;
+    estimatedHours: number; completionRate: number;
+  }> {
+    const map = new Map<number, { name: string; tasks: Task[] }>();
+    const today = new Date();
+    this.tasks.forEach(task => {
+      if (task.assignedTo) {
+        const id = task.assignedTo.id;
+        if (!map.has(id)) {
+          map.set(id, {
+            name: `${task.assignedTo.firstName} ${task.assignedTo.lastName}`,
+            tasks: []
+          });
+        }
+        map.get(id)!.tasks.push(task);
+      }
+    });
+
+    return Array.from(map.values()).map(({ name, tasks }) => {
+      const done       = tasks.filter(t => t.status === TaskStatus.DONE).length;
+      const inProgress = tasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length;
+      const todo       = tasks.filter(t => t.status === TaskStatus.TODO).length;
+      const overdue    = tasks.filter(t =>
+        t.dueDate && t.status !== TaskStatus.DONE && new Date(t.dueDate) < today
+      ).length;
+      const estimatedHours = tasks.reduce((s, t) => s + (t.estimatedHours || 0), 0);
+      const completionRate = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+      return { name, total: tasks.length, done, inProgress, todo, overdue, estimatedHours, completionRate };
+    }).sort((a, b) => b.total - a.total);
+  }
+
+  /** Progression des tâches par projet — calculé depuis les tâches chargées */
+  get projectTaskStats(): Array<{
+    name: string; total: number; done: number;
+    inProgress: number; overdue: number; completionRate: number;
+  }> {
+    const map = new Map<number, { name: string; tasks: Task[] }>();
+    const today = new Date();
+    this.tasks.forEach(task => {
+      if (task.project) {
+        const id = task.project.id;
+        if (!map.has(id)) { map.set(id, { name: task.project.name, tasks: [] }); }
+        map.get(id)!.tasks.push(task);
+      }
+    });
+
+    return Array.from(map.values()).map(({ name, tasks }) => {
+      const done       = tasks.filter(t => t.status === TaskStatus.DONE).length;
+      const inProgress = tasks.filter(t => t.status === TaskStatus.IN_PROGRESS).length;
+      const overdue    = tasks.filter(t =>
+        t.dueDate && t.status !== TaskStatus.DONE && new Date(t.dueDate) < today
+      ).length;
+      const completionRate = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+      return { name, total: tasks.length, done, inProgress, overdue, completionRate };
+    }).sort((a, b) => b.total - a.total).slice(0, 8);
   }
 
   loadData(): void {
@@ -334,69 +365,6 @@ export class AttachmentsComponent implements OnInit {
 
   hasPermission(action: keyof PermissionByAction): boolean {
     return !!this.myPermissions?.[action];
-  }
-
-  varianceClass(row: Record<string, unknown>): string {
-    const value = Number(row['varianceHours'] ?? 0);
-    return value > 0 ? 'text-danger' : 'text-success';
-  }
-
-  linePath(values: number[], maxValue: number, width = 840, height = 240, padding = 32): string {
-    if (!values.length) {
-      return '';
-    }
-
-    const stepX = values.length > 1 ? (width - padding * 2) / (values.length - 1) : 0;
-    return values
-      .map((value, index) => {
-        const x = padding + index * stepX;
-        const y = height - padding - (Math.max(value, 0) / maxValue) * (height - padding * 2);
-        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-      })
-      .join(' ');
-  }
-
-  areaPath(values: number[], maxValue: number, width = 840, height = 240, padding = 32): string {
-    if (!values.length) {
-      return '';
-    }
-
-    const line = this.linePath(values, maxValue, width, height, padding);
-    const lastX = values.length > 1 ? width - padding : padding;
-    const baseY = height - padding;
-    return `${line} L ${lastX} ${baseY} L ${padding} ${baseY} Z`;
-  }
-
-  pointX(index: number, length: number, width = 840, padding = 32): number {
-    if (length <= 1) {
-      return padding;
-    }
-    return padding + index * ((width - padding * 2) / (length - 1));
-  }
-
-  pointY(value: number, maxValue: number, height = 240, padding = 32): number {
-    return height - padding - (Math.max(value, 0) / maxValue) * (height - padding * 2);
-  }
-
-  variancePointY(value: number, maxAbs = 1, height = 240, padding = 32): number {
-    const center = height / 2;
-    const half = (height - padding * 2) / 2;
-    return center - (value / maxAbs) * half;
-  }
-
-  varianceLinePath(values: number[], maxAbs: number, width = 840, height = 240, padding = 32): string {
-    if (!values.length) {
-      return '';
-    }
-
-    const stepX = values.length > 1 ? (width - padding * 2) / (values.length - 1) : 0;
-    return values
-      .map((value, index) => {
-        const x = padding + index * stepX;
-        const y = this.variancePointY(value, maxAbs, height, padding);
-        return `${index === 0 ? 'M' : 'L'} ${x} ${y}`;
-      })
-      .join(' ');
   }
 
   ganttSvgLeft(task: Task): number {

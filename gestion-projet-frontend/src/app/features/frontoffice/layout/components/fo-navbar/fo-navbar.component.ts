@@ -75,8 +75,17 @@ export class FoNavbarComponent implements OnDestroy {
     this.showNotifications = !this.showNotifications;
 
     if (this.showNotifications) {
-      this.markVisibleNotificationsAsRead();
+      // Au bout de 1,2s, marquer toutes les notifs affichees comme lues
+      // (laisse le temps a l'utilisateur de voir le badge "non lu").
+      setTimeout(() => this.markAllVisibleAsRead(), 1200);
     }
+  }
+
+  /** Marque TOUTES les notifs comme lues via un seul appel backend. */
+  markAllVisibleAsRead(): void {
+    const hasUnread = this.notifications.some((n) => !n.isRead);
+    if (!hasUnread) return;
+    this.notificationService.markAllAsRead().subscribe();
   }
 
   loadNotifications(): void {

@@ -1,652 +1,531 @@
-:host {
-  display: block;
-}
-
-.tft-shell {
+/* =====================================================
+   SHELL
+   ===================================================== */
+.ft-shell {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 16px;
+  padding: 0 4px 32px;
 }
 
-.tft-hero {
-  overflow: hidden;
-  background:
-    radial-gradient(circle at top right, rgba(255, 214, 224, 0.58), transparent 25%),
-    radial-gradient(circle at bottom left, rgba(213, 237, 255, 0.7), transparent 30%),
-    linear-gradient(135deg, #fffdfd 0%, #ffffff 100%);
-}
-
-.tft-hero-top {
+/* =====================================================
+   EN-TÊTE
+   ===================================================== */
+.ft-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid #e9eaf0;
+  padding: 16px 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-.tft-kicker {
-  display: inline-block;
-  margin-bottom: 0.55rem;
-  color: #99a2b8;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.tft-title {
-  margin: 0;
-  color: #47536b;
-  font-size: 2rem;
-  line-height: 1.1;
-}
-
-.tft-subtitle {
-  margin: 0.6rem 0 0;
-  max-width: 48rem;
-  color: #7e88a1;
-}
-
-.tft-user-pill {
-  padding: 0.7rem 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(126, 136, 161, 0.15);
-  color: #65708a;
-  font-weight: 700;
-}
-
-.tft-filters {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.tft-filter-card {
-  padding: 1.15rem;
-  border-radius: 1.35rem;
-  border: 1px solid rgba(126, 136, 161, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-}
-
-.tft-filter-card-status {
-  background: linear-gradient(135deg, rgba(245, 238, 255, 0.92) 0%, rgba(255, 248, 252, 0.96) 100%);
-}
-
-.tft-filter-card-due {
-  background: linear-gradient(135deg, rgba(236, 247, 255, 0.92) 0%, rgba(245, 255, 251, 0.96) 100%);
-}
-
-.tft-filter-head {
+.ft-title-row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 12px;
 }
 
-.tft-filter-head h5 {
-  margin: 0.2rem 0 0;
-  color: #4f5971;
-  font-size: 1rem;
-}
-
-.tft-filter-head i {
-  width: 2.6rem;
-  height: 2.6rem;
-  border-radius: 1rem;
-  display: inline-flex;
+.ft-title-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.72);
-  color: #69739f;
-  font-size: 1.25rem;
-  box-shadow: 0 10px 18px rgba(102, 110, 170, 0.08);
+  color: #fff;
+  font-size: 19px;
+  flex-shrink: 0;
 }
 
-.tft-filter-kicker {
-  display: inline-block;
-  color: #9aa3b7;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.tft-filter-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-}
-
-.tft-filter-pill {
-  border: 1px solid rgba(126, 136, 161, 0.18);
-  border-radius: 1rem;
-  padding: 0.8rem 0.95rem;
-  background: rgba(255, 255, 255, 0.9);
-  color: #7b849a;
-  font-size: 0.8rem;
-  font-weight: 700;
-  transition: all 0.2s ease;
-  min-width: 8.6rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  justify-content: flex-start;
-}
-
-.tft-filter-pill:hover {
-  transform: translateY(-2px);
-  border-color: rgba(105, 108, 255, 0.28);
-  box-shadow: 0 14px 24px rgba(105, 108, 255, 0.1);
-}
-
-.tft-filter-pill.active {
-  border-color: transparent;
-  color: #56608f;
-  box-shadow: 0 14px 26px rgba(105, 108, 255, 0.14);
-}
-
-.tft-filter-pill i {
-  font-size: 1rem;
-}
-
-.pastel-all {
-  background: linear-gradient(135deg, #ffffff 0%, #faf9ff 100%);
-}
-
-.pastel-all.active {
-  background: linear-gradient(135deg, #f3f1ff 0%, #eff7ff 100%);
-}
-
-.pastel-todo {
-  background: linear-gradient(135deg, #f7efff 0%, #fff7fc 100%);
-}
-
-.pastel-todo.active {
-  background: linear-gradient(135deg, #ecdfff 0%, #f8ebff 100%);
-}
-
-.pastel-progress {
-  background: linear-gradient(135deg, #eef8ff 0%, #f4fcff 100%);
-}
-
-.pastel-progress.active {
-  background: linear-gradient(135deg, #dbf1ff 0%, #e5f8ff 100%);
-}
-
-.pastel-done {
-  background: linear-gradient(135deg, #effff7 0%, #f8fffc 100%);
-}
-
-.pastel-done.active {
-  background: linear-gradient(135deg, #def8ea 0%, #e8fff3 100%);
-}
-
-.pastel-overdue {
-  background: linear-gradient(135deg, #fff0f4 0%, #fff8fa 100%);
-}
-
-.pastel-overdue.active {
-  background: linear-gradient(135deg, #ffdfe8 0%, #fff0f4 100%);
-}
-
-.pastel-today {
-  background: linear-gradient(135deg, #fff6df 0%, #fffbf2 100%);
-}
-
-.pastel-today.active {
-  background: linear-gradient(135deg, #ffeebc 0%, #fff6df 100%);
-}
-
-.pastel-week {
-  background: linear-gradient(135deg, #eef5ff 0%, #f7faff 100%);
-}
-
-.pastel-week.active {
-  background: linear-gradient(135deg, #dfeaff 0%, #eef5ff 100%);
-}
-
-.pastel-month {
-  background: linear-gradient(135deg, #f1f1ff 0%, #faf8ff 100%);
-}
-
-.pastel-month.active {
-  background: linear-gradient(135deg, #e4e4ff 0%, #f0eeff 100%);
-}
-
-.pastel-nodate {
-  background: linear-gradient(135deg, #f7f8fb 0%, #fdfdff 100%);
-}
-
-.pastel-nodate.active {
-  background: linear-gradient(135deg, #ebeef5 0%, #f7f8fb 100%);
-}
-
-.tft-filter-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
-}
-
-.tft-filter-summary {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  color: #65708a;
-}
-
-.tft-filter-summary span {
-  font-size: 1.05rem;
+.ft-title {
+  font-size: 18px;
   font-weight: 800;
-  color: #49536c;
+  color: #1a1a2e;
+  margin: 0 0 2px;
 }
 
-.tft-filter-summary small {
-  color: #97a0b4;
-}
-
-.tft-reset-btn {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, #f3f5ff 0%, #eefbff 100%);
-  color: #5d6795;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  box-shadow: 0 12px 22px rgba(105, 108, 255, 0.08);
-}
-
-.tft-loading {
-  border-radius: 1.35rem;
-}
-
-.tft-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.tft-card {
-  border-radius: 1.35rem;
-}
-
-.tft-card-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.tft-badges {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
-}
-
-.tft-status,
-.tft-priority,
-.tft-overdue {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  padding: 0.38rem 0.78rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-.tft-status.status-todo {
-  background: #f1ebff;
-  color: #7b66c9;
-}
-
-.tft-status.status-in_progress {
-  background: #e8f8ff;
-  color: #3f9fc8;
-}
-
-.tft-status.status-done {
-  background: #eafaf2;
-  color: #54a67f;
-}
-
-.tft-priority.bg-label-danger {
-  background: #ffe8ea;
-  color: #d86d7d;
-}
-
-.tft-priority.bg-label-warning {
-  background: #fff2db;
-  color: #ce8b3d;
-}
-
-.tft-priority.bg-label-success {
-  background: #e8fbf3;
-  color: #4aa87c;
-}
-
-.tft-priority.bg-label-secondary {
-  background: #eef2f9;
-  color: #7c869d;
-}
-
-.tft-overdue {
-  background: #fff0f2;
-  color: #d45973;
-}
-
-.tft-task-title {
+.ft-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
   margin: 0;
-  color: #4d5770;
-  font-size: 1.1rem;
 }
 
-.tft-task-description {
-  margin: 0.95rem 0 1rem;
-  color: #8a93a8;
-  line-height: 1.55;
-}
-
-.tft-meta {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-}
-
-.tft-meta-item {
-  padding: 0.9rem 1rem;
-  border-radius: 1rem;
-  background: #fcfcfe;
-  border: 1px solid #eef0f7;
-}
-
-.tft-meta-label {
-  display: block;
-  margin-bottom: 0.25rem;
-  color: #97a0b4;
-  font-size: 0.75rem;
-}
-
-.tft-meta-item strong {
-  color: #4f5971;
-  font-size: 0.92rem;
-}
-
-.tft-card-actions {
-  margin-top: 1rem;
+/* Filtre statut compact — ligne de pills */
+.ft-status-bar {
   display: flex;
+  align-items: center;
+  gap: 6px;
   flex-wrap: wrap;
-  gap: 0.55rem;
-  justify-content: flex-end;
 }
 
-.tft-subtasks {
-  margin-top: 1rem;
-}
-
-.tft-subtasks-label {
-  display: inline-block;
-  margin-bottom: 0.45rem;
-  color: #97a0b4;
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-.tft-subtasks-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.tft-subtask-chip {
-  padding: 0.4rem 0.7rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #f2f5ff 0%, #f5fbff 100%);
-  color: #68739a;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-.tft-open-btn {
-  border: 0;
-  border-radius: 999px;
-  padding: 0.75rem 1rem;
-  background: linear-gradient(135deg, #f3f2ff 0%, #eefbff 100%);
-  color: #616b9a;
-  font-weight: 700;
+.ft-status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #e9eaf0;
+  background: #f8f9fb;
+  color: #6b7280;
+  transition: all 0.13s;
+  white-space: nowrap !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  word-break: keep-all !important;
+  flex-shrink: 0;
 }
 
-.tft-timer-btn {
-  border: 1px solid rgba(73, 176, 123, 0.24);
-  border-radius: 999px;
-  padding: 0.58rem 0.92rem 0.58rem 0.64rem;
-  background: linear-gradient(135deg, #ebfff3 0%, #f6fffb 60%, #ffffff 100%);
-  color: #2d9765;
+.ft-status-pill:hover { background: #eaecf0; }
+
+.ft-pill-count {
+  background: rgba(0,0,0,0.07);
+  border-radius: 10px;
+  padding: 0 5px;
+  font-size: 11px;
   font-weight: 700;
+}
+
+.ft-status-pill.active.ft-all      { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+.ft-status-pill.active.ft-all .ft-pill-count { background: rgba(255,255,255,0.2); }
+
+.ft-status-pill.active.ft-todo     { background: #f0f9ff; color: #0ea5e9; border-color: #bae6fd; }
+.ft-status-pill.active.ft-progress { background: #fff7ed; color: #f59e0b; border-color: #fde68a; }
+.ft-status-pill.active.ft-done     { background: #f0fdf4; color: #10b981; border-color: #a7f3d0; }
+
+.ft-overdue-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.52rem;
-  box-shadow: 0 10px 22px rgba(53, 170, 117, 0.14);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  gap: 4px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1.5px solid #fecaca;
 }
 
-.tft-timer-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 24px rgba(53, 170, 117, 0.2);
-  border-color: rgba(73, 176, 123, 0.4);
-}
-
-.tft-timer-btn-icon {
-  width: 1.6rem;
-  height: 1.6rem;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.86);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-
-.tft-timer-btn-icon i {
-  font-size: 1rem;
-}
-
-.tft-timer-btn.running {
-  border-color: rgba(222, 92, 122, 0.35);
-  background: linear-gradient(135deg, #ffe9ef 0%, #fff3f5 60%, #ffffff 100%);
-  color: #c44f69;
-  box-shadow: 0 10px 24px rgba(222, 92, 122, 0.2);
-}
-
-.tft-timer-btn.running .tft-timer-btn-icon {
-  background: rgba(255, 255, 255, 0.95);
-  animation: tftPulse 1.5s ease-in-out infinite;
-}
-
-.tft-timer-banner {
-  margin-top: 1rem;
-  border-radius: 1.15rem;
-  border: 1px solid rgba(118, 129, 186, 0.22);
-  background:
-    radial-gradient(circle at 12% 12%, rgba(255, 255, 255, 0.85), transparent 38%),
-    linear-gradient(130deg, #eef4ff 0%, #ecfbff 52%, #f3f7ff 100%);
+/* =====================================================
+   TIMER BANNER
+   ===================================================== */
+.ft-timer-banner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
-  padding: 0.9rem 0.95rem;
-  flex-wrap: wrap;
-  box-shadow: 0 18px 32px rgba(92, 111, 179, 0.13);
+  gap: 14px;
+  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px 18px;
+  box-shadow: 0 4px 14px rgba(26,26,46,0.3);
 }
 
-.tft-timer-left {
+.ft-timer-left {
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  color: #4e5a7f;
+  gap: 10px;
+  flex: 1;
 }
 
-.tft-timer-icon-wrap {
-  width: 2.1rem;
-  height: 2.1rem;
-  border-radius: 0.75rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(140deg, #ffffff 0%, #f5f7ff 100%);
-  border: 1px solid rgba(116, 129, 187, 0.2);
-  box-shadow: 0 10px 18px rgba(92, 111, 179, 0.14);
+.ft-timer-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.3);
+  animation: ft-pulse 1.2s ease infinite;
+  flex-shrink: 0;
 }
 
-.tft-timer-icon-wrap i {
-  font-size: 1.2rem;
+@keyframes ft-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(239,68,68,0.3); }
+  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0.1); }
 }
 
-.tft-timer-label {
-  display: block;
-  margin-bottom: 0.12rem;
-  font-size: 0.88rem;
-}
+.ft-timer-left strong { display: block; font-size: 13px; font-weight: 700; }
+.ft-timer-left span   { font-size: 11px; opacity: 0.6; }
 
-.tft-timer-task {
-  color: #6b789e;
-  font-size: 0.75rem;
-}
-
-.tft-timer-live {
-  min-width: 7.7rem;
-  text-align: center;
-  padding: 0.48rem 0.75rem;
-  border-radius: 0.78rem;
-  border: 1px solid rgba(116, 129, 187, 0.22);
-  background: rgba(255, 255, 255, 0.86);
-  color: #4f5c83;
-  font-size: 1rem;
+.ft-timer-live {
+  font-size: 22px;
   font-weight: 800;
-  letter-spacing: 0.08em;
   font-variant-numeric: tabular-nums;
-  font-family: "DM Sans", "Segoe UI", sans-serif;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  letter-spacing: 0.04em;
+  color: #fff;
 }
 
-.tft-timer-summary {
+.ft-timer-summary {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  gap: 12px;
+  font-size: 12px;
+  opacity: 0.7;
 }
 
-.tft-timer-summary span {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(126, 136, 161, 0.2);
-  border-radius: 999px;
-  padding: 0.28rem 0.65rem;
-  color: #5f6c91;
-  font-size: 0.72rem;
-  font-weight: 700;
-  box-shadow: 0 7px 12px rgba(92, 111, 179, 0.08);
-}
-
-.tft-stop-btn {
-  border: 1px solid rgba(224, 98, 128, 0.32);
-  border-radius: 999px;
-  padding: 0.6rem 0.9rem;
-  background: linear-gradient(135deg, #ffe6ed 0%, #fff3f6 60%, #ffffff 100%);
-  color: #c14e69;
-  font-weight: 700;
+.ft-stop-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  box-shadow: 0 10px 22px rgba(224, 98, 128, 0.18);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  background: rgba(239,68,68,0.15);
+  border: 1px solid rgba(239,68,68,0.4);
+  color: #f87171;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.13s;
+}
+.ft-stop-btn:hover:not(:disabled) { background: rgba(239,68,68,0.25); }
+.ft-stop-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* =====================================================
+   ERREUR / CHARGEMENT / VIDE
+   ===================================================== */
+.ft-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
 }
 
-.tft-stop-btn:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 24px rgba(224, 98, 128, 0.24);
+.ft-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 14px;
 }
 
-.tft-stop-btn:disabled,
-.tft-timer-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-  transform: none;
+.ft-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: ft-spin 0.7s linear infinite;
 }
 
-@keyframes tftPulse {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(226, 95, 125, 0.25);
-  }
-  50% {
-    box-shadow: 0 0 0 8px rgba(226, 95, 125, 0);
-  }
-}
+@keyframes ft-spin { to { transform: rotate(360deg); } }
 
-.tft-empty {
-  border-radius: 1.35rem;
+.ft-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 20px;
   text-align: center;
 }
 
-.tft-empty .card-body {
-  padding: 3rem 1.25rem;
+.ft-empty-art {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(99,102,241,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
 }
 
-.tft-empty i {
-  display: block;
-  margin-bottom: 0.9rem;
-  color: #b0b8cb;
-  font-size: 2.25rem;
+.ft-empty-art i { font-size: 30px; color: #6366f1; opacity: 0.5; }
+.ft-empty h4 { font-size: 16px; font-weight: 700; color: #374151; margin: 0; }
+.ft-empty p  { font-size: 13px; color: #6b7280; margin: 0; }
+
+.ft-reset-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 16px;
+  border-radius: 8px;
+  background: #f4f5f7;
+  border: 1.5px solid #e2e4e9;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
 }
 
-.tft-empty h6 {
-  margin-bottom: 0.35rem;
-  color: #576179;
+/* =====================================================
+   GROUPES PAR PROJET
+   ===================================================== */
+.ft-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.tft-empty p {
+.ft-group {
+  background: #fff;
+  border-radius: 14px;
+  border: 1.5px solid #e9eaf0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  overflow: hidden;
+}
+
+/* En-tête groupe (cliquable) */
+.ft-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 18px;
+  cursor: pointer;
+  border-bottom: 1.5px solid #f0f2f5;
+  user-select: none;
+  transition: background 0.12s;
+}
+
+.ft-group-header:hover { background: #fafbfc; }
+
+.ft-group-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ft-group-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ft-group-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.ft-group-count {
+  font-size: 12px;
+  color: #9ca3af;
+  background: #f4f5f7;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.ft-group-overdue {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.ft-group-chevron {
+  font-size: 18px;
+  color: #9ca3af;
+  transition: transform 0.18s;
+}
+
+/* =====================================================
+   TÂCHE
+   ===================================================== */
+.ft-task-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ft-task {
+  display: flex;
+  border-bottom: 1px solid #f4f5f7;
+  transition: background 0.12s;
+}
+
+.ft-task:last-child { border-bottom: none; }
+.ft-task:hover { background: #fafbfc; }
+
+.ft-task--done { opacity: 0.6; }
+
+/* Barre colorée gauche */
+.ft-task-bar {
+  width: 3px;
+  flex-shrink: 0;
+  background: #6366f1;
+}
+
+.ft-task-bar[data-status="TODO"]        { background: #9ca3af; }
+.ft-task-bar[data-status="IN_PROGRESS"] { background: #f59e0b; }
+.ft-task-bar[data-status="DONE"]        { background: #10b981; }
+
+.ft-task-body {
+  flex: 1;
+  padding: 13px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Titre + badges */
+/* ft-task-head supprimé — titre et badges sont maintenant des éléments séparés */
+
+.ft-task-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
   margin: 0;
-  color: #97a0b4;
+  line-height: 1.3;
 }
 
-@media (max-width: 991.98px) {
-  .tft-filters {
-    grid-template-columns: 1fr;
-  }
-
-  .tft-list {
-    grid-template-columns: 1fr;
-  }
+.ft-task--done .ft-task-title {
+  text-decoration: line-through;
+  color: #9ca3af;
 }
 
-@media (max-width: 767.98px) {
-  .tft-hero-top {
-    flex-direction: column;
-  }
+.ft-task-badges {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
 
-  .tft-filter-pill {
-    width: 100%;
-  }
+.ft-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  flex-shrink: 0 !important;
+  min-width: max-content;
+  width: max-content;
+}
 
-  .tft-meta {
-    grid-template-columns: 1fr;
-  }
+/* Badges statut */
+.ft-badge-status[data-status="TODO"]        { background: #f1f5f9; color: #64748b; }
+.ft-badge-status[data-status="IN_PROGRESS"] { background: #fff7ed; color: #f59e0b; }
+.ft-badge-status[data-status="DONE"]        { background: #f0fdf4; color: #10b981; }
 
-  .tft-timer-banner {
-    align-items: flex-start;
-  }
+/* Badges priorité */
+.ft-badge-priority[data-priority="HIGH"]   { background: #fef2f2; color: #ef4444; }
+.ft-badge-priority[data-priority="MEDIUM"] { background: #fff7ed; color: #f59e0b; }
+.ft-badge-priority[data-priority="LOW"]    { background: #f0fdf4; color: #10b981; }
+.ft-badge-priority[data-priority="NORMAL"] { background: #f4f5f7; color: #6b7280; }
 
-  .tft-timer-live {
-    width: 100%;
-    text-align: left;
-  }
+.ft-badge-overdue { background: #fef2f2; color: #ef4444; }
+
+/* Description */
+.ft-task-desc {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Meta */
+.ft-task-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.ft-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.ft-meta-item i { font-size: 13px; color: #9ca3af; }
+
+/* Actions */
+.ft-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ft-timer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #e9eaf0;
+  background: #f8f9fb;
+  color: #6b7280;
+  transition: all 0.13s;
+}
+
+.ft-timer-btn:hover:not(:disabled) { background: #eaecf0; color: #374151; }
+
+.ft-timer-btn.running {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #ef4444;
+}
+
+.ft-timer-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.ft-timer-btn i { font-size: 14px; }
+
+.ft-discuss-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid #ddd6fe;
+  background: #f5f3ff;
+  color: #7c3aed;
+  transition: background 0.13s;
+}
+
+.ft-discuss-btn:hover { background: #ede9fe; }
+.ft-discuss-btn i { font-size: 14px; }
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+@media (max-width: 768px) {
+  .ft-header { flex-direction: column; align-items: flex-start; }
+  .ft-timer-banner { flex-wrap: wrap; }
+  .ft-timer-summary { display: none; }
+  .ft-task-title { font-size: 13px; }
 }

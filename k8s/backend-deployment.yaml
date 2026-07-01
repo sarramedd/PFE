@@ -1,0 +1,101 @@
+# ============================================================================
+# Manifest Kubernetes pour le backend Spring Boot sur Azure AKS
+# ============================================================================
+# Pre-requis :
+#   1) Avoir push l'image dans un registry (ex: Azure Container Registry)
+#   2) Avoir cree un PostgreSQL Flexible Server sur Azure (terraform apply)
+#   3) Recuperer le FQDN du Postgres : "terraform output postgres_fqdn"
+#   4) Creer le Secret avec les credentials (commande kubectl plus bas)
+#
+# Creer le Secret (a faire AVANT le apply) :
+#   kubectl create secret generic gestion-projet-db \
+#     --from-literal=url='jdbc:postgresql://<postgres_fqdn>:5432/gestion_projet?sslmode=require' \
+#     --from-literal=username='<admin_user>' \
+#     --from-literal=password='<admin_password>'
+#
+# Creer le Secret pour la cle IA (optionnel - sinon fallback heuristique) :
+#   kubectl create secret generic gestion-projet-ai \
+#     --from-literal=apiKey='<votre_cle_gemini>'
+# ============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gestion-projet-backend
+  labels:
+    app: gestion-projet-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gestion-projet-backend
+  template:
+    metadata:
+      labels:
+        app: gestion-projet-backend
+    spec:
+      containers:
+        - name: backend
+          image: <YOUR_ACR>.azurecr.io/gestion-projet-backend:latest
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: gestion-projet-db
+                  key: url
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: gestion-projet-db
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: gestion-projet-db
+                  key: password
+            # IMPORTANT : sur Azure on utilise PostgreSQL, donc on force
+            # le driver et le dialecte JPA (defaut MySQL en local).
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: org.postgresql.Driver
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              value: org.hibernate.dialect.PostgreSQLDialect
+            - name: APP_AI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gestion-projet-ai
+                  key: apiKey
+                  optional: true
+          resources:
+            requests:
+              cpu: "200m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 60
+            periodSeconds: 20
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gestion-projet-backend
+spec:
+  selector:
+    app: gestion-projet-backend
+  ports:
+    - port: 8088
+      targetPort: 8088
+  type: ClusterIP

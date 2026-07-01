@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <defs>
+    <linearGradient id="hexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="50%" stop-color="#8b5cf6"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#e0e7ff" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Hexagone de fond -->
+  <path d="M100 12 L178 57 L178 143 L100 188 L22 143 L22 57 Z"
+        fill="url(#hexGrad)" filter="url(#glow)" opacity="0.95"/>
+
+  <!-- Icône flux / connexion (3 nœuds reliés) -->
+  <!-- Nœud haut gauche -->
+  <circle cx="72" cy="80" r="11" fill="url(#iconGrad)"/>
+  <!-- Nœud haut droite -->
+  <circle cx="128" cy="80" r="11" fill="url(#iconGrad)"/>
+  <!-- Nœud bas centre -->
+  <circle cx="100" cy="126" r="11" fill="url(#iconGrad)"/>
+
+  <!-- Lignes de connexion -->
+  <line x1="82" y1="83" x2="118" y2="83" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+  <line x1="76"  y1="90" x2="95"  y2="116" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+  <line x1="124" y1="90" x2="105" y2="116" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</svg>

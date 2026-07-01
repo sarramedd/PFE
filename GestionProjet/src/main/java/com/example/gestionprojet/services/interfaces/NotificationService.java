@@ -16,6 +16,8 @@ public interface NotificationService {
 
     Notification markAsRead(Long id);
 
+    int markAllAsRead(Long userId);
+
     void deleteNotification(Long id);
 
     Notification createForUser(User user, String message);

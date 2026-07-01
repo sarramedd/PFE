@@ -105,11 +105,6 @@
   color: #86efac;
 }
 
-.sidebar .nav .nav-item.menu-items.tf-menu-tasks .menu-icon {
-  background: rgba(245, 158, 11, 0.16);
-  border-color: rgba(245, 158, 11, 0.24);
-  color: #fcd34d;
-}
 
 .sidebar .nav .nav-item.menu-items.tf-menu-reports .menu-icon {
   background: rgba(168, 85, 247, 0.16);
@@ -143,10 +138,6 @@
   border-color: rgba(16, 185, 129, 0.28);
 }
 
-.sidebar .nav .nav-item.menu-items.tf-menu-tasks .nav-link.active {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.22), rgba(251, 191, 36, 0.12));
-  border-color: rgba(245, 158, 11, 0.28);
-}
 
 .sidebar .nav .nav-item.menu-items.tf-menu-reports .nav-link.active {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.22), rgba(192, 132, 252, 0.12));
@@ -289,3 +280,128 @@
   font-size: 0.68rem;
   margin-top: 0.08rem;
 }
+
+
+/* ===== Brand logo ===== */
+.tf-brand-link {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.tf-brand-icon {
+  width: 36px !important;
+  height: 36px !important;
+  object-fit: contain;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.tf-brand-name {
+  font-size: 1.18rem;
+  font-weight: 800;
+  color: #e2e8f0;
+  letter-spacing: -0.3px;
+}
+.tf-brand-accent {
+  background: linear-gradient(135deg, #818cf8, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============ Sidebar amelioree : logo orga + logout ============ */
+.tf-org-chip-improved {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(139, 92, 246, 0.10));
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 12px;
+  margin-top: 0.85rem;
+}
+
+.tf-org-logo-wrap {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(99, 102, 241, 0.18);
+}
+.tf-org-logo-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.tf-org-info {
+  display: flex; flex-direction: column;
+  min-width: 0;
+}
+.tf-org-info strong {
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.tf-org-info span {
+  color: #94a3b8;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Logout button : tres visible en bas du sidebar */
+.tf-sidebar-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(220, 38, 38, 0.18));
+  color: #fca5a5;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.tf-sidebar-logout i {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.tf-sidebar-logout:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(220, 38, 38, 0.35));
+  color: #fff;
+  border-color: rgba(239, 68, 68, 0.6);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.25);
+}
+
+/* Icones des items menu plus nettes et coherentes */
+.sidebar .nav .nav-item .menu-icon {
+  width: 36px; height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.10);
+  border-radius: 9px;
+  color: #a5b4fc;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar .nav .nav-item .menu-icon i {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.sidebar .nav .nav-item .nav-link:hover .menu-icon,
+.sidebar .nav .nav-item .nav-link.active .menu-icon {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(99, 102, 241, 0.35);
+}
+

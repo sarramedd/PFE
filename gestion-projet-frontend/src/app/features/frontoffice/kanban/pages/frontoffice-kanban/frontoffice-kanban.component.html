@@ -3,32 +3,35 @@
     <div class="card-body">
       <div class="tfk-hero-top">
         <div>
-          <a routerLink="/frontoffice/projects" class="tfk-back">Retour aux projets</a>
+          <a routerLink="/frontoffice/projects" class="tfk-back">{{ 'kanban.backToProjects' | tf }}</a>
           <h2 class="tfk-title">{{ project?.name || 'Project Calendar' }}</h2>
           <p class="tfk-subtitle">{{ project?.description || 'Une vue calendrier moderne, claire et fluide pour organiser le rythme du projet.' }}</p>
         </div>
 
-        <button *ngIf="canCreateTasks && project" class="btn btn-primary tfk-add-btn" (click)="openAddModal()">
-          Nouvelle tache
-        </button>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <app-meetings-button *ngIf="project" [projectId]="project.id"></app-meetings-button>
+          <button *ngIf="canCreateTasks && project" class="btn btn-primary tfk-add-btn" (click)="openAddModal()">
+            {{ 'kanban.newTask' | tf }}
+          </button>
+        </div>
       </div>
 
       <div class="tfk-stats">
         <div class="tfk-stat-card tone-lilac">
           <span class="tfk-stat-value">{{ totalTasks }}</span>
-          <span class="tfk-stat-label">Taches</span>
+          <span class="tfk-stat-label">{{ 'kanban.tasks' | tf }}</span>
         </div>
         <div class="tfk-stat-card tone-sky">
           <span class="tfk-stat-value">{{ tasksThisMonth }}</span>
-          <span class="tfk-stat-label">Ce mois-ci</span>
+          <span class="tfk-stat-label">{{ 'kanban.thisMonth' | tf }}</span>
         </div>
         <div class="tfk-stat-card tone-mint">
           <span class="tfk-stat-value">{{ completedTasks }}</span>
-          <span class="tfk-stat-label">Terminees</span>
+          <span class="tfk-stat-label">{{ 'kanban.done' | tf }}</span>
         </div>
         <div class="tfk-progress-card">
           <div class="tfk-progress-head">
-            <span>Progression</span>
+            <span>{{ 'kanban.progress' | tf }}</span>
             <strong>{{ progressPercent }}%</strong>
           </div>
           <div class="progress tfk-progress">
@@ -42,7 +45,7 @@
   <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
   <div *ngIf="loading" class="tfk-loading card">
-    <div class="card-body">Chargement du calendrier...</div>
+    <div class="card-body">{{ 'common.loading' | tf }}</div>
   </div>
 
   <div *ngIf="!loading" class="tfk-layout">
@@ -78,7 +81,7 @@
               class="tfk-marker"
               [ngClass]="'status-' + getStatusTone(task.status)"></span>
           </div>
-          <small *ngIf="day.tasks.length > 0" class="tfk-day-count">{{ day.tasks.length }} task{{ day.tasks.length > 1 ? 's' : '' }}</small>
+          <small *ngIf="day.tasks.length > 0" class="tfk-day-count">{{ day.tasks.length }}</small>
         </button>
       </div>
     </div>
@@ -88,14 +91,14 @@
         <div class="card-body">
           <div class="tfk-panel-head">
             <div>
-              <span class="tfk-panel-kicker">Selected day</span>
+              <span class="tfk-panel-kicker">{{ 'kanban.selectedDay' | tf }}</span>
               <h4>{{ formatDayLabel(selectedDate) }}</h4>
             </div>
             <span class="tfk-chip">{{ selectedDayTasks.length }}</span>
           </div>
 
           <div *ngIf="selectedDayTasks.length === 0" class="tfk-empty">
-            Aucune tache prevue pour cette date.
+            {{ 'kanban.noTaskDay' | tf }}
           </div>
 
           <div class="tfk-agenda" *ngIf="selectedDayTasks.length > 0">
@@ -110,34 +113,34 @@
               </div>
 
               <h5>{{ task.title }}</h5>
-              <p>{{ task.description || 'Aucune description pour cette tache.' }}</p>
+              <p>{{ task.description || ('kanban.noDescription' | tf) }}</p>
 
               <div class="tfk-agenda-meta">
                 <div class="tfk-avatar">{{ getInitials(task) }}</div>
                 <div>
-                  <span class="tfk-meta-label">Assigne a</span>
+                  <span class="tfk-meta-label">{{ 'kanban.assignedTo' | tf }}</span>
                   <strong>{{ getAssigneeName(task) }}</strong>
                 </div>
               </div>
 
               <div class="tfk-agenda-meta">
                 <div>
-                  <span class="tfk-meta-label">Charge</span>
+                  <span class="tfk-meta-label">{{ 'kanban.load' | tf }}</span>
                   <strong>{{ task.estimatedHours || 0 }}h</strong>
                 </div>
                 <div *ngIf="task.dependsOn">
-                  <span class="tfk-meta-label">Depend de</span>
+                  <span class="tfk-meta-label">{{ 'kanban.dependsOn' | tf }}</span>
                   <strong>{{ task.dependsOn.title }}</strong>
                 </div>
                 <div *ngIf="task.parentTask">
-                  <span class="tfk-meta-label">Sous-tache de</span>
+                  <span class="tfk-meta-label">{{ 'kanban.subtaskOf' | tf }}</span>
                   <strong>{{ task.parentTask.title }}</strong>
                 </div>
               </div>
 
               <div class="tfk-agenda-actions" *ngIf="canManageTasks">
-                <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditModal(task)">Modifier</button>
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteTask(task)">Supprimer</button>
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="openEditModal(task)">{{ 'kanban.edit' | tf }}</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteTask(task)">{{ 'kanban.delete' | tf }}</button>
               </div>
 
               <div class="tfk-status-switch" *ngIf="canChangeStatus(task)">
@@ -146,21 +149,21 @@
                   class="tfk-status-btn"
                   [class.active]="task.status === 'TODO'"
                   (click)="changeTaskStatus(task, TaskStatus.TODO)">
-                  To do
+                  {{ 'kanban.todo' | tf }}
                 </button>
                 <button
                   type="button"
                   class="tfk-status-btn"
                   [class.active]="task.status === 'IN_PROGRESS'"
                   (click)="changeTaskStatus(task, TaskStatus.IN_PROGRESS)">
-                  In progress
+                  {{ 'kanban.inProgress' | tf }}
                 </button>
                 <button
                   type="button"
                   class="tfk-status-btn"
                   [class.active]="task.status === 'DONE'"
                   (click)="changeTaskStatus(task, TaskStatus.DONE)">
-                  Done
+                  {{ 'kanban.done' | tf }}
                 </button>
               </div>
             </div>
@@ -172,13 +175,13 @@
         <div class="card-body">
           <div class="tfk-panel-head">
             <div>
-              <span class="tfk-panel-kicker">Upcoming</span>
-              <h4>Prochaines echeances</h4>
+              <span class="tfk-panel-kicker">{{ 'kanban.upcoming' | tf }}</span>
+              <h4>{{ 'kanban.upcoming' | tf }}</h4>
             </div>
           </div>
 
           <div *ngIf="upcomingTasks.length === 0" class="tfk-empty">
-            Rien a venir pour le moment.
+            {{ 'kanban.noUpcoming' | tf }}
           </div>
 
           <div class="tfk-upcoming" *ngIf="upcomingTasks.length > 0">
@@ -188,7 +191,7 @@
                 <strong>{{ task.title }}</strong>
                 <span>{{ formatDate(task.dueDate) }}</span>
               </div>
-              <button *ngIf="canManageTasks" type="button" class="tfk-link-btn" (click)="openEditModal(task)">Ouvrir</button>
+              <button *ngIf="canManageTasks" type="button" class="tfk-link-btn" (click)="openEditModal(task)">{{ 'kanban.open' | tf }}</button>
             </div>
           </div>
         </div>

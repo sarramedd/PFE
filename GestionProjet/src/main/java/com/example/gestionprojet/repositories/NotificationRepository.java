@@ -3,7 +3,11 @@ package com.example.gestionprojet.repositories;
 import com.example.gestionprojet.entities.Notification;
 import com.example.gestionprojet.entities.NotificationType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -12,4 +16,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     List<Notification> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     List<Notification> findByUserIdAndTypeOrderByCreatedAtDesc(Long userId, NotificationType type);
+
+    @Modifying
+    @Query("UPDATE Notification n SET n.isRead = true, n.readAt = :now WHERE n.user.id = :userId AND n.isRead = false")
+    int markAllAsReadByUserId(@Param("userId") Long userId, @Param("now") LocalDateTime now);
 }

@@ -120,6 +120,12 @@
                   Members
                 </button>
 
+                <!-- IA : Brief executif du projet -->
+                <app-ai-brief-modal [projectId]="project.id"></app-ai-brief-modal>
+
+                <!-- IA : Resume de la discussion -->
+                <app-ai-discussion-summary [projectId]="project.id"></app-ai-discussion-summary>
+
                 <!-- Delete -->
                 <button class="pm-action-btn delete" (click)="deleteProject(project.id)" title="Delete project">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

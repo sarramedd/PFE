@@ -1,7 +1,7 @@
 <nav class="navbar tf-admin-navbar p-0 fixed-top d-flex flex-row">
   <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center">
     <a class="navbar-brand brand-logo-mini" routerLink="/admin/dashboard">
-      <img src="assets/images/teamflow.png" alt="TeamFlow" />
+      <img src="assets/images/teamflow-logo.svg" alt="TeamFlow" style="height:32px;width:32px;object-fit:contain;border-radius:8px;" />
     </a>
   </div>
 
@@ -34,14 +34,18 @@
       <li class="nav-item d-none d-md-flex align-items-center">
         <a routerLink="/admin/attachments" class="tf-quick-link">
           <i class="mdi mdi-chart-areaspline"></i>
-          <span>Reports</span>
+          <span>{{ 'nav.planning' | tf }}</span>
         </a>
+      </li>
+
+      <li class="nav-item d-flex align-items-center">
+        <app-lang-switcher></app-lang-switcher>
       </li>
 
       <li class="nav-item d-none d-md-flex align-items-center">
         <a routerLink="/admin/projects" class="tf-quick-link alt">
           <i class="mdi mdi-folder-star-outline"></i>
-          <span>Projects</span>
+          <span>{{ 'nav.projects' | tf }}</span>
         </a>
       </li>
 
@@ -84,7 +88,7 @@
               </div>
             </div>
             <div class="preview-item-content">
-              <p class="preview-subject mb-1">Dashboard</p>
+              <p class="preview-subject mb-1">{{ 'nav.dashboard' | tf }}</p>
             </div>
           </a>
 
@@ -95,7 +99,7 @@
               </div>
             </div>
             <div class="preview-item-content">
-              <p class="preview-subject mb-1">Reports & Planning</p>
+              <p class="preview-subject mb-1">{{ 'nav.planning' | tf }}</p>
             </div>
           </a>
 
@@ -108,7 +112,7 @@
               </div>
             </div>
             <div class="preview-item-content">
-              <p class="preview-subject mb-1">Log out</p>
+              <p class="preview-subject mb-1">{{ 'nav.logout' | tf }}</p>
             </div>
           </button>
         </div>

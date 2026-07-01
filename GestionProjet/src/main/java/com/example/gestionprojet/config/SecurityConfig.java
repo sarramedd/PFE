@@ -48,7 +48,7 @@ public class SecurityConfig {
         ));
 
         config.setAllowedMethods(Arrays.asList(
-                "GET", "POST", "PUT", "DELETE", "OPTIONS"
+                "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
         ));
 
         config.setAllowedHeaders(Arrays.asList("*"));
@@ -82,6 +82,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/comments/**").permitAll()
                         .requestMatchers("/api/notifications/**").permitAll()
                         .requestMatchers("/api/reports/**").permitAll()
+                        .requestMatchers("/api/ai/**").authenticated()
+                        .requestMatchers("/api/meetings/**").authenticated()
                         .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )

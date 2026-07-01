@@ -44,6 +44,15 @@ export class NotificationService {
     });
   }
 
+  markAllAsRead(): Observable<void> {
+    return this.http.patch<void>(`${this.apiUrl}/me/read-all`, {}).pipe(
+      tap(() => {
+        const updated = this.liveNotifications$.value.map((item) => ({ ...item, isRead: true }));
+        this.liveNotifications$.next(updated);
+      })
+    );
+  }
+
   watchMineLive(): Observable<NotificationItem[]> {
     this.getMine().subscribe({
       next: (items) => this.liveNotifications$.next(this.sortNewest(items)),
@@ -75,10 +84,8 @@ export class NotificationService {
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {
-      this.getMine().subscribe({
-        next: (items) => this.liveNotifications$.next(this.sortNewest(items)),
-        error: () => {}
-      });
+      // Les données sont déjà chargées via getMine() dans watchMineLive().
+      // Pas de second appel ici pour éviter la race condition avec markAsRead.
     };
 
     this.socket.onmessage = (event) => {

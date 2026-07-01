@@ -13,6 +13,7 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String password;
+    private String oldPassword;
     private String avatarUrl;
     private Boolean isActive ;
     @Enumerated(EnumType.STRING)
@@ -31,6 +32,14 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
     public String getAvatarUrl() {

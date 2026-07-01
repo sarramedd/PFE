@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription, forkJoin, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { LanguageService } from 'src/app/core/services/language.service';
 import { CurrentUserService } from 'src/app/core/services/current-user.service';
 import { NotificationService } from 'src/app/core/services/notification.service';
 import { ProjectService } from 'src/app/features/admin/projects/services/project.service';
@@ -59,6 +60,7 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
   private notificationsSub: Subscription | null = null;
 
   constructor(
+    private lang: LanguageService,
     private currentUserService: CurrentUserService,
     private projectService: ProjectService,
     private taskService: TaskService,
@@ -78,7 +80,7 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
       next: (user) => {
         if (!user) {
           this.loading = false;
-          this.errorMessage = 'Impossible de charger votre session.';
+          this.errorMessage = this.lang.instant('dashboard.sessionError');
           return;
         }
 
@@ -87,7 +89,7 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.loading = false;
-        this.errorMessage = 'Impossible de charger votre tableau de bord.';
+        this.errorMessage = this.lang.instant('dashboard.dashboardError');
       }
     });
   }
@@ -98,13 +100,9 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
 
   get greeting(): string {
     const hour = new Date().getHours();
-    if (hour < 12) {
-      return 'Bonjour';
-    }
-    if (hour < 18) {
-      return 'Bon apres-midi';
-    }
-    return 'Bonsoir';
+    if (hour < 12) return 'dashboard.greetingMorning';
+    if (hour < 18) return 'dashboard.greetingAfternoon';
+    return 'dashboard.greetingEvening';
   }
 
   get activeProjectsCount(): number {
@@ -146,9 +144,9 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
     const done = this.dashboardTasks.filter((task) => task.status === TaskStatus.DONE).length;
 
     return [
-      { label: 'To do', value: todo, percent: Math.round((todo / total) * 100), tone: 'violet' },
-      { label: 'In progress', value: inProgress, percent: Math.round((inProgress / total) * 100), tone: 'sky' },
-      { label: 'Done', value: done, percent: Math.round((done / total) * 100), tone: 'mint' }
+      { label: 'common.todo', value: todo, percent: Math.round((todo / total) * 100), tone: 'violet' },
+      { label: 'common.inProgress', value: inProgress, percent: Math.round((inProgress / total) * 100), tone: 'sky' },
+      { label: 'common.done', value: done, percent: Math.round((done / total) * 100), tone: 'mint' }
     ];
   }
 
@@ -160,10 +158,10 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
     const month = this.dashboardTasks.filter((task) => this.isTaskInCurrentMonth(task)).length;
 
     return [
-      { label: 'En retard', value: overdue, percent: Math.round((overdue / total) * 100), tone: 'rose' },
-      { label: "Aujourd'hui", value: today, percent: Math.round((today / total) * 100), tone: 'amber' },
-      { label: 'Cette semaine', value: week, percent: Math.round((week / total) * 100), tone: 'sky' },
-      { label: 'Ce mois', value: month, percent: Math.round((month / total) * 100), tone: 'mint' }
+      { label: 'dashboard.overdue', value: overdue, percent: Math.round((overdue / total) * 100), tone: 'rose' },
+      { label: 'dashboard.today', value: today, percent: Math.round((today / total) * 100), tone: 'amber' },
+      { label: 'dashboard.thisWeek', value: week, percent: Math.round((week / total) * 100), tone: 'sky' },
+      { label: 'dashboard.thisMonth', value: month, percent: Math.round((month / total) * 100), tone: 'mint' }
     ];
   }
 
@@ -239,32 +237,32 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
 
     if (overdue > 0) {
       insights.push({
-        title: 'Detection de retard active',
-        description: `${overdue} tache${overdue > 1 ? 's sont' : ' est'} en retard. Priorise ces elements pour reduire le risque de blocage.`,
+        title: this.lang.instant('dashboard.aiDelayActive'),
+        description: `${overdue} ${this.lang.instant(overdue > 1 ? 'dashboard.aiDelayDescPlural' : 'dashboard.aiDelayDesc1')}`,
         tone: 'danger'
       });
     }
 
     if (dueSoon > 0) {
       insights.push({
-        title: 'Echeances proches',
-        description: `${dueSoon} tache${dueSoon > 1 ? 's arrivent' : ' arrive'} dans les prochaines 48 heures.`,
+        title: this.lang.instant('dashboard.aiUpcoming'),
+        description: `${dueSoon} ${this.lang.instant(dueSoon > 1 ? 'dashboard.aiUpcomingDescPlural' : 'dashboard.aiUpcomingDesc1')}`,
         tone: 'warning'
       });
     }
 
     if (riskyProject) {
       insights.push({
-        title: 'Projet a surveiller',
-        description: `${riskyProject.project.name} montre un risque de retard avec ${riskyProject.delayed} tache${riskyProject.delayed > 1 ? 's' : ''} en retard et ${riskyProject.progress}% de progression.`,
+        title: this.lang.instant('dashboard.aiRiskyProject'),
+        description: `${riskyProject.project.name}: ${riskyProject.delayed} ${this.lang.instant('dashboard.delayed')}, ${riskyProject.progress}% ${this.lang.instant('dashboard.progressOf')}`,
         tone: riskyProject.delayed > 0 ? 'warning' : 'info'
       });
     }
 
     if (insights.length === 0) {
       insights.push({
-        title: 'Rythme sain',
-        description: 'Aucun signal de retard detecte pour le moment. Tu peux te concentrer sur les prochaines echeances.',
+        title: this.lang.instant('dashboard.aiHealthy'),
+        description: this.lang.instant('dashboard.aiHealthyDesc'),
         tone: 'success'
       });
     }
@@ -274,10 +272,10 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
 
   get quickActions(): Array<{ label: string; route: string; icon: string; tone: string }> {
     return [
-      { label: 'Mes projets', route: '/frontoffice/projects', icon: 'bx bx-briefcase-alt-2', tone: 'lilac' },
-      { label: 'Mes taches', route: '/frontoffice/tasks', icon: 'bx bx-task', tone: 'sky' },
-      { label: 'Messages', route: '/frontoffice/messages', icon: 'bx bx-message-dots', tone: 'peach' },
-      { label: 'Profil', route: '/frontoffice/profile', icon: 'bx bx-user-circle', tone: 'mint' }
+      { label: 'nav.projects', route: '/frontoffice/projects', icon: 'bx bx-briefcase-alt-2', tone: 'lilac' },
+      { label: 'nav.tasks', route: '/frontoffice/tasks', icon: 'bx bx-task', tone: 'sky' },
+      { label: 'nav.messages', route: '/frontoffice/messages', icon: 'bx bx-message-dots', tone: 'peach' },
+      { label: 'nav.profile', route: '/frontoffice/profile', icon: 'bx bx-user-circle', tone: 'mint' }
     ];
   }
 
@@ -291,10 +289,10 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
 
   get managerSummaryItems(): Array<{ value: number; label: string }> {
     return [
-      { value: this.projectTasks.length, label: 'Taches equipe' },
-      { value: this.completedTasksCount, label: 'Done equipe' },
-      { value: this.overdueTasksCount, label: 'Retards equipe' },
-      { value: this.uniqueContributorsCount, label: 'Membres actifs' }
+      { value: this.projectTasks.length, label: 'dashboard.teamTasks' },
+      { value: this.completedTasksCount, label: 'dashboard.teamDone' },
+      { value: this.overdueTasksCount, label: 'dashboard.teamDelaysLabel' },
+      { value: this.uniqueContributorsCount, label: 'dashboard.activeMembers' }
     ];
   }
 
@@ -336,41 +334,29 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
   }
 
   formatDate(value?: string): string {
-    if (!value) {
-      return 'Sans date';
-    }
-
+    if (!value) return this.lang.instant('dashboard.noDate');
     const date = new Date(value);
-    if (isNaN(date.getTime())) {
-      return 'Sans date';
-    }
-
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
+    if (isNaN(date.getTime())) return this.lang.instant('dashboard.noDate');
+    const locale = this.lang.current === 'en' ? 'en-US' : 'fr-FR';
+    return date.toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
   getTaskStatusLabel(status: string): string {
     switch (status) {
-      case TaskStatus.IN_PROGRESS:
-        return 'In progress';
-      case TaskStatus.DONE:
-        return 'Done';
-      default:
-        return 'To do';
+      case TaskStatus.IN_PROGRESS: return this.lang.instant('common.inProgress');
+      case TaskStatus.DONE:        return this.lang.instant('common.done');
+      default:                     return this.lang.instant('common.todo');
     }
   }
 
   getStatusClass(status: string): string {
     switch (status) {
       case TaskStatus.IN_PROGRESS:
-        return 'status-progress';
+        return 'progress';
       case TaskStatus.DONE:
-        return 'status-done';
+        return 'done';
       default:
-        return 'status-todo';
+        return 'todo';
     }
   }
 

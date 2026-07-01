@@ -91,6 +91,26 @@
   font-size: 0.73rem;
   font-weight: 600;
 }
+.sad-hero-tag-success {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+.sad-hero-tag-warning {
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #fcd34d;
+}
+.sad-hero-tag-info {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+.sad-hero-tag-purple {
+  background: rgba(139, 92, 246, 0.18);
+  border-color: rgba(139, 92, 246, 0.35);
+  color: #c4b5fd;
+}
 
 .sad-hero-stats {
   display: flex;

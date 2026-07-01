@@ -1,11 +1,14 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { LanguageService } from './core/services/language.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './core/auth/pages/login/login.component';
+import { TranslatePipe } from './shared/pipes/translate.pipe';
+import { LangSwitcherComponent } from './shared/components/lang-switcher/lang-switcher.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { AttachmentsComponent } from './features/admin/attachments/pages/attachments/attachments.component';
 import { DashboardComponent } from './features/admin/dashboard/pages/dashboard/dashboard.component';
@@ -44,6 +47,23 @@ import { AdminLayoutComponent } from './shared/layout/admin-layout/admin-layout.
 import { FooterComponent } from './shared/layout/footer/footer.component';
 import { NavbarComponent } from './shared/layout/navbar/navbar.component';
 import { SidebarComponent } from './shared/layout/sidebar/sidebar.component';
+
+// Composants IA standalone
+import { AiBriefModalComponent } from './shared/components/ai-brief-modal/ai-brief-modal.component';
+import { AiDescribeButtonComponent } from './shared/components/ai-describe-button/ai-describe-button.component';
+import { AiSuggestAssigneeComponent } from './shared/components/ai-suggest-assignee/ai-suggest-assignee.component';
+import { AiRiskTasksComponent } from './shared/components/ai-risk-tasks/ai-risk-tasks.component';
+import { AiDiscussionSummaryComponent } from './shared/components/ai-discussion-summary/ai-discussion-summary.component';
+
+// Panneau Reunions
+import { MeetingsPanelComponent } from './shared/components/meetings-panel/meetings-panel.component';
+import { MeetingsButtonComponent } from './shared/components/meetings-button/meetings-button.component';
+import { MyMeetingsWidgetComponent } from './shared/components/my-meetings-widget/my-meetings-widget.component';
+
+// Reunion en ligne Jitsi
+import { JitsiRoomComponent } from './features/frontoffice/meetings/pages/jitsi-room/jitsi-room.component';
+// Page réunions (sidebar)
+import { FrontofficeReunionsComponent } from './features/frontoffice/meetings/pages/frontoffice-reunions/frontoffice-reunions.component';
 
 @NgModule({
   declarations: [
@@ -91,9 +111,30 @@ import { SidebarComponent } from './shared/layout/sidebar/sidebar.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    // Composants IA standalone : disponibles dans tout le template HTML
+    AiBriefModalComponent,
+    AiDescribeButtonComponent,
+    AiSuggestAssigneeComponent,
+    AiRiskTasksComponent,
+    AiDiscussionSummaryComponent,
+    MeetingsPanelComponent,
+    MeetingsButtonComponent,
+    MyMeetingsWidgetComponent,
+    JitsiRoomComponent,
+    FrontofficeReunionsComponent,
+    LangSwitcherComponent,
+    TranslatePipe
   ],
-  providers: [ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (langService: LanguageService) => () => langService.init(),
+      deps: [LanguageService],
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

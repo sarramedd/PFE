@@ -7,8 +7,8 @@ import { AttachmentItem } from 'src/app/shared/models/attachment.model';
   providedIn: 'root'
 })
 export class AttachmentService {
-  private readonly apiUrl = 'http://localhost:8088/api/attachments';
-  private readonly backendBaseUrl = 'http://localhost:8088';
+  private readonly apiUrl = '/api/attachments';
+  private readonly backendBaseUrl = '';
 
   constructor(private http: HttpClient) {}
 

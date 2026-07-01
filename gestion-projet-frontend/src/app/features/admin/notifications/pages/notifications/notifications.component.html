@@ -22,6 +22,10 @@
         <strong>{{ mentionCount }}</strong>
         <span>Mentions</span>
       </div>
+      <button class="btn btn-outline-light btn-sm noti-refresh-btn" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
+        <i class="mdi mdi-check-all"></i>
+        Tout marquer lu
+      </button>
       <button class="btn btn-outline-light btn-sm noti-refresh-btn" (click)="loadNotifications()">
         <i class="mdi mdi-refresh"></i>
         Rafraichir

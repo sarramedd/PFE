@@ -1,80 +1,152 @@
-<div class="row">
-  <div class="col-12">
-    <div class="card">
-      <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <div>
-          <h5 class="mb-1">Projects</h5>
-          <small class="text-muted">
-            {{ isProjectManager ? 'Projets de votre organisation' : 'Vos projets affectes' }}
-          </small>
-        </div>
+<div class="fp-shell">
 
-        <button *ngIf="isProjectManager" type="button" class="btn btn-primary" (click)="openAddModal()">
-          Nouveau projet
-        </button>
+  <!-- ===== EN-TÊTE ===== -->
+  <div class="fp-header">
+    <div class="fp-header-left">
+      <h2 class="fp-title">
+        <span class="fp-title-icon"><i class="bx bx-briefcase-alt-2"></i></span>
+        {{ 'projects.title' | tf }}
+      </h2>
+      <p class="fp-subtitle">
+        {{ isProjectManager ? ('projects.subtitleManager' | tf) : ('projects.subtitleMember' | tf) }}
+      </p>
+    </div>
+    <div class="fp-header-actions">
+      <div class="fp-search-wrap">
+        <i class="bx bx-search fp-search-icon"></i>
+        <input type="text" class="fp-search" [placeholder]="'projects.searchPlaceholder' | tf" [(ngModel)]="searchQuery" />
       </div>
+      <button *ngIf="isProjectManager" class="fp-btn-new" (click)="openAddModal()">
+        <i class="bx bx-plus"></i> {{ 'projects.newProject' | tf }}
+      </button>
+    </div>
+  </div>
 
-      <div class="card-body">
-        <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
-        <div class="text-center py-5 text-muted" *ngIf="loading">Chargement des projets...</div>
+  <!-- ===== STATS RAPIDES ===== -->
+  <div class="fp-stats">
+    <div class="fp-stat" (click)="setStatusFilter('ALL')" [class.active]="statusFilter === 'ALL'">
+      <span class="fp-stat-num">{{ projects.length }}</span>
+      <span class="fp-stat-lbl">{{ 'projects.total' | tf }}</span>
+    </div>
+    <div class="fp-stat fp-stat--active" (click)="setStatusFilter('ACTIVE')" [class.active]="statusFilter === 'ACTIVE'">
+      <span class="fp-stat-num">{{ countByStatus('ACTIVE') }}</span>
+      <span class="fp-stat-lbl">{{ 'projects.active' | tf }}</span>
+    </div>
+    <div class="fp-stat fp-stat--completed" (click)="setStatusFilter('COMPLETED')" [class.active]="statusFilter === 'COMPLETED'">
+      <span class="fp-stat-num">{{ countByStatus('COMPLETED') }}</span>
+      <span class="fp-stat-lbl">{{ 'projects.completed' | tf }}</span>
+    </div>
+    <div class="fp-stat fp-stat--archived" (click)="setStatusFilter('ARCHIVED')" [class.active]="statusFilter === 'ARCHIVED'">
+      <span class="fp-stat-num">{{ countByStatus('ARCHIVED') }}</span>
+      <span class="fp-stat-lbl">{{ 'projects.archived' | tf }}</span>
+    </div>
+  </div>
 
-        <div class="tfp-filters" *ngIf="!loading">
-          <button type="button" class="tfp-filter" [class.active]="statusFilter === 'ALL'" (click)="setStatusFilter('ALL')">Tous</button>
-          <button type="button" class="tfp-filter" [class.active]="statusFilter === 'ACTIVE'" (click)="setStatusFilter('ACTIVE')">Actifs</button>
-          <button type="button" class="tfp-filter" [class.active]="statusFilter === 'COMPLETED'" (click)="setStatusFilter('COMPLETED')">Completed</button>
-          <button type="button" class="tfp-filter" [class.active]="statusFilter === 'ARCHIVED'" (click)="setStatusFilter('ARCHIVED')">Archives</button>
+  <!-- ===== CHARGEMENT ===== -->
+  <div class="fp-loading" *ngIf="loading">
+    <div class="fp-spinner"></div>
+    <span>{{ 'projects.loading' | tf }}</span>
+  </div>
+
+  <!-- ===== ERREUR ===== -->
+  <div class="fp-error" *ngIf="errorMessage">
+    <i class="bx bx-error-circle"></i> {{ errorMessage }}
+  </div>
+
+  <!-- ===== LISTE VIDE ===== -->
+  <div class="fp-empty" *ngIf="!loading && filteredProjects.length === 0">
+    <div class="fp-empty-art">
+      <i class="bx bx-folder-open"></i>
+    </div>
+    <h4>{{ 'projects.noProject' | tf }}</h4>
+    <p>{{ isProjectManager ? ('projects.noProjectHint' | tf) : ('projects.noProjectMember' | tf) }}</p>
+    <button *ngIf="isProjectManager" class="fp-btn-new" (click)="openAddModal()">
+      <i class="bx bx-plus"></i> {{ 'projects.newProject' | tf }}
+    </button>
+  </div>
+
+  <!-- ===== GRILLE PROJETS ===== -->
+  <div class="fp-grid" *ngIf="!loading && filteredProjects.length > 0">
+    <div class="fp-card" *ngFor="let project of filteredProjects" [attr.data-status]="project.status || 'ACTIVE'">
+
+      <div class="fp-card-top-bar"></div>
+
+      <div class="fp-card-body">
+
+        <div class="fp-card-head">
+          <div class="fp-project-icon" [attr.data-status]="project.status || 'ACTIVE'">
+            {{ projectInitials(project.name) }}
+          </div>
+          <div class="fp-project-info">
+            <h3 class="fp-project-name">{{ project.name }}</h3>
+            <span class="fp-project-org">
+              <i class="bx bx-buildings"></i>
+              {{ project.organizationName || currentUser?.organizationName || 'Organisation' }}
+            </span>
+          </div>
+          <span class="fp-status-badge" [attr.data-status]="project.status || 'ACTIVE'">
+            {{ statusLabel(project.status) }}
+          </span>
         </div>
 
-        <div class="row g-4" *ngIf="!loading && filteredProjects.length > 0">
-          <div class="col-md-6 col-xl-4" *ngFor="let project of filteredProjects">
-            <div class="card border shadow-none h-100">
-              <div class="card-body d-flex flex-column">
-                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
-                  <div>
-                    <h6 class="mb-1">{{ project.name }}</h6>
-                    <small class="text-muted">{{ project.organizationName || currentUser?.organizationName }}</small>
-                  </div>
-                  <span class="badge" [ngClass]="getStatusClass(project.status)">{{ project.status || 'ACTIVE' }}</span>
-                </div>
+        <p class="fp-desc">{{ project.description || ('projects.noDescription' | tf) }}</p>
 
-                <p class="text-muted small flex-grow-1 mb-3">
-                  {{ project.description || 'Aucune description pour le moment.' }}
-                </p>
-
-                <div class="d-flex flex-column gap-2 small text-muted mb-3">
-                  <div><strong class="text-body">Debut:</strong> {{ formatDate(project.startDate) }}</div>
-                  <div><strong class="text-body">Fin:</strong> {{ formatDate(project.endDate) }}</div>
-                </div>
-
-                <div class="d-flex gap-2 flex-wrap">
-                  <a class="btn btn-primary btn-sm" [routerLink]="['/frontoffice/projects', project.id, 'kanban']">Kanban</a>
-                  <a class="btn btn-outline-primary btn-sm" [routerLink]="['/frontoffice/tasks']">Voir les taches</a>
-                  <button
-                    *ngIf="isProjectManager"
-                    type="button"
-                    class="btn btn-outline-secondary btn-sm"
-                    (click)="openMembersModal(project)">
-                    Membres
-                  </button>
-                  <button *ngIf="isProjectManager" type="button" class="btn btn-outline-dark btn-sm" (click)="toggleArchive(project)">
-                    {{ project.status === 'ARCHIVED' ? 'Reactiver' : 'Archiver' }}
-                  </button>
-                </div>
-              </div>
-            </div>
+        <div class="fp-dates">
+          <div class="fp-date-item">
+            <i class="bx bx-calendar-check"></i>
+            <span>{{ 'projects.start' | tf }} <strong>{{ formatDate(project.startDate) }}</strong></span>
+          </div>
+          <div class="fp-date-item">
+            <i class="bx bx-calendar-x"></i>
+            <span>{{ 'projects.end' | tf }} <strong>{{ formatDate(project.endDate) }}</strong></span>
           </div>
         </div>
 
-        <div class="text-center py-5" *ngIf="!loading && filteredProjects.length === 0">
-          <i class="bx bx-briefcase-alt-2 fs-1 text-muted mb-3 d-block"></i>
-          <h6 class="mb-1">Aucun projet disponible</h6>
-          <p class="text-muted mb-0">
-            {{ isProjectManager ? 'Creez votre premier projet.' : 'Aucun projet ne vous est encore assigne.' }}
-          </p>
+        <div class="fp-progress-wrap" *ngIf="project.startDate && project.endDate">
+          <div class="fp-progress-bar">
+            <div class="fp-progress-fill" [style.width.%]="timeProgress(project)" [attr.data-status]="project.status || 'ACTIVE'"></div>
+          </div>
+          <span class="fp-progress-label">{{ timeProgress(project) }}% {{ 'projects.elapsed' | tf }}</span>
+        </div>
+
+        <div class="fp-divider"></div>
+
+        <div class="fp-actions">
+          <div class="fp-action-main">
+            <a class="fp-btn-primary" [routerLink]="['/frontoffice/projects', project.id, 'kanban']">
+              <i class="bx bx-grid-alt"></i> {{ 'projects.kanban' | tf }}
+            </a>
+            <a class="fp-btn-secondary" [routerLink]="['/frontoffice/tasks']">
+              <i class="bx bx-list-check"></i> {{ 'projects.tasks' | tf }}
+            </a>
+          </div>
+
+          <div class="fp-action-chips">
+            <span class="fp-chip fp-chip-ai fp-chip-wrap">
+              <app-ai-brief-modal [projectId]="project.id"></app-ai-brief-modal>
+            </span>
+            <span class="fp-chip fp-chip-ai fp-chip-wrap">
+              <app-ai-discussion-summary [projectId]="project.id"></app-ai-discussion-summary>
+            </span>
+
+            <ng-container *ngIf="isProjectManager">
+              <button class="fp-chip fp-chip-members" (click)="openMembersModal(project)">
+                <i class="bx bx-group"></i> {{ 'projects.members' | tf }}
+              </button>
+              <button class="fp-chip"
+                      [class.fp-chip-archive]="project.status !== 'ARCHIVED'"
+                      [class.fp-chip-restore]="project.status === 'ARCHIVED'"
+                      (click)="toggleArchive(project)">
+                <i class="bx" [class.bx-archive]="project.status !== 'ARCHIVED'" [class.bx-revision]="project.status === 'ARCHIVED'"></i>
+                {{ project.status === 'ARCHIVED' ? ('projects.restore' | tf) : ('projects.archive' | tf) }}
+              </button>
+            </ng-container>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
 </div>
 
 <app-frontoffice-project-form

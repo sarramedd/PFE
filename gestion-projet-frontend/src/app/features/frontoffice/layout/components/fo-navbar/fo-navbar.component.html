@@ -52,6 +52,8 @@
         </span>
       </button>
 
+      <app-lang-switcher></app-lang-switcher>
+
       <button type="button" class="fo-icon-btn fo-logout-btn" (click)="logout()" aria-label="Deconnexion" title="Deconnexion">
         <i class="bx bx-log-out-circle"></i>
       </button>
@@ -59,15 +61,26 @@
       <div *ngIf="showNotifications" class="card shadow position-absolute end-0 mt-2 fo-notification-panel">
         <div class="card-header d-flex justify-content-between align-items-center">
           <span class="fw-semibold">Notifications</span>
-          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="loadNotifications()">Rafraichir</button>
+          <div class="d-flex gap-1">
+            <button type="button" class="btn btn-sm btn-outline-primary"
+                    (click)="markAllVisibleAsRead()" *ngIf="unreadCount > 0"
+                    title="Tout marquer comme lu">
+              <i class="bx bx-check-double"></i>
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                    (click)="loadNotifications()" title="Rafraichir">
+              <i class="bx bx-refresh"></i>
+            </button>
+          </div>
         </div>
         <div class="card-body p-0">
           <div class="p-3 text-center text-muted" *ngIf="loadingNotifications">Chargement...</div>
-          <div class="list-group list-group-flush" *ngIf="!loadingNotifications && notifications.length > 0">
+          <!-- Liste scrollable avec scrollbar customise -->
+          <div class="fo-notification-list" *ngIf="!loadingNotifications && notifications.length > 0">
             <button
               type="button"
               class="list-group-item list-group-item-action"
-              *ngFor="let notification of notifications | slice:0:6"
+              *ngFor="let notification of notifications"
               (click)="markAsRead(notification)"
               [class.fo-notification-unread]="!notification.isRead">
               <div class="fw-semibold small mb-1">{{ notification.message }}</div>

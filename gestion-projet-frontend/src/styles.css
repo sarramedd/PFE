@@ -17,3 +17,26 @@ body.frontoffice-sneat .content-wrapper {
 body.frontoffice-sneat .content-wrapper {
   background: transparent;
 }
+
+/* ── Fix global : badges & pills tâches — empêche tout word-break/hyphens ── */
+.ft-badge,
+.ft-status-pill {
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+  -webkit-hyphens: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  min-width: max-content !important;
+}
+
+.ft-task-badges {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LanguageService } from 'src/app/core/services/language.service';
 import { AuditLogService } from 'src/app/core/services/audit-log.service';
 import { AuditLogItem } from 'src/app/shared/models/audit-log.model';
 import { Role } from 'src/app/shared/models/user.model';
@@ -16,6 +17,7 @@ export class FrontofficeActivityComponent implements OnInit {
   role: Role | null = null;
 
   constructor(
+    private lang: LanguageService,
     private auditLogService: AuditLogService,
     private currentUserService: CurrentUserService
   ) {}
@@ -50,14 +52,11 @@ export class FrontofficeActivityComponent implements OnInit {
   }
 
   formatDate(value?: string): string {
-    if (!value) {
-      return '';
-    }
-
+    if (!value) return '';
     const date = new Date(value);
-    return isNaN(date.getTime())
-      ? ''
-      : date.toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    if (isNaN(date.getTime())) return '';
+    const locale = this.lang.current === 'en' ? 'en-US' : 'fr-FR';
+    return date.toLocaleString(locale, { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
   }
 
   formatAction(action: string): string {

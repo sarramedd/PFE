@@ -2,8 +2,8 @@
   <div class="tfa-hero card border-0 shadow-sm">
     <div class="card-body">
       <span class="tfa-kicker">Workspace Activity</span>
-      <h2>Centre d'activite</h2>
-      <p>Retrouve ton historique recent et, si ton role le permet, l'activite globale de l'equipe.</p>
+      <h2>{{ 'activity.title' | tf }}</h2>
+      <p>{{ 'activity.subtitle' | tf }}</p>
     </div>
   </div>
 
@@ -12,8 +12,8 @@
       <div class="card-body">
         <div class="tfa-head">
           <div>
-            <span class="tfa-section-kicker">Personnel</span>
-            <h4>Mon activite</h4>
+            <span class="tfa-section-kicker">{{ 'activity.personal' | tf }}</span>
+            <h4>{{ 'activity.myActivity' | tf }}</h4>
           </div>
         </div>
 
@@ -34,8 +34,8 @@
       <div class="card-body">
         <div class="tfa-head">
           <div>
-            <span class="tfa-section-kicker">Equipe</span>
-            <h4>Activite d'equipe</h4>
+            <span class="tfa-section-kicker">{{ 'activity.team' | tf }}</span>
+            <h4>{{ 'activity.teamActivity' | tf }}</h4>
           </div>
         </div>
 
@@ -55,9 +55,9 @@
 </div>
 
 <ng-template #noMyLogs>
-  <div class="tfa-empty">Aucune activite personnelle recente.</div>
+  <div class="tfa-empty">{{ 'activity.noMyLogs' | tf }}</div>
 </ng-template>
 
 <ng-template #noTeamLogs>
-  <div class="tfa-empty">Aucune activite equipe recente.</div>
+  <div class="tfa-empty">{{ 'activity.noTeamLogs' | tf }}</div>
 </ng-template>

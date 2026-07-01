@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LanguageService } from 'src/app/core/services/language.service';
 import { SearchService } from 'src/app/core/services/search.service';
 import { GlobalSearchResult } from 'src/app/shared/models/search.model';
 
@@ -13,13 +14,13 @@ export class FrontofficeSearchComponent {
   errorMessage = '';
   results: GlobalSearchResult = { projects: [], tasks: [], users: [] };
 
-  constructor(private searchService: SearchService) {}
+  constructor(private lang: LanguageService, private searchService: SearchService) {}
 
   search(): void {
     const value = this.query.trim();
     if (value.length < 2) {
       this.results = { projects: [], tasks: [], users: [] };
-      this.errorMessage = value ? 'Entre au moins 2 caracteres.' : '';
+      this.errorMessage = value ? this.lang.instant('search.minChars') : '';
       return;
     }
 
@@ -33,7 +34,7 @@ export class FrontofficeSearchComponent {
       },
       error: () => {
         this.loading = false;
-        this.errorMessage = 'Impossible de lancer la recherche globale.';
+        this.errorMessage = this.lang.instant('search.error');
       }
     });
   }
@@ -43,13 +44,10 @@ export class FrontofficeSearchComponent {
   }
 
   formatDate(value?: string): string {
-    if (!value) {
-      return 'Sans date';
-    }
-
+    if (!value) return this.lang.instant('search.noDate');
     const date = new Date(value);
-    return isNaN(date.getTime())
-      ? 'Sans date'
-      : date.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (isNaN(date.getTime())) return this.lang.instant('search.noDate');
+    const locale = this.lang.current === 'en' ? 'en-US' : 'fr-FR';
+    return date.toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' });
   }
 }

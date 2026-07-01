@@ -7,8 +7,8 @@ import { Organization } from 'src/app/shared/models/organization.model';
   providedIn: 'root'
 })
 export class OrganizationService {
-  private readonly apiUrl = 'http://localhost:8088/api/organizations';
-  private readonly backendBaseUrl = 'http://localhost:8088';
+  private readonly apiUrl = '/api/organizations';
+  private readonly backendBaseUrl = '';
 
   constructor(private http: HttpClient) {}
 

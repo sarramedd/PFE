@@ -1,10 +1,12 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
   <div class="app-brand demo">
-    <a routerLink="/frontoffice/dashboard" class="app-brand-link">
+    <a routerLink="/frontoffice/dashboard" class="app-brand-link tf-fo-brand-link">
       <span class="app-brand-logo demo">
-        <img src="assets/images/teamflow.png" alt="TeamFlow" style="height: 38px; width: auto; object-fit: contain;" />
+        <img src="assets/images/teamflow-logo.svg" alt="TeamFlow" class="tf-fo-brand-icon" />
       </span>
-      <span class="app-brand-text demo menu-text fw-bolder ms-2">TeamFlow</span>
+      <span class="app-brand-text demo menu-text fw-bolder ms-2 tf-fo-brand-name">
+        Team<span class="tf-fo-brand-accent">Flow</span>
+      </span>
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -18,43 +20,49 @@
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/dashboard" class="menu-link">
         <i class="menu-icon tf-icons bx bx-home-circle"></i>
-        <div>Dashboard</div>
+        <div>{{ 'nav.dashboard' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/projects" class="menu-link">
         <i class="menu-icon tf-icons bx bx-briefcase-alt-2"></i>
-        <div>Projects</div>
+        <div>{{ 'nav.projects' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/messages" class="menu-link">
         <i class="menu-icon tf-icons bx bx-chat"></i>
-        <div>Messages</div>
+        <div>{{ 'nav.messages' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/tasks" class="menu-link">
         <i class="menu-icon tf-icons bx bx-task"></i>
-        <div>Tasks</div>
+        <div>{{ 'nav.tasks' | tf }}</div>
+      </a>
+    </li>
+    <li class="menu-item" routerLinkActive="active">
+      <a routerLink="/frontoffice/meetings" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-video"></i>
+        <div>{{ 'nav.meetings' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/activity" class="menu-link">
         <i class="menu-icon tf-icons bx bx-pulse"></i>
-        <div>Activity</div>
+        <div>{{ 'nav.activity' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/search" class="menu-link">
         <i class="menu-icon tf-icons bx bx-search-alt-2"></i>
-        <div>Search</div>
+        <div>{{ 'nav.search' | tf }}</div>
       </a>
     </li>
     <li class="menu-item" routerLinkActive="active">
       <a routerLink="/frontoffice/profile" class="menu-link">
         <i class="menu-icon tf-icons bx bx-user"></i>
-        <div>Profile</div>
+        <div>{{ 'nav.profile' | tf }}</div>
       </a>
     </li>
 
@@ -65,7 +73,7 @@
     <li class="menu-item" *ngIf="isAdmin">
       <a routerLink="/admin/dashboard" class="menu-link">
         <i class="menu-icon tf-icons bx bx-shield-quarter"></i>
-        <div>Backoffice Admin</div>
+        <div>{{ 'nav.backoffice' | tf }}</div>
       </a>
     </li>
   </ul>

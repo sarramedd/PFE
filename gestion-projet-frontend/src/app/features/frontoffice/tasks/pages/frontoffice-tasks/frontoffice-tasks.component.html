@@ -1,196 +1,173 @@
-<div class="tft-shell">
-  <div class="tft-hero card border-0 shadow-sm">
-    <div class="card-body">
-      <div class="tft-hero-top">
+<div class="ft-shell">
+
+  <!-- ===== EN-TÊTE ===== -->
+  <div class="ft-header">
+    <div class="ft-header-left">
+      <div class="ft-title-row">
+        <span class="ft-title-icon"><i class="bx bx-task"></i></span>
         <div>
-          <span class="tft-kicker">TeamFlow Tasks</span>
-          <h2 class="tft-title">Mes taches</h2>
-          <p class="tft-subtitle">Retrouve tes taches par statut ou par echeance, avec une vue claire et rapide a lire.</p>
-        </div>
-
-        <div class="tft-user-pill" *ngIf="currentUser">
-          Pour {{ currentUser.firstName }}
+          <h2 class="ft-title">{{ 'tasks.title' | tf }}</h2>
+          <p class="ft-subtitle" *ngIf="currentUser">
+            {{ 'tasks.greeting' | tf }} {{ currentUser.firstName }} —
+            {{ totalCount() }} {{ totalCount() > 1 ? ('tasks.totalPlural' | tf) : ('tasks.total' | tf) }} {{ 'tasks.totalSuffix' | tf }}
+          </p>
         </div>
       </div>
+    </div>
 
-      <div class="tft-filters">
-        <div class="tft-filter-card tft-filter-card-status">
-          <div class="tft-filter-head">
-            <div>
-              <h5>Statut</h5>
-            </div>
-            <i class="bx bx-check-square"></i>
-          </div>
+    <!-- Filtre statut compact -->
+    <div class="ft-status-bar">
+      <button class="ft-status-pill ft-all"
+              [class.active]="statusFilter === 'ALL'"
+              (click)="setStatusFilter('ALL')">
+        {{ 'tasks.all' | tf }} <span class="ft-pill-count">{{ tasks.length }}</span>
+      </button>
+      <button class="ft-status-pill ft-todo"
+              [class.active]="statusFilter === TaskStatus.TODO"
+              (click)="setStatusFilter(TaskStatus.TODO)">
+        {{ 'tasks.todo' | tf }} <span class="ft-pill-count">{{ countByStatus(TaskStatus.TODO) }}</span>
+      </button>
+      <button class="ft-status-pill ft-progress"
+              [class.active]="statusFilter === TaskStatus.IN_PROGRESS"
+              (click)="setStatusFilter(TaskStatus.IN_PROGRESS)">
+        {{ 'tasks.inProgress' | tf }} <span class="ft-pill-count">{{ countByStatus(TaskStatus.IN_PROGRESS) }}</span>
+      </button>
+      <button class="ft-status-pill ft-done"
+              [class.active]="statusFilter === TaskStatus.DONE"
+              (click)="setStatusFilter(TaskStatus.DONE)">
+        {{ 'tasks.done' | tf }} <span class="ft-pill-count">{{ countByStatus(TaskStatus.DONE) }}</span>
+      </button>
+      <span class="ft-overdue-badge" *ngIf="overdueCount() > 0">
+        <i class="bx bx-error-circle"></i> {{ overdueCount() }} {{ 'tasks.late' | tf }}
+      </span>
+    </div>
+  </div>
 
-          <div class="tft-filter-pills">
-            <button type="button" class="tft-filter-pill pastel-all" [class.active]="statusFilter === 'ALL'" (click)="setStatusFilter('ALL')">
-              <i class="bx bx-grid-alt"></i>
-              <span>Toutes</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-todo" [class.active]="statusFilter === TaskStatus.TODO" (click)="setStatusFilter(TaskStatus.TODO)">
-              <i class="bx bx-radio-circle"></i>
-              <span>To do</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-progress" [class.active]="statusFilter === TaskStatus.IN_PROGRESS" (click)="setStatusFilter(TaskStatus.IN_PROGRESS)">
-              <i class="bx bx-loader-circle"></i>
-              <span>In progress</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-done" [class.active]="statusFilter === TaskStatus.DONE" (click)="setStatusFilter(TaskStatus.DONE)">
-              <i class="bx bx-check-circle"></i>
-              <span>Done</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="tft-filter-card tft-filter-card-due">
-          <div class="tft-filter-head">
-            <div>
-              <h5>Echeance</h5>
-            </div>
-            <i class="bx bx-calendar-heart"></i>
-          </div>
-
-          <div class="tft-filter-pills">
-            <button type="button" class="tft-filter-pill pastel-all" [class.active]="dueFilter === 'ALL'" (click)="setDueFilter('ALL')">
-              <i class="bx bx-border-all"></i>
-              <span>Toutes</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-overdue" [class.active]="dueFilter === 'OVERDUE'" (click)="setDueFilter('OVERDUE')">
-              <i class="bx bx-error-circle"></i>
-              <span>En retard</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-today" [class.active]="dueFilter === 'TODAY'" (click)="setDueFilter('TODAY')">
-              <i class="bx bx-sun"></i>
-              <span>Aujourd'hui</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-week" [class.active]="dueFilter === 'THIS_WEEK'" (click)="setDueFilter('THIS_WEEK')">
-              <i class="bx bx-calendar-week"></i>
-              <span>Semaine</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-month" [class.active]="dueFilter === 'THIS_MONTH'" (click)="setDueFilter('THIS_MONTH')">
-              <i class="bx bx-calendar"></i>
-              <span>Mois</span>
-            </button>
-            <button type="button" class="tft-filter-pill pastel-nodate" [class.active]="dueFilter === 'NO_DATE'" (click)="setDueFilter('NO_DATE')">
-              <i class="bx bx-calendar-x"></i>
-              <span>Sans date</span>
-            </button>
-          </div>
-        </div>
+  <!-- ===== TIMER BANNER ===== -->
+  <div class="ft-timer-banner" *ngIf="timerTaskId">
+    <div class="ft-timer-left">
+      <span class="ft-timer-dot"></span>
+      <div>
+        <strong>{{ 'tasks.timerActive' | tf }}</strong>
+        <span>{{ 'tasks.task' | tf }}{{ timerTaskId }}</span>
       </div>
+    </div>
+    <div class="ft-timer-live">{{ formattedElapsed }}</div>
+    <div class="ft-timer-summary" *ngIf="activeTaskSummary">
+      <span>{{ 'tasks.estimated' | tf }} {{ activeTaskSummary['estimatedHours'] || 0 }}h</span>
+      <span>{{ 'tasks.real' | tf }} {{ activeTaskSummary['loggedHours'] || 0 }}h</span>
+      <span>{{ activeTaskSummary['consumptionPercent'] || 0 }}{{ 'tasks.consumed' | tf }}</span>
+    </div>
+    <button class="ft-stop-btn" (click)="stopTaskTimer()" [disabled]="timerBusy">
+      <i class="bx bx-stop-circle"></i> {{ timerBusy ? '…' : ('tasks.stop' | tf) }}
+    </button>
+  </div>
 
-      <div class="tft-filter-footer">
-        <div class="tft-filter-summary">
-          <span>{{ filteredTasks.length }} tache{{ filteredTasks.length > 1 ? 's' : '' }}</span>
-          <small>apres application des filtres</small>
-        </div>
+  <!-- ===== ERREUR ===== -->
+  <div class="ft-error" *ngIf="errorMessage">
+    <i class="bx bx-error-circle"></i> {{ errorMessage }}
+  </div>
 
-        <button type="button" class="tft-reset-btn" (click)="resetFilters()" *ngIf="statusFilter !== 'ALL' || dueFilter !== 'ALL'">
-          <i class="bx bx-refresh"></i>
-          <span>Reinitialiser</span>
-        </button>
-      </div>
+  <!-- ===== CHARGEMENT ===== -->
+  <div class="ft-loading" *ngIf="loading">
+    <div class="ft-spinner"></div>
+    <span>{{ 'tasks.loading' | tf }}</span>
+  </div>
 
-      <div class="tft-timer-banner" *ngIf="timerTaskId">
-        <div class="tft-timer-left">
-          <span class="tft-timer-icon-wrap">
-            <i class="bx bx-time-five"></i>
+  <!-- ===== ÉTAT VIDE ===== -->
+  <div class="ft-empty" *ngIf="!loading && taskGroups.length === 0">
+    <div class="ft-empty-art"><i class="bx bx-check-double"></i></div>
+    <h4>{{ 'tasks.noTask' | tf }}{{ statusFilter !== 'ALL' ? ' ' + ('tasks.noTaskFilter' | tf) : '' }}</h4>
+    <p>{{ statusFilter !== 'ALL' ? ('tasks.noTaskFilterHint' | tf) : ('tasks.noTaskHint' | tf) }}</p>
+    <button class="ft-reset-btn" *ngIf="statusFilter !== 'ALL'" (click)="setStatusFilter('ALL')">
+      <i class="bx bx-refresh"></i> {{ 'tasks.showAll' | tf }}
+    </button>
+  </div>
+
+  <!-- ===== GROUPES PAR PROJET ===== -->
+  <div class="ft-groups" *ngIf="!loading && taskGroups.length > 0">
+    <div class="ft-group" *ngFor="let group of taskGroups">
+
+      <div class="ft-group-header" (click)="toggleProject(group.id)">
+        <div class="ft-group-left">
+          <div class="ft-group-avatar">{{ group.name.slice(0,2).toUpperCase() }}</div>
+          <span class="ft-group-name">{{ group.name }}</span>
+          <span class="ft-group-count">
+            {{ group.tasks.length }} {{ group.tasks.length > 1 ? ('tasks.totalPlural' | tf) : ('tasks.total' | tf) }}
           </span>
-          <div>
-            <strong class="tft-timer-label">Timer actif</strong>
-            <p class="mb-0 tft-timer-task">Task #{{ timerTaskId }}</p>
-          </div>
+          <span class="ft-group-overdue" *ngIf="group.overdueCount > 0">
+            <i class="bx bx-error-circle"></i> {{ group.overdueCount }} {{ 'tasks.late' | tf }}
+          </span>
         </div>
-        <div class="tft-timer-live">{{ formattedElapsed }}</div>
-        <div class="tft-timer-summary" *ngIf="activeTaskSummary">
-          <span>Estime: {{ activeTaskSummary['estimatedHours'] || 0 }}h</span>
-          <span>Reel: {{ activeTaskSummary['loggedHours'] || 0 }}h</span>
-          <span>Consommation: {{ activeTaskSummary['consumptionPercent'] || 0 }}%</span>
-        </div>
-        <button type="button" class="tft-stop-btn" (click)="stopTaskTimer()" [disabled]="timerBusy">
-          <i class="bx bx-stop-circle"></i>
-          <span>{{ timerBusy ? '...' : 'Stop' }}</span>
-        </button>
+        <i class="bx ft-group-chevron"
+           [class.bx-chevron-down]="!isCollapsed(group.id)"
+           [class.bx-chevron-right]="isCollapsed(group.id)"></i>
       </div>
-    </div>
-  </div>
 
-  <div class="alert alert-danger" *ngIf="errorMessage">{{ errorMessage }}</div>
+      <div class="ft-task-list" *ngIf="!isCollapsed(group.id)">
+        <div class="ft-task" *ngFor="let task of group.tasks"
+             [class.ft-task--overdue]="isOverdue(task)"
+             [class.ft-task--done]="task.status === TaskStatus.DONE">
 
-  <div class="tft-loading card border-0 shadow-sm" *ngIf="loading">
-    <div class="card-body">Chargement des taches...</div>
-  </div>
+          <div class="ft-task-bar" [attr.data-status]="task.status || 'TODO'"></div>
 
-  <div class="tft-list" *ngIf="!loading && filteredTasks.length > 0">
-    <article class="tft-card card border-0 shadow-sm" *ngFor="let task of filteredTasks">
-      <div class="card-body">
-        <div class="tft-card-top">
-          <div>
-            <div class="tft-badges">
-              <span class="tft-status" [ngClass]="'status-' + (task.status || 'TODO').toLowerCase()">{{ task.status }}</span>
-              <span class="tft-priority" [ngClass]="getPriorityClass(task.priority)">{{ task.priority || 'NORMAL' }}</span>
-              <span class="tft-overdue" *ngIf="isOverdue(task)">En retard</span>
+          <div class="ft-task-body">
+            <h4 class="ft-task-title">{{ task.title }}</h4>
+
+            <div class="ft-task-badges">
+              <span class="ft-badge ft-badge-status" [attr.data-status]="task.status || 'TODO'">
+                {{ statusLabel(task.status) }}
+              </span>
+              <span class="ft-badge ft-badge-priority" [attr.data-priority]="task.priority || 'NORMAL'">
+                {{ priorityLabel(task.priority) }}
+              </span>
+              <span class="ft-badge ft-badge-overdue" *ngIf="isOverdue(task)">
+                <i class="bx bx-error-circle"></i>&nbsp;{{ 'tasks.overdue' | tf }}
+              </span>
             </div>
-            <h5 class="tft-task-title">{{ task.title }}</h5>
-          </div>
-        </div>
 
-        <p class="tft-task-description">{{ task.description || 'Aucune description.' }}</p>
+            <p class="ft-task-desc" *ngIf="task.description">{{ task.description }}</p>
 
-        <div class="tft-meta">
-          <div class="tft-meta-item">
-            <span class="tft-meta-label">Projet</span>
-            <strong>{{ task.project?.name || ('#' + (task.projectId || '')) }}</strong>
-          </div>
-          <div class="tft-meta-item">
-            <span class="tft-meta-label">Echeance</span>
-            <strong>{{ formatDate(task.dueDate) }}</strong>
-          </div>
-          <div class="tft-meta-item">
-            <span class="tft-meta-label">Charge</span>
-            <strong>{{ getTaskLoad(task) }}</strong>
-          </div>
-          <div class="tft-meta-item" *ngIf="task.dependsOn">
-            <span class="tft-meta-label">Depend de</span>
-            <strong>{{ task.dependsOn.title }}</strong>
-          </div>
-        </div>
+            <div class="ft-task-meta">
+              <span class="ft-meta-item" *ngIf="task.dueDate">
+                <i class="bx bx-calendar"></i>
+                {{ formatDate(task.dueDate) }}
+              </span>
+              <span class="ft-meta-item" *ngIf="task.estimatedHours">
+                <i class="bx bx-time"></i>
+                {{ getTaskLoad(task) }} {{ 'tasks.estimated_h' | tf }}
+              </span>
+              <span class="ft-meta-item" *ngIf="task.dependsOn">
+                <i class="bx bx-link"></i>
+                {{ 'tasks.dependsOn' | tf }} {{ task.dependsOn.title }}
+              </span>
+              <span class="ft-meta-item" *ngIf="task.subtasks?.length">
+                <i class="bx bx-subdirectory-right"></i>
+                {{ task.subtasks!.length }}
+                {{ task.subtasks!.length > 1 ? ('tasks.subtasksPlural' | tf) : ('tasks.subtasks' | tf) }}
+              </span>
+            </div>
 
-        <div class="tft-subtasks" *ngIf="task.subtasks?.length">
-          <span class="tft-subtasks-label">Sous-taches</span>
-          <div class="tft-subtasks-list">
-            <span class="tft-subtask-chip" *ngFor="let subtask of task.subtasks | slice:0:4">{{ subtask.title }}</span>
+            <div class="ft-task-actions">
+              <button class="ft-timer-btn"
+                      [class.running]="isTimerRunningOn(task.id)"
+                      (click)="isTimerRunningOn(task.id) ? stopTaskTimer() : startTaskTimer(task)"
+                      [disabled]="timerBusy || (!!timerTaskId && !isTimerRunningOn(task.id))">
+                <i class="bx" [class.bx-play-circle]="!isTimerRunningOn(task.id)" [class.bx-stop-circle]="isTimerRunningOn(task.id)"></i>
+                {{ isTimerRunningOn(task.id) ? ('tasks.stop' | tf) : ('tasks.timer' | tf) }}
+              </button>
+              <button class="ft-discuss-btn" (click)="openTask(task)">
+                <i class="bx bx-chat"></i>
+                {{ 'tasks.discussion' | tf }}
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div class="tft-card-actions">
-          <button
-            type="button"
-            class="tft-timer-btn"
-            [ngClass]="isTimerRunningOn(task.id) ? 'running' : ''"
-            (click)="isTimerRunningOn(task.id) ? stopTaskTimer() : startTaskTimer(task)"
-            [disabled]="timerBusy || (!!timerTaskId && !isTimerRunningOn(task.id))">
-            <span class="tft-timer-btn-icon">
-              <i class="bx" [ngClass]="isTimerRunningOn(task.id) ? 'bx-stop-circle' : 'bx-play-circle'"></i>
-            </span>
-            <span>{{ isTimerRunningOn(task.id) ? 'Stop timer' : 'Start timer' }}</span>
-          </button>
-          <button type="button" class="tft-open-btn" (click)="openTask(task)">
-            <i class="bx bx-chat"></i>
-            <span>Discussion & fichiers</span>
-          </button>
         </div>
       </div>
-    </article>
-  </div>
 
-  <div class="tft-empty card border-0 shadow-sm" *ngIf="!loading && filteredTasks.length === 0">
-    <div class="card-body">
-      <i class="bx bx-task"></i>
-      <h6>Aucune tache correspondante</h6>
-      <p>Essaie un autre filtre de statut ou d'echeance.</p>
     </div>
   </div>
+
 </div>
 
 <app-frontoffice-task-hub

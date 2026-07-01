@@ -1,0 +1,3 @@
+{
+  "_comment": "Ce fichier est conserve pour compatibilite. La configuration active est dans proxy.conf.js, declaree dans angular.json (serve.options.proxyConfig)."
+}

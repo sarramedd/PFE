@@ -12,6 +12,7 @@ import com.example.gestionprojet.websocket.WebSocketSessionRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -94,6 +95,17 @@ private WebSocketSessionRegistry webSocketSessionRegistry;
             webSocketSessionRegistry.publishNotification(saved.getUser().getId(), saved);
         }
         return saved;
+    }
+
+    @Override
+    @Transactional
+    public int markAllAsRead(Long userId) {
+        if (!tenantAccessService.isSuperAdmin()) {
+            if (!tenantAccessService.getCurrentUserId().equals(userId)) {
+                throw new RuntimeException("You can only mark your own notifications as read");
+            }
+        }
+        return notificationRepository.markAllAsReadByUserId(userId, LocalDateTime.now());
     }
 
     public List<Notification> getNotificationsByType(Long userId, NotificationType type) {

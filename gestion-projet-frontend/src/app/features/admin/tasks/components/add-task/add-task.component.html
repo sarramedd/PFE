@@ -40,12 +40,19 @@
         <span class="at-error" *ngIf="title.invalid && title.touched">3 a 120 caracteres requis</span>
       </div>
 
-      <!-- Description -->
+      <!-- Description + bouton IA -->
       <div class="at-field">
-        <label class="at-label">Description</label>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+          <label class="at-label" style="margin-bottom:0;">Description</label>
+          <app-ai-describe-button
+            [title]="task.title"
+            [projectId]="projectId"
+            (generated)="onAiDescriptionGenerated($event)">
+          </app-ai-describe-button>
+        </div>
         <textarea class="at-input at-textarea"
           [(ngModel)]="task.description" name="description"
-          placeholder="Describe the task..." rows="3" maxlength="2000">
+          placeholder="Describe the task... (ou cliquez sur Generer avec IA)" rows="3" maxlength="2000">
         </textarea>
       </div>
 
@@ -78,9 +85,17 @@
         </div>
       </div>
 
-      <!-- Assign user -->
+      <!-- Assign user + bouton IA suggestion -->
       <div class="at-field" *ngIf="!hideAssignedUser">
-        <label class="at-label">Assign To</label>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
+          <label class="at-label" style="margin-bottom:0;">Assign To</label>
+          <app-ai-suggest-assignee
+            [projectId]="projectId"
+            [title]="task.title"
+            [description]="task.description"
+            (pick)="onAiAssigneePicked($event)">
+          </app-ai-suggest-assignee>
+        </div>
         <div class="at-input-wrap">
           <svg class="at-input-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>

@@ -70,6 +70,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.allNotifications = items;
         this.applyFilter(this.filter, false);
         this.loading = false;
+
+        // Auto-marquer comme lues toutes celles affichees au bout de 1.5s
+        // (laisse le temps a l'utilisateur de voir le badge "nouveau").
+        setTimeout(() => this.autoMarkVisibleAsRead(), 1500);
       },
       error: () => {
         this.allNotifications = [];
@@ -77,6 +81,25 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         this.loading = false;
       }
     });
+  }
+
+  /**
+   * Marque toutes les notifications non lues comme "lues" via un seul
+   * appel backend atomique. Appelee automatiquement apres ouverture de la page.
+   */
+  private autoMarkVisibleAsRead(): void {
+    const hasUnread = this.allNotifications.some((n) => !n.isRead);
+    if (hasUnread) {
+      this.notificationService.markAllAsRead().subscribe();
+    }
+  }
+
+  /** Bouton "Tout marquer comme lu". */
+  markAllAsRead(): void {
+    const hasUnread = this.allNotifications.some((n) => !n.isRead);
+    if (hasUnread) {
+      this.notificationService.markAllAsRead().subscribe();
+    }
   }
 
   loadPreferences(): void {

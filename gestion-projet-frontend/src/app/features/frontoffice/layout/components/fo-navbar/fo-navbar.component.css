@@ -152,7 +152,7 @@
 .fo-notification-panel {
   top: 100%;
   z-index: 1050;
-  width: 360px;
+  width: 380px;
   border: 0;
   border-radius: 20px;
   overflow: hidden;
@@ -160,6 +160,39 @@
 
 .fo-notification-unread {
   background: linear-gradient(180deg, #fcfcff 0%, #f7f9ff 100%);
+  border-left: 3px solid #6366f1 !important;
+}
+
+/* Liste scrollable des notifications avec scrollbar visible */
+.fo-notification-list {
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: #a5b4fc #f1f5f9;
+}
+.fo-notification-list .list-group-item-action {
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 0.85rem 1rem;
+  transition: background 0.15s ease;
+}
+.fo-notification-list .list-group-item-action:hover {
+  background: #f8fafc;
+}
+/* WebKit (Chrome, Edge, Safari) */
+.fo-notification-list::-webkit-scrollbar { width: 8px; }
+.fo-notification-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+.fo-notification-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a5b4fc 0%, #818cf8 100%);
+  border-radius: 4px;
+}
+.fo-notification-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #818cf8 0%, #6366f1 100%);
 }
 
 @media (max-width: 991.98px) {

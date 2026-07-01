@@ -3,8 +3,7 @@
     <div class="fte-header">
       <div>
         <span class="fte-kicker">Task workspace</span>
-        <h3>Ouvrir la tache</h3>
-        <p>Consulte et modifie la tache dans une fenetre frontoffice plus claire et plus moderne.</p>
+        <h3>{{ 'taskForm.editTask' | tf }}</h3>
       </div>
       <button type="button" class="fte-close" (click)="close.emit()">×</button>
     </div>
@@ -12,54 +11,54 @@
     <form class="fte-form" #taskForm="ngForm" (ngSubmit)="save()">
       <div class="fte-grid">
         <label class="fte-field fte-field-full">
-          <span>Titre</span>
+          <span>{{ 'taskForm.title' | tf }}</span>
           <input [(ngModel)]="form.title" name="title" required minlength="3" maxlength="120" />
         </label>
 
         <label class="fte-field fte-field-full">
-          <span>Description</span>
+          <span>{{ 'taskForm.description' | tf }}</span>
           <textarea [(ngModel)]="form.description" name="description" rows="4" maxlength="2000"></textarea>
         </label>
 
         <label class="fte-field">
-          <span>Echeance</span>
+          <span>{{ 'taskForm.dueDate' | tf }}</span>
           <input [(ngModel)]="form.dueDate" name="dueDate" type="date" />
         </label>
 
         <label class="fte-field">
-          <span>Charge estimee (h)</span>
+          <span>{{ 'taskForm.estimatedHours' | tf }}</span>
           <input [(ngModel)]="form.estimatedHours" name="estimatedHours" type="number" min="1" max="500" />
         </label>
 
         <label class="fte-field" *ngIf="canManageTasks">
-          <span>Assignee a</span>
+          <span>{{ 'taskForm.assignedTo' | tf }}</span>
           <select [(ngModel)]="form.assignedUserId" name="assignedUserId">
-            <option [ngValue]="null">Non assignee</option>
+            <option [ngValue]="null">{{ 'taskForm.unassigned' | tf }}</option>
             <option *ngFor="let user of users" [ngValue]="user.id">{{ user.firstName }} {{ user.lastName }}</option>
           </select>
         </label>
 
         <label class="fte-field">
-          <span>Sous-tache de</span>
+          <span>{{ 'taskForm.parentTask' | tf }}</span>
           <select [(ngModel)]="form.parentTaskId" name="parentTaskId">
-            <option [ngValue]="null">Aucune</option>
+            <option [ngValue]="null">{{ 'taskForm.none' | tf }}</option>
             <option *ngFor="let item of availableTasks" [ngValue]="item.id">{{ item.title }}</option>
           </select>
         </label>
 
         <label class="fte-field">
-          <span>Depend de</span>
+          <span>{{ 'taskForm.dependsOn' | tf }}</span>
           <select [(ngModel)]="form.dependsOnId" name="dependsOnId">
-            <option [ngValue]="null">Aucune</option>
+            <option [ngValue]="null">{{ 'taskForm.none' | tf }}</option>
             <option *ngFor="let item of availableTasks" [ngValue]="item.id">{{ item.title }}</option>
           </select>
         </label>
 
         <label class="fte-field fte-field-full">
-          <span>Statut</span>
+          <span>{{ 'taskForm.status' | tf }}</span>
           <div class="fte-statuses">
             <button *ngFor="let status of statuses" type="button" class="fte-status-btn" [class.active]="form.status === status.value" (click)="form.status = status.value">
-              {{ status.label }}
+              {{ status.label | tf }}
             </button>
           </div>
         </label>
@@ -69,9 +68,9 @@
       <div class="fte-feedback error" *ngIf="errorMessage">{{ errorMessage }}</div>
 
       <div class="fte-actions">
-        <button type="button" class="fte-cancel" (click)="close.emit()">Fermer</button>
+        <button type="button" class="fte-cancel" (click)="close.emit()">{{ 'taskForm.close' | tf }}</button>
         <button type="submit" class="fte-submit" [disabled]="taskForm.invalid || loading">
-          {{ loading ? 'Enregistrement...' : 'Enregistrer' }}
+          {{ loading ? ('taskForm.saving' | tf) : ('taskForm.save' | tf) }}
         </button>
       </div>
     </form>

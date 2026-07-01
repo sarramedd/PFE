@@ -1,127 +1,178 @@
-<div class="container-xxl flex-grow-1 container-p-y">
-  <div class="row g-4">
-    <div class="col-12">
-      <div class="card border-0 shadow-sm">
-        <div class="card-body d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-          <div>
-            <span class="badge bg-label-primary mb-2">TeamFlow Messages</span>
-            <h4 class="card-title mb-1">Discussions de projet</h4>
-            <p class="text-muted mb-0">Echange avec les membres de tes projets en temps reel applicatif.</p>
-          </div>
-          <div class="d-flex gap-3 flex-wrap">
-            <div class="tf-stat">
-              <span class="tf-stat-value">{{ projects.length }}</span>
-              <span class="tf-stat-label">Projets</span>
-            </div>
-            <div class="tf-stat">
-              <span class="tf-stat-value">{{ messages.length }}</span>
-              <span class="tf-stat-label">Messages</span>
-            </div>
-          </div>
+<div class="fm-shell">
+
+  <!-- ===== SIDEBAR PROJETS ===== -->
+  <aside class="fm-sidebar">
+    <div class="fm-sidebar-head">
+      <h5 class="fm-sidebar-title">
+        <i class="bx bx-message-rounded-dots"></i>
+        {{ 'messages.title' | tf }}
+      </h5>
+      <span class="fm-count-badge">{{ projects.length }}</span>
+    </div>
+
+    <div class="fm-sidebar-search">
+      <i class="bx bx-search"></i>
+      <input type="text" [placeholder]="'messages.searchPlaceholder' | tf" [(ngModel)]="projectSearch" />
+    </div>
+
+    <div class="fm-project-list">
+      <div *ngIf="loadingProjects" class="fm-state-msg">
+        <div class="fm-spinner"></div>
+        <span>{{ 'messages.loading' | tf }}</span>
+      </div>
+
+      <div *ngIf="!loadingProjects && projects.length === 0" class="fm-state-msg">
+        <i class="bx bx-folder-open"></i>
+        <span>{{ 'messages.noProject' | tf }}</span>
+      </div>
+
+      <button
+        *ngFor="let project of filteredProjects"
+        type="button"
+        class="fm-project-item"
+        [class.active]="selectedProject?.id === project.id"
+        (click)="selectProject(project)">
+        <div class="fm-project-avatar">{{ projectInitials(project.name) }}</div>
+        <div class="fm-project-meta">
+          <span class="fm-project-name">{{ project.name }}</span>
+          <span class="fm-project-sub">{{ project.description || ('messages.channelDefault' | tf) }}</span>
         </div>
+        <div class="fm-project-dot" *ngIf="selectedProject?.id === project.id"></div>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===== ZONE CONVERSATION ===== -->
+  <main class="fm-chat">
+
+    <div class="fm-chat-head" *ngIf="selectedProject; else noProjectHead">
+      <div class="fm-chat-head-avatar">{{ projectInitials(selectedProject.name) }}</div>
+      <div class="fm-chat-head-meta">
+        <strong>{{ selectedProject.name }}</strong>
+        <span>
+          {{ messages.length }} {{ messages.length !== 1 ? ('messages.messages' | tf) : ('messages.message' | tf) }}
+          · {{ 'messages.membersOnly' | tf }}
+        </span>
       </div>
     </div>
+    <ng-template #noProjectHead>
+      <div class="fm-chat-head fm-chat-head-empty">
+        <i class="bx bx-message-square-dots"></i>
+        <span>{{ 'messages.selectProject' | tf }}</span>
+      </div>
+    </ng-template>
 
-    <div class="col-12" *ngIf="errorMessage">
-      <div class="alert alert-danger mb-0">{{ errorMessage }}</div>
-    </div>
+    <div class="fm-chat-body" #chatBody>
 
-    <div class="col-12 col-xl-4">
-      <div class="card h-100">
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="mb-0">Mes projets</h5>
-          <span class="badge bg-label-secondary">{{ projects.length }}</span>
-        </div>
-        <div class="card-body p-0">
-          <div *ngIf="loadingProjects" class="tf-placeholder">Chargement des projets...</div>
+      <div *ngIf="loadingMessages" class="fm-body-state">
+        <div class="fm-spinner"></div>
+        <span>{{ 'messages.loadingMessages' | tf }}</span>
+      </div>
 
-          <div *ngIf="!loadingProjects && projects.length === 0" class="tf-placeholder">
-            Aucun projet disponible pour la messagerie.
-          </div>
-
-          <button
-            *ngFor="let project of projects"
-            type="button"
-            class="tf-project-item"
-            [class.active]="selectedProject?.id === project.id"
-            (click)="selectProject(project)">
-            <span class="tf-project-icon">
-              <i class="bx bx-message-rounded-detail"></i>
-            </span>
-            <span class="tf-project-meta">
-              <span class="tf-project-name">{{ project.name }}</span>
-              <span class="tf-project-subtitle">{{ project.description || 'Canal de discussion du projet' }}</span>
-            </span>
-          </button>
+      <div *ngIf="!loadingMessages && !selectedProject" class="fm-body-state">
+        <div class="fm-welcome-art">
+          <i class="bx bx-message-rounded-dots fm-welcome-icon"></i>
+          <h4>{{ 'messages.welcome' | tf }}</h4>
+          <p>{{ 'messages.welcomeHint' | tf }}</p>
         </div>
       </div>
-    </div>
 
-    <div class="col-12 col-xl-8">
-      <div class="card h-100">
-        <div class="card-header border-bottom">
-          <div *ngIf="selectedProject; else noProjectSelected">
-            <h5 class="mb-1">{{ selectedProject.name }}</h5>
-            <p class="text-muted mb-0">Messages visibles uniquement par les membres de ce projet.</p>
-          </div>
-          <ng-template #noProjectSelected>
-            <h5 class="mb-0">Messagerie</h5>
-          </ng-template>
+      <div *ngIf="!loadingMessages && selectedProject && messages.length === 0" class="fm-body-state">
+        <div class="fm-welcome-art">
+          <i class="bx bx-chat fm-welcome-icon"></i>
+          <h4>{{ 'messages.noMessage' | tf }}</h4>
+          <p>{{ 'messages.noMessageHint' | tf }}</p>
         </div>
+      </div>
 
-        <div class="card-body tf-chat-body">
-          <div *ngIf="loadingMessages" class="tf-placeholder">Chargement des messages...</div>
+      <div *ngIf="!loadingMessages && selectedProject && messages.length > 0"
+           class="fm-thread"
+           (click)="closePicker()">
+        <ng-container *ngFor="let message of messages; let i = index">
 
-          <div *ngIf="!loadingMessages && !selectedProject" class="tf-placeholder">
-            Choisis un projet pour voir la conversation.
+          <div class="fm-date-sep" *ngIf="showDateSeparator(i)">
+            <span>{{ formatDateLabel(message.createdAt) }}</span>
           </div>
 
-          <div *ngIf="!loadingMessages && selectedProject && messages.length === 0" class="tf-placeholder">
-            Aucun message pour ce projet. Lance la discussion.
-          </div>
+          <div class="fm-msg-group"
+               (mouseenter)="loadReactions(message.id)"
+               [class.mine]="isMine(message)">
 
-          <div *ngIf="!loadingMessages && selectedProject && messages.length > 0" class="tf-thread">
-            <div
-              *ngFor="let message of messages"
-              class="tf-message"
-              [class.mine]="isMine(message)">
-              <div class="tf-avatar">
-                <img
-                  *ngIf="getAvatarUrl(message); else initialsAvatar"
-                  [src]="getAvatarUrl(message)!"
-                  [alt]="getAuthorLabel(message)" />
-                <ng-template #initialsAvatar>{{ getInitials(message) }}</ng-template>
+            <div class="fm-msg" [class.mine]="isMine(message)">
+              <div class="fm-msg-avatar" *ngIf="!isMine(message)">
+                <img *ngIf="getAvatarUrl(message)" [src]="getAvatarUrl(message)!" [alt]="getAuthorLabel(message)" />
+                <span *ngIf="!getAvatarUrl(message)">{{ getInitials(message) }}</span>
               </div>
-              <div class="tf-bubble-wrap">
-                <div class="tf-author">
-                  <span>{{ getAuthorLabel(message) }}</span>
-                  <small>{{ formatTime(message.createdAt) }}</small>
+
+              <div class="fm-msg-content">
+                <div class="fm-msg-meta" *ngIf="!isMine(message)">
+                  <span class="fm-msg-author">{{ getAuthorLabel(message) }}</span>
+                  <span class="fm-msg-time">{{ formatTime(message.createdAt) }}</span>
                 </div>
-                <div class="tf-bubble">{{ message.content }}</div>
+                <div class="fm-bubble">{{ message.content }}</div>
+                <div class="fm-msg-time-mine" *ngIf="isMine(message)">{{ formatTime(message.createdAt) }}</div>
+
+                <div class="fm-reactions" *ngIf="groupedReactions(message.id).length > 0">
+                  <button
+                    *ngFor="let g of groupedReactions(message.id)"
+                    class="fm-reaction-chip"
+                    [class.mine]="g.iMine"
+                    (click)="toggleReaction(message, g.type); $event.stopPropagation()"
+                    [title]="g.iMine ? ('messages.removeReaction' | tf) : ('messages.react' | tf)">
+                    {{ g.emoji }} <span>{{ g.count }}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="fm-reaction-trigger" (click)="togglePicker(message.id, $event)">
+                <i class="bx bx-smile"></i>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div class="card-footer border-top" *ngIf="selectedProject">
-          <div class="input-group">
-            <textarea
-              class="form-control"
-              rows="3"
-              maxlength="2000"
-              placeholder="Ecrire un message au projet..."
-              [(ngModel)]="draftMessage"></textarea>
-            <button
-              class="btn btn-primary"
-              type="button"
-              [disabled]="sending || !draftMessage.trim()"
-              (click)="sendMessage()">
-              {{ sending ? 'Envoi...' : 'Envoyer' }}
-            </button>
+            <div class="fm-picker" *ngIf="reactionPickerFor === message.id" (click)="$event.stopPropagation()">
+              <button
+                *ngFor="let type of REACTION_TYPES"
+                class="fm-picker-btn"
+                [class.active]="hasMyReaction(message.id, type)"
+                (click)="toggleReaction(message, type)"
+                [title]="type">
+                {{ EMOJI_MAP[type] }}
+              </button>
+            </div>
+
           </div>
-          <small class="text-muted d-block mt-2">{{ draftMessage.trim().length }}/2000 caracteres</small>
-        </div>
+        </ng-container>
       </div>
     </div>
-  </div>
+
+    <div class="fm-input-zone" *ngIf="selectedProject">
+      <div class="fm-error" *ngIf="errorMessage">
+        <i class="bx bx-error-circle"></i> {{ errorMessage }}
+      </div>
+      <div class="fm-input-row">
+        <textarea
+          class="fm-textarea"
+          rows="1"
+          maxlength="2000"
+          [placeholder]="'messages.inputPlaceholder' | tf"
+          [(ngModel)]="draftMessage"
+          (keydown)="handleKeydown($event)"
+          [disabled]="sending">
+        </textarea>
+        <button
+          class="fm-send-btn"
+          type="button"
+          [disabled]="sending || !draftMessage.trim()"
+          (click)="sendMessage()">
+          <span *ngIf="sending" class="fm-send-spinner"></span>
+          <i *ngIf="!sending" class="bx bx-send"></i>
+        </button>
+      </div>
+      <div class="fm-input-hint">
+        <span>{{ draftMessage.trim().length }}/2000</span>
+        <span>{{ 'messages.hint' | tf }}</span>
+      </div>
+    </div>
+
+  </main>
 </div>

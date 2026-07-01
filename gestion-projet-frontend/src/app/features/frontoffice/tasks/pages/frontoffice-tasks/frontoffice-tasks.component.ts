@@ -22,6 +22,8 @@ export class FrontofficeTasksComponent implements OnInit, OnDestroy {
   statusFilter: StatusFilter = 'ALL';
   dueFilter: DueFilter = 'ALL';
   selectedTask: Task | null = null;
+  collapsedProjects = new Set<string>();
+  taskGroups: Array<{ id: string; name: string; tasks: Task[]; overdueCount: number }> = [];
   timerTaskId: number | null = null;
   timerElapsedSeconds = 0;
   timerInterval: ReturnType<typeof setInterval> | null = null;
@@ -63,6 +65,7 @@ export class FrontofficeTasksComponent implements OnInit, OnDestroy {
       next: (tasks) => {
         this.tasks = tasks;
         this.loading = false;
+        this.buildGroups();
       },
       error: () => {
         this.loading = false;
@@ -98,8 +101,45 @@ export class FrontofficeTasksComponent implements OnInit, OnDestroy {
       }));
   }
 
+  buildGroups(): void {
+    const map = new Map<string, { id: string; name: string; tasks: Task[] }>();
+
+    const filtered = this.tasks
+      .filter(t => this.matchesStatusFilter(t))
+      .map(t => ({ ...t, subtasks: this.tasks.filter(c => c.parentTask?.id === t.id) }));
+
+    for (const task of filtered) {
+      // Clé = project.id si présent, sinon projectId, sinon "none"
+      const pid  = task.project?.id ?? task.projectId;
+      const key  = pid != null ? String(pid) : 'none';
+      const name = task.project?.name
+        ?? (pid != null ? `Projet #${pid}` : 'Sans projet');
+
+      if (!map.has(key)) map.set(key, { id: key, name, tasks: [] });
+      map.get(key)!.tasks.push(task);
+    }
+
+    this.taskGroups = Array.from(map.values())
+      .map(g => ({ ...g, overdueCount: g.tasks.filter(t => this.isOverdue(t)).length }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  toggleProject(key: string): void {
+    if (this.collapsedProjects.has(key)) this.collapsedProjects.delete(key);
+    else this.collapsedProjects.add(key);
+  }
+
+  isCollapsed(key: string): boolean {
+    return this.collapsedProjects.has(key);
+  }
+
+  totalCount(): number { return this.tasks.filter(t => this.matchesStatusFilter(t)).length; }
+  countByStatus(s: TaskStatus): number { return this.tasks.filter(t => t.status === s).length; }
+  overdueCount(): number { return this.tasks.filter(t => this.isOverdue(t)).length; }
+
   setStatusFilter(filter: StatusFilter): void {
     this.statusFilter = filter;
+    this.buildGroups();
   }
 
   setDueFilter(filter: DueFilter): void {
@@ -175,6 +215,25 @@ export class FrontofficeTasksComponent implements OnInit, OnDestroy {
     return `${this.pad(hours)}:${this.pad(minutes)}:${this.pad(seconds)}`;
   }
 
+  /** Retourne le libellé de statut avec espace insécable pour éviter tout word-break */
+  statusLabel(status?: string): string {
+    switch (status) {
+      case 'IN_PROGRESS': return 'En cours';
+      case 'DONE':        return 'Terminé';
+      default:            return 'À faire';
+    }
+  }
+
+  /** Retourne le libellé de priorité avec espace insécable */
+  priorityLabel(priority?: string): string {
+    switch (priority) {
+      case 'HIGH':   return 'Haute';
+      case 'MEDIUM': return 'Moyenne';
+      case 'LOW':    return 'Basse';
+      default:       return 'Normale';
+    }
+  }
+
   getPriorityClass(priority?: string): string {
     switch (priority) {
       case 'HIGH':
@@ -248,7 +307,6 @@ export class FrontofficeTasksComponent implements OnInit, OnDestroy {
     if (this.statusFilter === 'ALL') {
       return true;
     }
-
     return task.status === this.statusFilter;
   }
 
