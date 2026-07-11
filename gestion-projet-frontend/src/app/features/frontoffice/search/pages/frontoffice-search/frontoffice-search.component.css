@@ -2,134 +2,254 @@
   display: block;
 }
 
+/* =====================================================
+   SHELL
+   ===================================================== */
 .tfs-shell {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  padding: 0 4px 32px;
 }
 
+/* =====================================================
+   HERO BANNER VIOLET
+   ===================================================== */
 .tfs-hero {
-  background: linear-gradient(135deg, #fff9fb 0%, #fbfdff 55%, #f5fffb 100%);
+  border-radius: 1.1rem !important;
+  background: linear-gradient(120deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%) !important;
+  box-shadow: 0 4px 18px rgba(124,58,237,.25) !important;
+  border: none !important;
+}
+
+.tfs-hero .card-body {
+  padding: 1.25rem 1.5rem;
 }
 
 .tfs-kicker {
   display: inline-block;
-  margin-bottom: 0.5rem;
-  color: #98a1b5;
-  font-size: 0.75rem;
+  margin-bottom: 0.4rem;
+  color: rgba(255,255,255,.7);
+  font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .tfs-hero h2 {
-  margin: 0;
-  color: #49536d;
+  margin: 0 0 0.3rem;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 .tfs-hero p {
-  margin: 0.65rem 0 0;
-  color: #8a94a9;
+  margin: 0 0 1.1rem;
+  color: rgba(255,255,255,.75);
+  font-size: 0.85rem;
 }
 
+/* =====================================================
+   BARRE DE RECHERCHE
+   ===================================================== */
 .tfs-searchbar {
-  margin-top: 1.2rem;
   display: flex;
-  gap: 0.8rem;
+  gap: 0.7rem;
   flex-wrap: wrap;
 }
 
 .tfs-searchbar input {
   flex: 1 1 22rem;
-  min-height: 3.2rem;
-  border: 1px solid #e7ebf5;
-  border-radius: 1rem;
-  padding: 0 1rem;
-  background: rgba(255, 255, 255, 0.92);
+  min-height: 3rem;
+  border: 1.5px solid rgba(255,255,255,.4);
+  border-radius: 0.9rem;
+  padding: 0 1.1rem;
+  background: rgba(255,255,255,.18);
+  color: #fff;
+  font-size: 0.92rem;
+  outline: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tfs-searchbar input::placeholder {
+  color: rgba(255,255,255,.6);
+}
+
+.tfs-searchbar input:focus {
+  background: rgba(255,255,255,.26);
+  border-color: rgba(255,255,255,.7);
 }
 
 .tfs-searchbar button {
-  border: 0;
-  border-radius: 1rem;
-  padding: 0.85rem 1.2rem;
-  background: linear-gradient(135deg, #efe9ff 0%, #eaf7ff 100%);
-  color: #5b6593;
+  border: 1.5px solid rgba(255,255,255,.5);
+  border-radius: 0.9rem;
+  padding: 0 1.3rem;
+  min-height: 3rem;
+  background: rgba(255,255,255,.18);
+  color: #fff;
   font-weight: 700;
+  font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
+.tfs-searchbar button:hover {
+  background: rgba(255,255,255,.28);
+}
+
+.tfs-searchbar button i {
+  font-size: 1.1rem;
+}
+
+/* =====================================================
+   LOADING
+   ===================================================== */
+.tfs-loading {
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+}
+
+.tfs-loading .card-body {
+  padding: 1.5rem;
+  color: #7c3aed;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* =====================================================
+   GRILLE RÉSULTATS
+   ===================================================== */
 .tfs-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
+/* =====================================================
+   CARTES RÉSULTATS
+   ===================================================== */
 .tfs-card {
-  border-radius: 1.3rem;
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04) !important;
+  transition: box-shadow 0.15s;
+}
+
+.tfs-card:hover {
+  box-shadow: 0 4px 16px rgba(124,58,237,.1) !important;
+}
+
+.tfs-card .card-body {
+  padding: 1.2rem 1.3rem;
 }
 
 .tfs-section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1.5px solid #f0eeff;
 }
 
 .tfs-section-head h4 {
   margin: 0;
-  color: #4f5972;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+  font-weight: 800;
 }
 
 .tfs-section-head span {
-  min-width: 2rem;
-  height: 2rem;
+  min-width: 1.8rem;
+  height: 1.8rem;
   border-radius: 999px;
-  background: #f1f4fb;
-  color: #6e7892;
+  background: #f5f3ff;
+  color: #7c3aed;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  font-size: 0.82rem;
 }
 
+/* =====================================================
+   ITEMS
+   ===================================================== */
 .tfs-item {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.9rem 0;
-  border-top: 1px solid #eef1f6;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
   text-decoration: none;
+  transition: background 0.12s;
+  margin-bottom: 0.35rem;
 }
 
-.tfs-item:first-of-type {
-  border-top: 0;
-  padding-top: 0;
+.tfs-item:last-child {
+  margin-bottom: 0;
+}
+
+.tfs-item:hover {
+  background: #faf5ff;
 }
 
 .tfs-item strong {
   display: block;
-  color: #4a5470;
+  color: #1f2937;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .tfs-item p {
-  margin: 0.2rem 0 0;
-  color: #8e98ad;
-  font-size: 0.88rem;
+  margin: 0.18rem 0 0;
+  color: #6b7280;
+  font-size: 0.8rem;
 }
 
 .tfs-item small {
-  color: #95a0b4;
+  color: #a78bfa;
   white-space: nowrap;
+  font-size: 0.78rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
-.tfs-empty,
+/* =====================================================
+   ÉTATS VIDES
+   ===================================================== */
+.tfs-empty {
+  padding: 1rem;
+  border-radius: 0.8rem;
+  border: 1.5px dashed #ddd6fe;
+  text-align: center;
+  color: #a78bfa;
+  font-size: 0.85rem;
+  background: #faf5ff;
+}
+
+.tfs-empty-state {
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+}
+
 .tfs-empty-state .card-body {
-  color: #98a2b7;
+  padding: 2rem;
+  color: #a78bfa;
+  text-align: center;
+  font-size: 0.9rem;
 }
 
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 @media (max-width: 991.98px) {
   .tfs-grid {
     grid-template-columns: 1fr;

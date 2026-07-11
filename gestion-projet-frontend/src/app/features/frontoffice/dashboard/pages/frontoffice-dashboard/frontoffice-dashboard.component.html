@@ -1,6 +1,6 @@
 <div class="tfd-shell" *ngIf="!loading; else dashboardLoading">
 
-  <!-- ════════════════════ HERO ════════════════════ -->
+  <!-- ══════ HERO ══════ -->
   <section class="tfd-hero" *ngIf="currentUser as user">
     <div class="tfd-hero-glow tfd-hero-glow-1"></div>
     <div class="tfd-hero-glow tfd-hero-glow-2"></div>
@@ -8,7 +8,7 @@
     <div class="tfd-hero-inner">
       <div class="tfd-hero-copy">
         <span class="tfd-kicker"><i class="bx bx-buildings"></i>{{ user.organizationName || 'TeamFlow' }}</span>
-        <h1>{{ greeting | tf }},&nbsp;<span class="tfd-hero-name">{{ user.firstName }}</span> 👋</h1>
+        <h1>{{ greeting | tf }},&nbsp;<span class="tfd-hero-name">{{ user.firstName }}</span></h1>
         <p>{{ isProjectManagerView ? ('dashboard.heroTextManager'|tf) : ('dashboard.heroTextMember'|tf) }}</p>
         <div class="tfd-hero-actions">
           <a routerLink="/frontoffice/tasks" class="tfd-btn-primary">
@@ -32,28 +32,31 @@
     </div>
 
     <div class="tfd-metrics">
-      <article class="tfd-metric">
+      <a class="tfd-metric" routerLink="/frontoffice/projects">
         <div class="tfd-metric-icon-wrap icon-lilac"><i class="bx bx-folder"></i></div>
         <div>
           <span class="tfd-metric-label">{{ isProjectManagerView ? ('dashboard.trackedProjects'|tf) : ('dashboard.activeProjects'|tf) }}</span>
           <strong>{{ activeProjectsCount }}</strong>
         </div>
-      </article>
-      <article class="tfd-metric">
+        <i class="bx bx-chevron-right tfd-metric-arrow"></i>
+      </a>
+      <a class="tfd-metric" routerLink="/frontoffice/tasks">
         <div class="tfd-metric-icon-wrap icon-sky"><i class="bx bx-calendar-check"></i></div>
         <div>
           <span class="tfd-metric-label">{{ isProjectManagerView ? ('dashboard.teamTasksToday'|tf) : ('dashboard.tasksToday'|tf) }}</span>
           <strong>{{ todayTasksCount }}</strong>
         </div>
-      </article>
-      <article class="tfd-metric">
+        <i class="bx bx-chevron-right tfd-metric-arrow"></i>
+      </a>
+      <a class="tfd-metric" routerLink="/frontoffice/tasks">
         <div class="tfd-metric-icon-wrap icon-peach"><i class="bx bx-alarm-exclamation"></i></div>
         <div>
           <span class="tfd-metric-label">{{ isProjectManagerView ? ('dashboard.teamDelays'|tf) : ('dashboard.detectedDelays'|tf) }}</span>
           <strong>{{ overdueTasksCount }}</strong>
         </div>
-      </article>
-      <article class="tfd-metric">
+        <i class="bx bx-chevron-right tfd-metric-arrow"></i>
+      </a>
+      <a class="tfd-metric" [routerLink]="isProjectManagerView ? '/frontoffice/projects' : '/frontoffice/messages'">
         <div class="tfd-metric-icon-wrap icon-mint">
           <i class="bx" [ngClass]="isProjectManagerView ? 'bx-group' : 'bx-bell'"></i>
         </div>
@@ -61,104 +64,18 @@
           <span class="tfd-metric-label">{{ isProjectManagerView ? ('dashboard.activeMembers'|tf) : ('dashboard.unreadNotifications'|tf) }}</span>
           <strong>{{ isProjectManagerView ? uniqueContributorsCount : unreadNotificationsCount }}</strong>
         </div>
-      </article>
+        <i class="bx bx-chevron-right tfd-metric-arrow"></i>
+      </a>
     </div>
   </section>
 
-  <!-- Meetings -->
-  <section class="tfd-section">
-    <app-my-meetings-widget></app-my-meetings-widget>
-  </section>
-
-  <!-- ════════════════════ GRID ════════════════════ -->
+  <!-- ══════ GRILLE PRINCIPALE ══════ -->
   <section class="tfd-grid">
+
+    <!-- ── COLONNE PRINCIPALE ── -->
     <div class="tfd-main-column">
 
-      <!-- Analytics row -->
-      <div class="tfd-analytics-row">
-
-        <!-- Status distribution -->
-        <div class="tfd-card">
-          <div class="tfd-card-band">
-            <div class="tfd-band-icon bi-violet"><i class="bx bx-pie-chart-alt-2"></i></div>
-            <div>
-              <span class="tfd-section-kicker">{{ 'dashboard.overallView'|tf }}</span>
-              <h3>{{ 'dashboard.statusDistribution'|tf }}</h3>
-            </div>
-          </div>
-          <div class="tfd-card-body">
-            <div class="tfd-chart-layout">
-              <div class="tfd-ring-wrap">
-                <div class="tfd-ring" [style.background]="completionRing">
-                  <div class="tfd-ring-center">
-                    <strong>{{ completionPercent }}%</strong>
-                    <span>{{ 'common.done'|tf }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="tfd-bars">
-                <div class="tfd-bar-item" *ngFor="let bar of statusBars">
-                  <div class="tfd-bar-head">
-                    <span>{{ bar.label|tf }}</span>
-                    <strong>{{ bar.value }}</strong>
-                  </div>
-                  <div class="tfd-bar-track">
-                    <div class="tfd-bar-fill" [ngClass]="'tone-'+bar.tone" [style.width.%]="bar.percent"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Deadline pressure -->
-        <div class="tfd-card">
-          <div class="tfd-card-band">
-            <div class="tfd-band-icon bi-amber"><i class="bx bx-time-five"></i></div>
-            <div>
-              <span class="tfd-section-kicker">{{ 'dashboard.deadlinePressure'|tf }}</span>
-              <h3>{{ 'dashboard.timeLoad'|tf }}</h3>
-            </div>
-          </div>
-          <div class="tfd-card-body">
-            <div class="tfd-bars">
-              <div class="tfd-bar-item" *ngFor="let bar of deadlineBars">
-                <div class="tfd-bar-head">
-                  <span>{{ bar.label|tf }}</span>
-                  <strong>{{ bar.value }}</strong>
-                </div>
-                <div class="tfd-bar-track">
-                  <div class="tfd-bar-fill" [ngClass]="'tone-'+bar.tone" [style.width.%]="bar.percent"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- AI card -->
-      <div class="tfd-card tfd-ai-card">
-        <div class="tfd-card-band">
-          <div class="tfd-band-icon bi-ai"><i class="bx bx-bot"></i></div>
-          <div>
-            <span class="tfd-section-kicker">{{ 'dashboard.aiTitle'|tf }}</span>
-            <h3>{{ 'dashboard.aiDetection'|tf }}</h3>
-          </div>
-        </div>
-        <div class="tfd-card-body">
-          <div class="tfd-insights">
-            <article class="tfd-insight" *ngFor="let insight of aiInsights" [ngClass]="getInsightClass(insight.tone)">
-              <div class="tfd-insight-dot" [ngClass]="'dot-'+insight.tone"></div>
-              <div>
-                <h4>{{ insight.title }}</h4>
-                <p>{{ insight.description }}</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
-
-      <!-- Urgent tasks -->
+      <!-- Tâches urgentes -->
       <div class="tfd-card">
         <div class="tfd-card-band">
           <div class="tfd-band-icon bi-rose"><i class="bx bx-flag"></i></div>
@@ -166,14 +83,18 @@
             <span class="tfd-section-kicker">{{ 'dashboard.focusDay'|tf }}</span>
             <h3>{{ isProjectManagerView ? ('dashboard.teamCriticalTasks'|tf) : ('dashboard.myUrgentTasks'|tf) }}</h3>
           </div>
+          <div class="tfd-task-filters">
+            <button class="tfd-filter-btn" [class.active]="taskFilter==='all'"      (click)="setTaskFilter('all')">Tout</button>
+            <button class="tfd-filter-btn" [class.active]="taskFilter==='progress'" (click)="setTaskFilter('progress')">En cours</button>
+            <button class="tfd-filter-btn" [class.active]="taskFilter==='late'"     (click)="setTaskFilter('late')">En retard</button>
+          </div>
           <a routerLink="/frontoffice/tasks" class="tfd-link-btn">{{ 'dashboard.seeAll'|tf }}&nbsp;<i class="bx bx-chevron-right"></i></a>
         </div>
         <div class="tfd-card-body">
-          <div class="tfd-task-list" *ngIf="upcomingTasks.length > 0; else noTasks">
-            <article class="tfd-task-item" *ngFor="let task of upcomingTasks" [ngClass]="'task-'+getStatusClass(task.status.toString())">
-              <div class="tfd-task-accent">
-                <i class="bx bx-task"></i>
-              </div>
+          <div class="tfd-task-list" *ngIf="filteredUpcomingTasks.length > 0; else noTasks">
+            <article class="tfd-task-item" *ngFor="let task of filteredUpcomingTasks"
+                     [ngClass]="'task-'+getStatusClass(task.status.toString())">
+              <div class="tfd-task-accent"><i class="bx bx-task"></i></div>
               <div class="tfd-task-content">
                 <div class="tfd-task-top">
                   <span class="tfd-badge" [ngClass]="'badge-'+getStatusClass(task.status.toString())">{{ getTaskStatusLabel(task.status.toString()) }}</span>
@@ -187,36 +108,7 @@
         </div>
       </div>
 
-      <!-- Team late tasks -->
-      <div class="tfd-card" *ngIf="isProjectManagerView">
-        <div class="tfd-card-band">
-          <div class="tfd-band-icon bi-rose"><i class="bx bx-error"></i></div>
-          <div>
-            <span class="tfd-section-kicker">{{ 'dashboard.teamControl'|tf }}</span>
-            <h3>{{ 'dashboard.teamDelaysTitle'|tf }}</h3>
-          </div>
-        </div>
-        <div class="tfd-card-body">
-          <div class="tfd-task-list" *ngIf="teamLateTasks.length > 0; else noLateTeamTasks">
-            <article class="tfd-task-item task-late" *ngFor="let task of teamLateTasks">
-              <div class="tfd-task-accent"><i class="bx bx-alarm-exclamation"></i></div>
-              <div class="tfd-task-content">
-                <div class="tfd-task-top">
-                  <span class="tfd-badge badge-late">{{ 'common.late'|tf }}</span>
-                  <span class="tfd-task-date"><i class="bx bx-calendar"></i>{{ formatDate(task.dueDate) }}</span>
-                </div>
-                <h4>{{ task.title }}</h4>
-                <p>
-                  <i class="bx bx-folder"></i>{{ task.project?.name || ('Projet #'+(task.projectId||'')) }}
-                  <span *ngIf="task.assignedTo">&nbsp;·&nbsp;<i class="bx bx-user"></i>{{ task.assignedTo.firstName }} {{ task.assignedTo.lastName }}</span>
-                </p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
-
-      <!-- Projects progress -->
+      <!-- Avancement projets -->
       <div class="tfd-card">
         <div class="tfd-card-band">
           <div class="tfd-band-icon bi-mint"><i class="bx bx-trending-up"></i></div>
@@ -228,22 +120,25 @@
         </div>
         <div class="tfd-card-body">
           <div class="tfd-project-list" *ngIf="projectProgress.length > 0; else noProjects">
-            <article class="tfd-project-item" *ngFor="let item of projectProgress">
+            <article class="tfd-project-item" *ngFor="let item of projectProgress; let i = index">
               <div class="tfd-project-row">
-                <div class="tfd-project-info">
-                  <h4>{{ item.project.name }}</h4>
-                  <small>{{ item.done }}/{{ item.total }} {{ 'dashboard.tasksCompleted'|tf }}</small>
+                <div class="tfd-member-row">
+                  <div class="tfd-proj-avatar" [attr.data-index]="i % 4">{{ item.project.name.charAt(0).toUpperCase() }}</div>
+                  <div class="tfd-project-info">
+                    <h4>{{ item.project.name }}</h4>
+                    <small>{{ item.done }}/{{ item.total }} {{ 'dashboard.tasksCompleted'|tf }}</small>
+                  </div>
                 </div>
                 <div class="tfd-project-meta">
-                  <span class="tfd-risk-badge" *ngIf="item.delayed > 0"><i class="bx bx-error-circle"></i>{{ item.delayed }} {{ 'dashboard.delayed'|tf }}</span>
+                  <span class="tfd-risk-badge" *ngIf="item.delayed > 0"><i class="bx bx-error-circle"></i>{{ item.delayed }}</span>
                   <span class="tfd-percent-badge">{{ item.progress }}%</span>
                 </div>
               </div>
               <div class="tfd-progress">
-                <div class="tfd-progress-bar" [style.width.%]="item.progress"></div>
+                <div class="tfd-progress-bar" [style.width.%]="item.progress" [attr.data-index]="i % 4"></div>
               </div>
               <div class="tfd-project-footer">
-                <span>{{ item.progress }}{{ 'dashboard.progressOf'|tf }}</span>
+                <span>{{ item.done }}/{{ item.total }} terminées</span>
                 <a [routerLink]="['/frontoffice/projects', item.project.id, 'kanban']"><i class="bx bx-layout"></i>Kanban</a>
               </div>
             </article>
@@ -251,62 +146,41 @@
         </div>
       </div>
 
-      <!-- Team workload -->
-      <div class="tfd-card" *ngIf="isProjectManagerView">
-        <div class="tfd-card-band">
-          <div class="tfd-band-icon bi-sky"><i class="bx bx-group"></i></div>
-          <div>
-            <span class="tfd-section-kicker">{{ 'dashboard.teamLoad'|tf }}</span>
-            <h3>{{ 'dashboard.teamView'|tf }}</h3>
-          </div>
-        </div>
-        <div class="tfd-card-body">
-          <div class="tfd-project-list" *ngIf="memberWorkload.length > 0; else noWorkload">
-            <article class="tfd-project-item" *ngFor="let item of memberWorkload">
-              <div class="tfd-project-row">
-                <div class="tfd-member-row">
-                  <div class="tfd-member-avatar">{{ item.name.charAt(0) }}</div>
-                  <div class="tfd-project-info">
-                    <h4>{{ item.name }}</h4>
-                    <small>{{ item.total }} {{ 'kanban.tasks'|tf }} · {{ item.hours }}{{ 'dashboard.estimatedHours'|tf }}</small>
-                  </div>
-                </div>
-                <div class="tfd-project-meta">
-                  <span class="tfd-risk-badge" *ngIf="item.overdue > 0"><i class="bx bx-error-circle"></i>{{ item.overdue }} {{ 'dashboard.delayed'|tf }}</span>
-                </div>
-              </div>
-              <div class="tfd-progress">
-                <div class="tfd-progress-bar" [style.width.%]="item.total ? (item.done/item.total)*100 : 0"></div>
-              </div>
-              <div class="tfd-project-footer">
-                <span>{{ item.done }}/{{ item.total }} {{ 'common.done'|tf }}</span>
-                <span>{{ item.hours }}h</span>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
+    </div>
 
-    </div><!-- /main column -->
-
-    <!-- ════ SIDEBAR ════ -->
+    <!-- ── SIDEBAR ── -->
     <div class="tfd-side-column">
 
-      <!-- Quick actions -->
-      <div class="tfd-card">
+      <!-- Réunions -->
+      <div class="tfd-section-widget">
+        <app-my-meetings-widget></app-my-meetings-widget>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="tfd-card tfd-ai-card">
         <div class="tfd-card-band">
-          <div class="tfd-band-icon bi-indigo"><i class="bx bx-grid-alt"></i></div>
+          <div class="tfd-band-icon bi-ai"><i class="bx bx-bot"></i></div>
           <div>
-            <span class="tfd-section-kicker">{{ 'dashboard.navigation'|tf }}</span>
-            <h3>{{ 'dashboard.quickActions'|tf }}</h3>
+            <span class="tfd-section-kicker">{{ 'dashboard.aiTitle'|tf }}</span>
+            <h3>{{ 'dashboard.aiDetection'|tf }}</h3>
           </div>
         </div>
         <div class="tfd-card-body">
-          <div class="tfd-quick-grid">
-            <a class="tfd-quick-card" *ngFor="let action of quickActions" [routerLink]="action.route" [ngClass]="'qa-'+action.tone">
-              <div class="tfd-quick-icon"><i [class]="action.icon"></i></div>
-              <span>{{ action.label|tf }}</span>
-            </a>
+          <div class="tfd-insights">
+            <article class="tfd-insight" *ngFor="let insight of aiInsights" [ngClass]="getInsightClass(insight.tone)">
+              <div class="tfd-insight-icon" [ngClass]="'dot-'+insight.tone">
+                <i class="bx" [ngClass]="{
+                  'bx-error-circle':  insight.tone === 'danger',
+                  'bx-alarm':         insight.tone === 'warning',
+                  'bx-check-circle':  insight.tone === 'success',
+                  'bx-info-circle':   insight.tone === 'info'
+                }"></i>
+              </div>
+              <div class="tfd-insight-body">
+                <h4>{{ insight.title }}</h4>
+                <p>{{ insight.description }}</p>
+              </div>
+            </article>
           </div>
         </div>
       </div>
@@ -322,75 +196,22 @@
         </div>
         <div class="tfd-card-body">
           <div class="tfd-notification-list" *ngIf="recentNotifications.length > 0; else noNotifications">
-            <article class="tfd-notification-item" *ngFor="let n of recentNotifications">
-              <div class="tfd-notif-dot" [class.unread]="!n.isRead"></div>
+            <article class="tfd-notification-item" *ngFor="let n of recentNotifications" [class.is-unread]="!n.isRead">
+              <div class="tfd-notif-icon" [class.unread]="!n.isRead">
+                <i class="bx" [ngClass]="!n.isRead ? 'bx-bell-ring' : 'bx-bell'"></i>
+              </div>
               <div class="tfd-notif-body">
                 <p>{{ n.message }}</p>
-                <small><i class="bx bx-time"></i>{{ formatDate(n.createdAt) }}</small>
+                <small><i class="bx bx-time-five"></i>{{ formatDate(n.createdAt) }}</small>
               </div>
+              <div class="tfd-notif-unread-dot" *ngIf="!n.isRead"></div>
             </article>
           </div>
         </div>
       </div>
 
-      <!-- Summary -->
-      <div class="tfd-card">
-        <div class="tfd-card-band">
-          <div class="tfd-band-icon bi-mint"><i class="bx bx-bar-chart"></i></div>
-          <div>
-            <span class="tfd-section-kicker">{{ 'dashboard.synthesis'|tf }}</span>
-            <h3>{{ isProjectManagerView ? ('dashboard.managerSummary'|tf) : ('dashboard.personalSummary'|tf) }}</h3>
-          </div>
-        </div>
-        <div class="tfd-card-body">
-          <div class="tfd-summary-grid" *ngIf="!isProjectManagerView">
-            <div class="tfd-summary-item tfd-summary-violet">
-              <i class="bx bx-check-circle tfd-summary-icon"></i>
-              <strong>{{ completedTasksCount }}</strong>
-              <span>{{ 'dashboard.completedTasksLabel'|tf }}</span>
-            </div>
-            <div class="tfd-summary-item tfd-summary-sky">
-              <i class="bx bx-task tfd-summary-icon"></i>
-              <strong>{{ myTasks.length }}</strong>
-              <span>{{ 'dashboard.totalTasksLabel'|tf }}</span>
-            </div>
-            <div class="tfd-summary-item tfd-summary-mint">
-              <i class="bx bx-folder tfd-summary-icon"></i>
-              <strong>{{ projects.length }}</strong>
-              <span>{{ 'dashboard.visibleProjects'|tf }}</span>
-            </div>
-            <div class="tfd-summary-item tfd-summary-peach">
-              <i class="bx bx-bell tfd-summary-icon"></i>
-              <strong>{{ unreadNotificationsCount }}</strong>
-              <span>{{ 'dashboard.alertsToRead'|tf }}</span>
-            </div>
-          </div>
-          <div class="tfd-summary-grid" *ngIf="isProjectManagerView">
-            <div class="tfd-summary-item" *ngFor="let item of managerSummaryItems">
-              <strong>{{ item.value }}</strong>
-              <span>{{ item.label|tf }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </section>
 
-  <!-- AI risk -->
-  <section class="tfd-section" *ngIf="!loading && projects.length">
-    <div class="tfd-card tfd-ai-risk-card">
-      <div class="tfd-card-band">
-        <div class="tfd-band-icon bi-ai"><i class="bx bx-shield-quarter"></i></div>
-        <div>
-          <span class="tfd-section-kicker">TeamFlow AI</span>
-          <h3>{{ 'dashboard.aiRisk'|tf }} "{{ projects[0].name }}"</h3>
-        </div>
-      </div>
-      <div class="tfd-card-body">
-        <app-ai-risk-tasks [projectId]="projects[0].id"></app-ai-risk-tasks>
-      </div>
-    </div>
   </section>
 
 </div>
@@ -411,10 +232,4 @@
 </ng-template>
 <ng-template #noNotifications>
   <div class="tfd-empty"><i class="bx bx-bell-off"></i><span>{{ 'dashboard.noRecentNotifications'|tf }}</span></div>
-</ng-template>
-<ng-template #noLateTeamTasks>
-  <div class="tfd-empty"><i class="bx bx-party"></i><span>{{ 'dashboard.noLateTeamTasks'|tf }}</span></div>
-</ng-template>
-<ng-template #noWorkload>
-  <div class="tfd-empty"><i class="bx bx-group"></i><span>{{ 'dashboard.noTeamWorkload'|tf }}</span></div>
 </ng-template>

@@ -2,14 +2,64 @@
   display: block;
 }
 
+/* =====================================================
+   AVATAR CARD
+   ===================================================== */
+
+/* Bandeau violet en haut de la card avatar */
+.col-xl-4 .card,
+.col-lg-5 .card {
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(124,58,237,.1) !important;
+}
+
+.col-xl-4 .card .card-body::before,
+.col-lg-5 .card .card-body::before {
+  content: '';
+  display: block;
+  margin: -1.5rem -1.5rem 1.25rem;
+  height: 80px;
+  background: linear-gradient(120deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+}
+
+/* ── Avatar ─────────────────────────────────────────────────── */
+.fo-avatar-img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 4px 16px rgba(124,58,237,.25);
+  margin-top: -55px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Nom utilisateur */
+.col-xl-4 .card h5,
+.col-lg-5 .card h5 {
+  color: #1a1a2e;
+  font-weight: 800;
+}
+
+/* Role */
+.col-xl-4 .card .text-muted:first-of-type,
+.col-lg-5 .card .text-muted:first-of-type {
+  color: #7c3aed !important;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* ── Org chip ───────────────────────────────────────────────── */
 .fo-profile-org-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  border: 1px solid #e6e9f2;
+  border: 1px solid #ddd6fe;
   border-radius: 999px;
-  padding: 0.22rem 0.62rem 0.22rem 0.22rem;
-  background: linear-gradient(135deg, #f8f9ff, #f2f7ff);
+  padding: 0.22rem 0.72rem 0.22rem 0.22rem;
+  background: #f5f3ff;
   margin-bottom: 0.9rem;
 }
 
@@ -18,41 +68,112 @@
   height: 24px;
   object-fit: cover;
   border-radius: 50%;
-  border: 1px solid #d9deea;
+  border: 1px solid #ddd6fe;
 }
 
 .fo-profile-org-chip span {
   font-size: 0.78rem;
-  color: #4a5772;
+  color: #7c3aed;
   font-weight: 600;
 }
 
-/* ── Avatar ─────────────────────────────────────────────────── */
-.fo-avatar-img {
-  width: 110px;
-  height: 110px;
-  object-fit: cover;
-  border: 3px solid #e6eaff;
-  box-shadow: 0 4px 14px rgba(105, 108, 255, .15);
+/* ── Bouton changer photo ───────────────────────────────────── */
+.col-xl-4 .btn-outline-primary,
+.col-lg-5 .btn-outline-primary {
+  border-color: #7c3aed !important;
+  color: #7c3aed !important;
+  border-radius: 8px !important;
+  font-size: 0.82rem !important;
+}
+
+.col-xl-4 .btn-outline-primary:hover,
+.col-lg-5 .btn-outline-primary:hover {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+/* =====================================================
+   CARTES DROITE
+   ===================================================== */
+.col-xl-8 .card,
+.col-lg-7 .card {
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+  box-shadow: 0 2px 10px rgba(124,58,237,.07) !important;
+}
+
+.col-xl-8 .card-header,
+.col-lg-7 .card-header {
+  background: linear-gradient(120deg, #f5f3ff 0%, #faf5ff 100%) !important;
+  border-bottom: 1.5px solid #ede9fe !important;
+  border-radius: 1.1rem 1.1rem 0 0 !important;
+  padding: 1rem 1.35rem;
+}
+
+.col-xl-8 .card-header i,
+.col-lg-7 .card-header i {
+  color: #7c3aed !important;
+  font-size: 1.15rem;
+}
+
+.col-xl-8 .card-header h5,
+.col-lg-7 .card-header h5 {
+  color: #1a1a2e;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+/* ── Form controls ──────────────────────────────────────────── */
+.form-control:focus {
+  border-color: #7c3aed !important;
+  box-shadow: 0 0 0 3px rgba(124,58,237,.13) !important;
+}
+
+.form-label {
+  color: #374151;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ── Readonly field ──────────────────────────────────────────── */
+.fo-readonly {
+  background: #f5f3ff;
+  color: #7c3aed;
+  font-weight: 600;
+  cursor: default;
 }
 
 /* ── Save button ─────────────────────────────────────────────── */
 .fo-save-btn {
   min-width: 160px;
-  border-radius: 8px;
+  border-radius: 8px !important;
 }
 
-/* ── Readonly field ──────────────────────────────────────────── */
-.fo-readonly {
-  background: #f8f9fc;
-  color: #8a92a6;
-  cursor: default;
+.fo-save-btn.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+  border-color: #7c3aed !important;
+  color: #fff !important;
+  font-weight: 700;
 }
 
-/* ── Security card ───────────────────────────────────────────── */
-.fo-security-card .card-header {
-  background: linear-gradient(135deg, #f8f9ff, #f1f4ff);
-  border-bottom: 1px solid #e6e9f2;
+.fo-save-btn.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6d28d9, #5b21b6) !important;
+  border-color: #6d28d9 !important;
+}
+
+.fo-save-btn.btn-outline-primary {
+  border-color: #7c3aed !important;
+  color: #7c3aed !important;
+  font-weight: 700;
+}
+
+.fo-save-btn.btn-outline-primary:hover:not(:disabled) {
+  background: #7c3aed !important;
+  color: #fff !important;
+}
+
+.fo-save-btn:disabled {
+  opacity: 0.5;
 }
 
 /* ── Password input wrapper ──────────────────────────────────── */
@@ -74,14 +195,14 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  color: #8a92a6;
+  color: #a78bfa;
   font-size: 1.15rem;
   line-height: 1;
   transition: color .2s;
 }
 
 .fo-pwd-toggle:hover {
-  color: #696cff;
+  color: #7c3aed;
 }
 
 /* ── Strength bar ────────────────────────────────────────────── */
@@ -95,7 +216,7 @@
 .fo-strength-track {
   flex: 1;
   height: 5px;
-  background: #e6e9f2;
+  background: #ede9fe;
   border-radius: 99px;
   overflow: hidden;
 }
@@ -106,12 +227,33 @@
   transition: width .35s ease, background .35s ease;
 }
 
-.fo-strength-fill.level-weak   { background: #ff4d4f; }
-.fo-strength-fill.level-fair   { background: #fa8c16; }
-.fo-strength-fill.level-strong { background: #52c41a; }
+.fo-strength-fill.level-weak   { background: #ef4444; }
+.fo-strength-fill.level-fair   { background: #f59e0b; }
+.fo-strength-fill.level-strong { background: #10b981; }
 
 .fo-strength-label {
   font-size: 0.72rem;
   font-weight: 600;
   white-space: nowrap;
+}
+
+/* ── Badge statut compte ─────────────────────────────────────── */
+.bg-label-success {
+  background: #f0fdf4 !important;
+  color: #10b981 !important;
+  border: 1px solid #a7f3d0;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+}
+
+.bg-label-warning {
+  background: #fff7ed !important;
+  color: #f59e0b !important;
+  border: 1px solid #fde68a;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
 }

@@ -16,7 +16,7 @@ import { MeetingsPanelComponent } from '../meetings-panel/meetings-panel.compone
   imports: [CommonModule, MeetingsPanelComponent],
   template: `
     <button type="button" class="mb-trigger" (click)="open()">
-      <span class="mb-icon">&#128197;</span>
+      <i class="bx bx-calendar-event"></i>
       Reunions
     </button>
 
@@ -34,18 +34,17 @@ import { MeetingsPanelComponent } from '../meetings-panel/meetings-panel.compone
   `,
   styles: [`
     .mb-trigger {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border: none; border-radius: 8px;
-      background: linear-gradient(135deg, #1D4ED8 0%, #6D28D9 100%);
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 8px 16px; border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.38);
       color: #fff; font-weight: 600; font-size: 13px; cursor: pointer;
-      box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
-      transition: transform .15s ease, box-shadow .15s ease;
+      transition: background .15s;
     }
     .mb-trigger:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(29, 78, 216, 0.35);
+      background: rgba(255,255,255,.30);
     }
-    .mb-icon { font-size: 15px; }
+    .mb-trigger i { font-size: 16px; }
 
     .mb-overlay {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55);

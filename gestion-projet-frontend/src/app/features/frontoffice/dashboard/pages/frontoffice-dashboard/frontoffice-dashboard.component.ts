@@ -270,6 +270,22 @@ export class FrontofficeDashboardComponent implements OnInit, OnDestroy {
     return insights.slice(0, 3);
   }
 
+  taskFilter: 'all' | 'todo' | 'progress' | 'late' = 'all';
+
+  setTaskFilter(f: 'all' | 'todo' | 'progress' | 'late'): void {
+    this.taskFilter = f;
+  }
+
+  get filteredUpcomingTasks(): Task[] {
+    const now = new Date();
+    switch (this.taskFilter) {
+      case 'todo':     return this.upcomingTasks.filter(t => t.status === TaskStatus.TODO);
+      case 'progress': return this.upcomingTasks.filter(t => t.status === TaskStatus.IN_PROGRESS);
+      case 'late':     return this.upcomingTasks.filter(t => t.dueDate && new Date(t.dueDate) < now);
+      default:         return this.upcomingTasks;
+    }
+  }
+
   get quickActions(): Array<{ label: string; route: string; icon: string; tone: string }> {
     return [
       { label: 'nav.projects', route: '/frontoffice/projects', icon: 'bx bx-briefcase-alt-2', tone: 'lilac' },

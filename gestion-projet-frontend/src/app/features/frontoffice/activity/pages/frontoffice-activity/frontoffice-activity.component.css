@@ -2,107 +2,187 @@
   display: block;
 }
 
+/* =====================================================
+   SHELL
+   ===================================================== */
 .tfa-shell {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
+  padding: 0 4px 32px;
 }
 
+/* =====================================================
+   HERO BANNER VIOLET
+   ===================================================== */
 .tfa-hero {
-  border-radius: 1.45rem;
-  background:
-    radial-gradient(circle at top right, rgba(240, 231, 255, 0.55), transparent 26%),
-    radial-gradient(circle at bottom left, rgba(220, 241, 255, 0.6), transparent 28%),
-    linear-gradient(135deg, #fffefe 0%, #ffffff 100%);
+  border-radius: 1.1rem !important;
+  background: linear-gradient(120deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%) !important;
+  box-shadow: 0 4px 18px rgba(124,58,237,.25) !important;
+  border: none !important;
 }
 
-.tfa-kicker,
-.tfa-section-kicker {
-  color: #9aa3b7;
+.tfa-hero .card-body {
+  padding: 1.1rem 1.5rem;
+}
+
+.tfa-kicker {
+  display: inline-block;
+  color: rgba(255,255,255,.7);
   font-size: 0.74rem;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
 
 .tfa-hero h2 {
-  margin: 0.45rem 0 0;
-  color: #4b5670;
+  margin: 0.35rem 0 0;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 .tfa-hero p {
-  margin: 0.55rem 0 0;
-  color: #7f899f;
+  margin: 0.35rem 0 0;
+  color: rgba(255,255,255,.75);
+  font-size: 0.85rem;
 }
 
+/* =====================================================
+   GRILLE
+   ===================================================== */
 .tfa-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
+/* =====================================================
+   CARTES
+   ===================================================== */
 .tfa-card {
-  border-radius: 1.35rem;
+  border-radius: 1.1rem !important;
+  border: 1.5px solid #ede9fe !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04) !important;
+  transition: box-shadow 0.15s;
+}
+
+.tfa-card:hover {
+  box-shadow: 0 4px 16px rgba(124,58,237,.1) !important;
+}
+
+.tfa-card .card-body {
+  padding: 1.25rem 1.35rem;
 }
 
 .tfa-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   margin-bottom: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1.5px solid #f0eeff;
+}
+
+.tfa-section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #7c3aed;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  background: #f5f3ff;
+  border-radius: 999px;
+  padding: 2px 10px;
 }
 
 .tfa-head h4 {
-  margin: 0.28rem 0 0;
-  color: #4c5870;
+  margin: 0.22rem 0 0;
+  color: #1a1a2e;
+  font-size: 1rem;
+  font-weight: 800;
 }
 
+/* =====================================================
+   LISTE D'ACTIVITÉS — TIMELINE
+   ===================================================== */
 .tfa-list {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .tfa-item {
   display: flex;
-  gap: 0.8rem;
-  padding: 0.95rem;
-  border-radius: 1rem;
-  background: #fcfcfe;
-  border: 1px solid #eef1f7;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.9rem;
+  background: #faf5ff;
+  border: 1px solid #ede9fe;
+  transition: background 0.12s, border-color 0.12s;
 }
 
+.tfa-item:hover {
+  background: #f5f0ff;
+  border-color: #ddd6fe;
+}
+
+/* Dot timeline */
 .tfa-dot {
-  width: 0.85rem;
-  height: 0.85rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #9aa4ff 0%, #88ddcf 100%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.15);
   margin-top: 0.35rem;
   flex-shrink: 0;
 }
 
 .tfa-dot.team {
-  background: linear-gradient(135deg, #f0a8bc 0%, #ffd6de 100%);
+  background: linear-gradient(135deg, #8b5cf6 0%, #c4b5fd 100%);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.15);
 }
 
 .tfa-item strong {
-  color: #4f5a73;
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #1f2937;
+  line-height: 1.3;
 }
 
-.tfa-item p,
-.tfa-item span {
-  margin: 0.18rem 0 0;
-  color: #8c95aa;
-}
-
-.tfa-item span {
+.tfa-item p {
+  margin: 0.2rem 0 0;
   font-size: 0.78rem;
+  color: #6b7280;
 }
 
+.tfa-item span {
+  display: inline-block;
+  margin: 0.25rem 0 0;
+  font-size: 0.73rem;
+  color: #a78bfa;
+  font-weight: 600;
+}
+
+/* =====================================================
+   ÉTAT VIDE
+   ===================================================== */
 .tfa-empty {
-  padding: 1rem;
-  border-radius: 1rem;
-  border: 1px dashed #e1e6f0;
+  padding: 1.25rem;
+  border-radius: 0.9rem;
+  border: 1.5px dashed #ddd6fe;
   text-align: center;
-  color: #9aa3b7;
+  color: #a78bfa;
+  font-size: 0.85rem;
+  background: #faf5ff;
 }
 
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
 @media (max-width: 991.98px) {
   .tfa-grid {
     grid-template-columns: 1fr;

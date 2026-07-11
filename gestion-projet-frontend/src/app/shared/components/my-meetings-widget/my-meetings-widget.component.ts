@@ -24,7 +24,7 @@ import {
     <section class="mw">
       <header class="mw__head">
         <h4 class="mw__title">
-          <span class="mw__icon">&#128197;</span>
+          <i class="bx bx-calendar-event mw__icon"></i>
           Mes prochaines reunions
         </h4>
         <button type="button" class="mw__reload" (click)="reload()" [disabled]="loading"
@@ -38,7 +38,7 @@ import {
 
       <ng-container *ngIf="!loading && !error">
         <p *ngIf="!upcoming.length" class="mw__msg">
-          &#9989; Aucune reunion a venir.
+          Aucune reunion a venir.
         </p>
 
         <ul class="mw__list" *ngIf="upcoming.length">
@@ -55,7 +55,7 @@ import {
                 <span class="mw__type-badge" [attr.data-type]="m.type">{{ typeLabel(m.type) }}</span>
               </div>
               <div class="mw__meta">
-                <span>&#128344; {{ formatTime(m.scheduledAt) }}</span>
+                <span><i class="bx bx-time-five"></i> {{ formatTime(m.scheduledAt) }}</span>
                 <span>&middot; {{ m.durationMinutes }}min</span>
                 <span>&middot; <em>{{ m.projectName }}</em></span>
               </div>
@@ -81,74 +81,94 @@ import {
   `,
   styles: [`
     .mw {
-      background: #fff; border: 1px solid #e5e7eb; border-radius: 14px;
-      padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      background:
+        radial-gradient(circle at top right, rgba(124,58,237,.1), transparent 28%),
+        linear-gradient(180deg, rgba(20,12,42,.98), rgba(13,8,28,.98));
+      border: 1px solid rgba(124,58,237,.2);
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 8px 28px rgba(10,5,25,.35);
     }
     .mw__head {
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(124,58,237,.15);
     }
-    .mw__title { margin: 0; font-size: 16px; color: #111827; display: flex; align-items: center; gap: 8px; }
-    .mw__icon { font-size: 20px; }
+    .mw__title {
+      margin: 0; font-size: 15px; color: #fff;
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
+    }
+    .mw__icon { font-size: 18px; color: #c4b5fd; }
     .mw__reload {
-      background: #F3F4F6; border: 1px solid #e5e7eb; border-radius: 8px;
-      width: 32px; height: 32px; cursor: pointer; font-size: 16px; color: #4B5563;
+      background: rgba(124,58,237,.15);
+      border: 1px solid rgba(124,58,237,.3);
+      border-radius: 8px;
+      width: 32px; height: 32px; cursor: pointer; font-size: 16px; color: #c4b5fd;
+      transition: background .15s;
     }
-    .mw__reload:disabled { opacity: 0.5; cursor: not-allowed; }
-    .mw__msg { margin: 8px 0; color: #6B7280; font-size: 14px; }
-    .mw__err { color: #991B1B; }
+    .mw__reload:hover { background: rgba(124,58,237,.28); }
+    .mw__reload:disabled { opacity: 0.4; cursor: not-allowed; }
+    .mw__msg { margin: 8px 0; color: rgba(226,232,240,.65); font-size: 14px; }
+    .mw__err { color: #fca5a5; }
 
-    .mw__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+    .mw__list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
     .mw__card {
       display: flex; gap: 14px; padding: 12px; border-radius: 10px;
-      border: 1px solid #e5e7eb; background: #F9FAFB;
-      transition: background .15s ease;
+      border: 1px solid rgba(124,58,237,.15);
+      background: rgba(124,58,237,.05);
+      transition: background .15s ease, border-color .15s;
     }
-    .mw__card:hover { background: #fff; border-color: #6D28D9; }
+    .mw__card:hover { background: rgba(124,58,237,.1); border-color: rgba(167,139,250,.4); }
 
     .mw__date-block {
-      width: 56px; flex-shrink: 0; text-align: center;
-      background: linear-gradient(135deg, #1D4ED8 0%, #6D28D9 100%);
+      width: 52px; flex-shrink: 0; text-align: center;
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
       color: #fff; border-radius: 8px; padding: 8px 4px;
+      box-shadow: 0 4px 12px rgba(124,58,237,.35);
     }
-    .mw__date-day { font-size: 22px; font-weight: 700; line-height: 1; }
-    .mw__date-month { font-size: 11px; text-transform: uppercase;
-      letter-spacing: 0.5px; margin-top: 4px; opacity: 0.9; }
+    .mw__date-day { font-size: 21px; font-weight: 800; line-height: 1; }
+    .mw__date-month { font-size: 10px; text-transform: uppercase;
+      letter-spacing: 0.5px; margin-top: 4px; opacity: 0.85; }
 
     .mw__card-body { flex: 1; min-width: 0; }
     .mw__card-title-row {
       display: flex; align-items: center; gap: 8px;
-      margin-bottom: 4px; flex-wrap: wrap;
+      margin-bottom: 5px; flex-wrap: wrap;
     }
-    .mw__card-title-row strong { color: #111827; font-size: 14px; }
+    .mw__card-title-row strong { color: #fff; font-size: 13px; font-weight: 700; }
+
     .mw__type-badge {
       padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700;
-      background: #E5E7EB; color: #374151;
+      background: rgba(124,58,237,.2); color: #c4b5fd;
     }
-    .mw__type-badge[data-type="STANDUP"]        { background: #DBEAFE; color: #1D4ED8; }
-    .mw__type-badge[data-type="RETRO"]          { background: #FEF3C7; color: #92400E; }
-    .mw__type-badge[data-type="SPRINT_PLANNING"]{ background: #EDE9FE; color: #5B21B6; }
-    .mw__type-badge[data-type="REVIEW"]         { background: #D1FAE5; color: #065F46; }
-    .mw__type-badge[data-type="ONE_ON_ONE"]     { background: #FCE7F3; color: #9D174D; }
+    .mw__type-badge[data-type="STANDUP"]        { background: rgba(59,130,246,.18); color: #93c5fd; }
+    .mw__type-badge[data-type="RETRO"]          { background: rgba(245,158,11,.18); color: #fcd34d; }
+    .mw__type-badge[data-type="SPRINT_PLANNING"]{ background: rgba(124,58,237,.22); color: #ddd6fe; }
+    .mw__type-badge[data-type="REVIEW"]         { background: rgba(16,185,129,.18); color: #6ee7b7; }
+    .mw__type-badge[data-type="ONE_ON_ONE"]     { background: rgba(244,63,94,.16);  color: #fda4af; }
 
     .mw__meta {
-      font-size: 12px; color: #6B7280; margin-bottom: 2px;
-      display: flex; flex-wrap: wrap; gap: 4px;
+      font-size: 11.5px; color: rgba(226,232,240,.6); margin-bottom: 3px;
+      display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
     }
-    .mw__meta em { font-style: normal; color: #374151; font-weight: 600; }
+    .mw__meta em { font-style: normal; color: #c4b5fd; font-weight: 600; }
+    .mw__meta i { color: #a78bfa; }
 
     .mw__actions { margin-top: 8px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
     .mw__btn-accept, .mw__btn-decline {
       padding: 4px 12px; border-radius: 6px; font-size: 12px;
-      font-weight: 600; cursor: pointer; border: none;
+      font-weight: 600; cursor: pointer;
     }
-    .mw__btn-accept  { background: #059669; color: #fff; }
-    .mw__btn-decline { background: #fff; color: #DC2626; border: 1px solid #DC2626; }
+    .mw__btn-accept  { background: rgba(16,185,129,.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,.35); }
+    .mw__btn-accept:hover { background: rgba(16,185,129,.32); }
+    .mw__btn-decline { background: rgba(239,68,68,.15); color: #fca5a5; border: 1px solid rgba(239,68,68,.3); }
+    .mw__btn-decline:hover { background: rgba(239,68,68,.25); }
     .mw__pill {
       padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600;
     }
-    .mw__pill--ok { background: #D1FAE5; color: #065F46; }
-    .mw__pill--ko { background: #FEE2E2; color: #991B1B; }
+    .mw__pill--ok { background: rgba(16,185,129,.18); color: #6ee7b7; }
+    .mw__pill--ko { background: rgba(239,68,68,.15); color: #fca5a5; }
   `]
 })
 export class MyMeetingsWidgetComponent implements OnInit {

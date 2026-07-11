@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { CurrentUserService } from 'src/app/core/services/current-user.service';
+import { LanguageService } from 'src/app/core/services/language.service';
 import { ProjectService } from 'src/app/features/admin/projects/services/project.service';
 import { TaskService } from 'src/app/features/admin/tasks/services/task.service';
 import { UserService } from 'src/app/features/admin/users/services/user.service';
@@ -20,7 +22,8 @@ interface CalendarDay {
   templateUrl: './frontoffice-kanban.component.html',
   styleUrls: ['./frontoffice-kanban.component.css']
 })
-export class FrontofficeKanbanComponent implements OnInit {
+export class FrontofficeKanbanComponent implements OnInit, OnDestroy {
+  private langSub!: Subscription;
   readonly TaskStatus = TaskStatus;
   project: Project | null = null;
   tasks: Task[] = [];
@@ -37,21 +40,39 @@ export class FrontofficeKanbanComponent implements OnInit {
   selectedDate = new Date();
   calendarDays: CalendarDay[] = [];
 
-  readonly weekLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  readonly monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  get weekLabels(): string[] {
+    return this.langService.current === 'fr'
+      ? ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam']
+      : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  }
+
+  get monthNames(): string[] {
+    return this.langService.current === 'fr'
+      ? ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+         'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+      : ['January', 'February', 'March', 'April', 'May', 'June',
+         'July', 'August', 'September', 'October', 'November', 'December'];
+  }
+
+  private get locale(): string {
+    return this.langService.current === 'fr' ? 'fr-FR' : 'en-US';
+  }
 
   constructor(
     private route: ActivatedRoute,
     private projectService: ProjectService,
     private taskService: TaskService,
     private userService: UserService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    private langService: LanguageService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.langSub = this.langService.currentLang$.subscribe(() => {
+      this.cd.markForCheck();
+    });
+
     const projectId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.currentUserService.user$.subscribe((user) => {
@@ -346,28 +367,23 @@ export class FrontofficeKanbanComponent implements OnInit {
   }
 
   formatDate(value?: string): string {
-    if (!value) {
-      return 'Sans date';
-    }
-
+    const noDate = this.langService.current === 'fr' ? 'Sans date' : 'No date';
+    if (!value) return noDate;
     const date = new Date(value);
-    if (isNaN(date.getTime())) {
-      return 'Sans date';
-    }
-
-    return date.toLocaleDateString('fr-FR', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
+    if (isNaN(date.getTime())) return noDate;
+    return date.toLocaleDateString(this.locale, {
+      day: '2-digit', month: 'short', year: 'numeric'
     });
   }
 
   formatDayLabel(date: Date): string {
-    return date.toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      day: '2-digit',
-      month: 'long'
+    return date.toLocaleDateString(this.locale, {
+      weekday: 'long', day: '2-digit', month: 'long'
     });
+  }
+
+  ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
   }
 
   isOverdue(task: Task): boolean {

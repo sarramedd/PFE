@@ -9,7 +9,7 @@
 }
 
 /* =====================================================
-   EN-TÊTE
+   EN-TÊTE — HERO BANNER VIOLET
    ===================================================== */
 .ft-header {
   display: flex;
@@ -17,11 +17,11 @@
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
-  background: #fff;
-  border-radius: 14px;
-  border: 1.5px solid #e9eaf0;
-  padding: 16px 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  background: linear-gradient(120deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+  border-radius: 1.1rem;
+  padding: 1.1rem 1.5rem;
+  box-shadow: 0 4px 18px rgba(124,58,237,.25);
+  border: none;
 }
 
 .ft-title-row {
@@ -31,32 +31,33 @@
 }
 
 .ft-title-icon {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #6366f1, #7c3aed);
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  font-size: 19px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
 .ft-title {
   font-size: 18px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: #fff;
   margin: 0 0 2px;
 }
 
 .ft-subtitle {
   font-size: 12px;
-  color: #9ca3af;
+  color: rgba(255,255,255,.75);
   margin: 0;
 }
 
-/* Filtre statut compact — ligne de pills */
+/* Filtre statut compact — pills sur fond violet */
 .ft-status-bar {
   display: flex;
   align-items: center;
@@ -73,9 +74,9 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  border: 1.5px solid #e9eaf0;
-  background: #f8f9fb;
-  color: #6b7280;
+  border: 1.5px solid rgba(255,255,255,.28);
+  background: rgba(255,255,255,.13);
+  color: rgba(255,255,255,.85);
   transition: all 0.13s;
   white-space: nowrap !important;
   hyphens: none !important;
@@ -84,22 +85,23 @@
   flex-shrink: 0;
 }
 
-.ft-status-pill:hover { background: #eaecf0; }
+.ft-status-pill:hover { background: rgba(255,255,255,.22); }
 
 .ft-pill-count {
-  background: rgba(0,0,0,0.07);
+  background: rgba(255,255,255,.2);
   border-radius: 10px;
   padding: 0 5px;
   font-size: 11px;
   font-weight: 700;
 }
 
-.ft-status-pill.active.ft-all      { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
-.ft-status-pill.active.ft-all .ft-pill-count { background: rgba(255,255,255,0.2); }
+/* Pills actives sur fond violet */
+.ft-status-pill.active.ft-all      { background: #fff; color: #7c3aed; border-color: #fff; }
+.ft-status-pill.active.ft-all .ft-pill-count { background: rgba(124,58,237,.12); color: #7c3aed; }
 
-.ft-status-pill.active.ft-todo     { background: #f0f9ff; color: #0ea5e9; border-color: #bae6fd; }
-.ft-status-pill.active.ft-progress { background: #fff7ed; color: #f59e0b; border-color: #fde68a; }
-.ft-status-pill.active.ft-done     { background: #f0fdf4; color: #10b981; border-color: #a7f3d0; }
+.ft-status-pill.active.ft-todo     { background: rgba(255,255,255,.28); color: #fff; border-color: rgba(255,255,255,.6); }
+.ft-status-pill.active.ft-progress { background: rgba(251,191,36,.25); color: #fef3c7; border-color: rgba(251,191,36,.5); }
+.ft-status-pill.active.ft-done     { background: rgba(52,211,153,.2); color: #d1fae5; border-color: rgba(52,211,153,.4); }
 
 .ft-overdue-badge {
   display: inline-flex;
@@ -109,9 +111,9 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 700;
-  background: #fef2f2;
-  color: #ef4444;
-  border: 1.5px solid #fecaca;
+  background: rgba(239,68,68,.18);
+  color: #fca5a5;
+  border: 1.5px solid rgba(239,68,68,.35);
 }
 
 /* =====================================================
@@ -121,11 +123,11 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: linear-gradient(135deg, #1a1a2e, #2d2d4e);
+  background: linear-gradient(135deg, #1a0a2e, #2d1b69);
   color: #fff;
   border-radius: 12px;
   padding: 12px 18px;
-  box-shadow: 0 4px 14px rgba(26,26,46,0.3);
+  box-shadow: 0 4px 14px rgba(45,27,105,.35);
 }
 
 .ft-timer-left {
@@ -140,14 +142,14 @@
   height: 10px;
   border-radius: 50%;
   background: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239,68,68,0.3);
+  box-shadow: 0 0 0 3px rgba(239,68,68,.3);
   animation: ft-pulse 1.2s ease infinite;
   flex-shrink: 0;
 }
 
 @keyframes ft-pulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(239,68,68,0.3); }
-  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,0.1); }
+  0%, 100% { box-shadow: 0 0 0 3px rgba(239,68,68,.3); }
+  50%       { box-shadow: 0 0 0 6px rgba(239,68,68,.1); }
 }
 
 .ft-timer-left strong { display: block; font-size: 13px; font-weight: 700; }
@@ -174,15 +176,15 @@
   gap: 5px;
   padding: 7px 14px;
   border-radius: 8px;
-  background: rgba(239,68,68,0.15);
-  border: 1px solid rgba(239,68,68,0.4);
+  background: rgba(239,68,68,.15);
+  border: 1px solid rgba(239,68,68,.4);
   color: #f87171;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.13s;
 }
-.ft-stop-btn:hover:not(:disabled) { background: rgba(239,68,68,0.25); }
+.ft-stop-btn:hover:not(:disabled) { background: rgba(239,68,68,.25); }
 .ft-stop-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* =====================================================
@@ -214,7 +216,7 @@
   width: 18px;
   height: 18px;
   border: 2px solid #e5e7eb;
-  border-top-color: #6366f1;
+  border-top-color: #7c3aed;
   border-radius: 50%;
   animation: ft-spin 0.7s linear infinite;
 }
@@ -234,14 +236,14 @@
   width: 64px;
   height: 64px;
   border-radius: 18px;
-  background: rgba(99,102,241,0.08);
+  background: rgba(124,58,237,.08);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 4px;
 }
 
-.ft-empty-art i { font-size: 30px; color: #6366f1; opacity: 0.5; }
+.ft-empty-art i { font-size: 30px; color: #7c3aed; opacity: 0.5; }
 .ft-empty h4 { font-size: 16px; font-weight: 700; color: #374151; margin: 0; }
 .ft-empty p  { font-size: 13px; color: #6b7280; margin: 0; }
 
@@ -251,14 +253,16 @@
   gap: 5px;
   padding: 7px 16px;
   border-radius: 8px;
-  background: #f4f5f7;
-  border: 1.5px solid #e2e4e9;
-  color: #374151;
+  background: #f5f3ff;
+  border: 1.5px solid #ddd6fe;
+  color: #7c3aed;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   margin-top: 4px;
+  transition: background 0.13s;
 }
+.ft-reset-btn:hover { background: #ede9fe; }
 
 /* =====================================================
    GROUPES PAR PROJET
@@ -273,8 +277,13 @@
   background: #fff;
   border-radius: 14px;
   border: 1.5px solid #e9eaf0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
   overflow: hidden;
+  transition: box-shadow 0.15s;
+}
+
+.ft-group:hover {
+  box-shadow: 0 4px 16px rgba(124,58,237,.1);
 }
 
 /* En-tête groupe (cliquable) */
@@ -289,7 +298,7 @@
   transition: background 0.12s;
 }
 
-.ft-group-header:hover { background: #fafbfc; }
+.ft-group-header:hover { background: #faf5ff; }
 
 .ft-group-left {
   display: flex;
@@ -301,7 +310,7 @@
   width: 34px;
   height: 34px;
   border-radius: 9px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
   color: #fff;
   font-weight: 800;
   font-size: 12px;
@@ -319,10 +328,11 @@
 
 .ft-group-count {
   font-size: 12px;
-  color: #9ca3af;
-  background: #f4f5f7;
+  color: #7c3aed;
+  background: #f5f3ff;
   border-radius: 10px;
   padding: 2px 8px;
+  font-weight: 600;
 }
 
 .ft-group-overdue {
@@ -340,7 +350,7 @@
 
 .ft-group-chevron {
   font-size: 18px;
-  color: #9ca3af;
+  color: #a78bfa;
   transition: transform 0.18s;
 }
 
@@ -359,32 +369,29 @@
 }
 
 .ft-task:last-child { border-bottom: none; }
-.ft-task:hover { background: #fafbfc; }
+.ft-task:hover { background: #faf5ff; }
 
 .ft-task--done { opacity: 0.6; }
 
 /* Barre colorée gauche */
 .ft-task-bar {
-  width: 3px;
+  width: 4px;
   flex-shrink: 0;
-  background: #6366f1;
+  background: #7c3aed;
 }
 
-.ft-task-bar[data-status="TODO"]        { background: #9ca3af; }
+.ft-task-bar[data-status="TODO"]        { background: #c4b5fd; }
 .ft-task-bar[data-status="IN_PROGRESS"] { background: #f59e0b; }
-.ft-task-bar[data-status="DONE"]        { background: #10b981; }
+.ft-task-bar[data-status="DONE"]        { background: #4ade80; }
 
 .ft-task-body {
   flex: 1;
-  padding: 13px 18px;
+  padding: 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
-
-/* Titre + badges */
-/* ft-task-head supprimé — titre et badges sont maintenant des éléments séparés */
 
 .ft-task-title {
   font-size: 14px;
@@ -426,7 +433,7 @@
 }
 
 /* Badges statut */
-.ft-badge-status[data-status="TODO"]        { background: #f1f5f9; color: #64748b; }
+.ft-badge-status[data-status="TODO"]        { background: #f5f3ff; color: #7c3aed; }
 .ft-badge-status[data-status="IN_PROGRESS"] { background: #fff7ed; color: #f59e0b; }
 .ft-badge-status[data-status="DONE"]        { background: #f0fdf4; color: #10b981; }
 
@@ -434,7 +441,7 @@
 .ft-badge-priority[data-priority="HIGH"]   { background: #fef2f2; color: #ef4444; }
 .ft-badge-priority[data-priority="MEDIUM"] { background: #fff7ed; color: #f59e0b; }
 .ft-badge-priority[data-priority="LOW"]    { background: #f0fdf4; color: #10b981; }
-.ft-badge-priority[data-priority="NORMAL"] { background: #f4f5f7; color: #6b7280; }
+.ft-badge-priority[data-priority="NORMAL"] { background: #f5f3ff; color: #7c3aed; }
 
 .ft-badge-overdue { background: #fef2f2; color: #ef4444; }
 
@@ -466,7 +473,7 @@
   color: #6b7280;
 }
 
-.ft-meta-item i { font-size: 13px; color: #9ca3af; }
+.ft-meta-item i { font-size: 13px; color: #a78bfa; }
 
 /* Actions */
 .ft-task-actions {
@@ -490,7 +497,7 @@
   transition: all 0.13s;
 }
 
-.ft-timer-btn:hover:not(:disabled) { background: #eaecf0; color: #374151; }
+.ft-timer-btn:hover:not(:disabled) { background: #f5f3ff; color: #7c3aed; border-color: #ddd6fe; }
 
 .ft-timer-btn.running {
   background: #fef2f2;
@@ -499,7 +506,6 @@
 }
 
 .ft-timer-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
 .ft-timer-btn i { font-size: 14px; }
 
 .ft-discuss-btn {
