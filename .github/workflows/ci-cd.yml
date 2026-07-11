@@ -582,11 +582,27 @@ jobs:
       - name: "Canary Deploy — Phase 1 (1 replica = ~50%)"
         run: |
           echo "🐦 Phase Canary: déploiement sur 1 replica..."
+          # Réduire les resources pour le node Standard_B2ls_v2 (2vCPU, 4GB)
+          kubectl patch deployment gestion-projet-backend -n default --type=merge --patch '{
+            "spec": {
+              "template": {
+                "spec": {
+                  "containers": [{
+                    "name": "backend",
+                    "resources": {
+                      "requests": {"cpu": "100m", "memory": "256Mi"},
+                      "limits": {"cpu": "500m", "memory": "512Mi"}
+                    }
+                  }]
+                }
+              }
+            }
+          }'
           kubectl set image deployment/gestion-projet-backend \
             backend=${{ env.BACKEND_IMAGE }}:${{ github.sha }} \
             -n default
           kubectl scale deployment/gestion-projet-backend --replicas=1 -n default
-          kubectl rollout status deployment/gestion-projet-backend -n default --timeout=120s
+          kubectl rollout status deployment/gestion-projet-backend -n default --timeout=300s
 
       - name: "Monitor Canary (90 secondes)"
         run: |
@@ -607,7 +623,7 @@ jobs:
           kubectl set image deployment/gestion-projet-frontend \
             frontend=${{ env.FRONTEND_IMAGE }}:${{ github.sha }} \
             -n default
-          kubectl rollout status deployment/gestion-projet-frontend -n default --timeout=120s
+          kubectl rollout status deployment/gestion-projet-frontend -n default --timeout=300s
           echo "🎉 Production mise à jour avec succès!"
           echo "Backend: ${{ env.BACKEND_IMAGE }}:${{ github.sha }}"
           echo "Frontend: ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}"
