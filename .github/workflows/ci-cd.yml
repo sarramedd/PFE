@@ -583,21 +583,7 @@ jobs:
         run: |
           echo "🐦 Phase Canary: déploiement sur 1 replica..."
           # Réduire les resources pour le node Standard_B2ls_v2 (2vCPU, 4GB)
-          kubectl patch deployment gestion-projet-backend -n default --type=merge --patch '{
-            "spec": {
-              "template": {
-                "spec": {
-                  "containers": [{
-                    "name": "backend",
-                    "resources": {
-                      "requests": {"cpu": "100m", "memory": "256Mi"},
-                      "limits": {"cpu": "500m", "memory": "512Mi"}
-                    }
-                  }]
-                }
-              }
-            }
-          }'
+          kubectl patch deployment gestion-projet-backend -n default --type=merge --patch "{\"spec\":{\"template\":{\"spec\":{\"containers\":[{\"name\":\"backend\",\"image\":\"${{ env.BACKEND_IMAGE }}:${{ github.sha }}\",\"resources\":{\"requests\":{\"cpu\":\"100m\",\"memory\":\"256Mi\"},\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"}}}]}}}}"
           kubectl set image deployment/gestion-projet-backend \
             backend=${{ env.BACKEND_IMAGE }}:${{ github.sha }} \
             -n default
